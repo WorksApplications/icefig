@@ -10,8 +10,10 @@ public class SeqTest {
 
     @Test
     public void test(){
-        Integer[] a= {1,2,3};
-        Seq<Integer> seq = Seq.of(a);
+        Seq<Integer> seq = Seq.of(1,2,3);
+        System.out.println(seq.shuffle());
+        System.out.println(seq);
+        seq.add(4);
         seq = seq.map(b -> b +1);
         System.out.println(seq.toString());
         System.out.println(seq.sample());
@@ -21,5 +23,15 @@ public class SeqTest {
         System.out.println(seq.sample(2));
         System.out.println(seq.sample(3));
         System.out.println(seq.sample(5));
+
+        seq.forEachWithIndex((value, idx) -> {
+            System.out.println(value);
+            System.out.println(idx);
+        });
+
+        seq.forEachCons(2, (values)->{
+            System.out.println(values);
+        });
+
     }
 }
