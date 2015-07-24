@@ -174,11 +174,11 @@ public class SeqTest {
     static TestObj tom = new TestObj("Tom", 16);
     static TestObj kate = new TestObj("Kate", 15);
     static TestObj john = new TestObj("John", 20);
-    static Seq<TestObj> people = Seq.of(Arrays.asList(new TestObj[]{jim,tom,kate,john}));
+    static Seq<TestObj> people = Seq.of(Arrays.asList(new TestObj[]{jim, tom, kate, john}));
 
     @Test
     public void testFind() {
-        assertEquals(jim, people.findFirst(p->p.age == 15));
+        assertEquals(jim, people.findFirst(p -> p.age == 15));
         assertEquals(kate, people.findLast(p -> p.age == 15));
         assertEquals(0, people.findFirstIndex(p -> p.age == 15));
         assertEquals(2, people.findLastIndex(p -> p.age == 15));
@@ -189,10 +189,28 @@ public class SeqTest {
     }
 
     @Test
-    public void testPushPrepend(){
-        assertEquals(Seq.of(1, 2, 3 ,4 ,5), Seq.of(1,2,3).push(4,5));
-        assertEquals(Seq.of(1, 2, 3 ,4 ,5), Seq.of(1,2,3).push(Arrays.asList(new Integer[]{4, 5})));
-        assertEquals(Seq.of(1, 2, 3 ,4), Seq.of(1,2,3).push(4));
-        assertEquals(Seq.of(1, 2, 3 ,4 ,5), Seq.of(3,4,5).prepend(1, 2));
+    public void testPushPrepend() {
+        assertEquals(Seq.of(1, 2, 3, 4, 5), Seq.of(1, 2, 3).push(4, 5));
+        assertEquals(Seq.of(1, 2, 3, 4, 5), Seq.of(1, 2, 3).push(Arrays.asList(new Integer[]{4, 5})));
+        assertEquals(Seq.of(1, 2, 3, 4), Seq.of(1, 2, 3).push(4));
+        assertEquals(Seq.of(1, 2, 3, 4, 5), Seq.of(3, 4, 5).prepend(1, 2));
+        Seq<Integer> seq = Seq.of(1, 2, 3);
+        seq.push(4, 5);
+        assertEquals(Seq.of(1, 2, 3, 4, 5), seq);
+        seq.prepend(4, 5);
+        assertEquals(Seq.of(4, 5, 1, 2, 3, 4, 5), seq);
+    }
+
+    @Test
+    public void testConcatPreConcat() {
+        assertEquals(Seq.of(1, 2, 3, 4, 5), Seq.of(1, 2, 3).concat(4, 5));
+        assertEquals(Seq.of(1, 2, 3, 4, 5), Seq.of(1, 2, 3).concat(Arrays.asList(new Integer[]{4, 5})));
+        assertEquals(Seq.of(1, 2, 3, 4), Seq.of(1, 2, 3).concat(4));
+        assertEquals(Seq.of(1, 2, 3, 4, 5), Seq.of(3, 4, 5).preConcat(1, 2));
+        Seq<Integer> seq = Seq.of(1, 2, 3);
+        seq.concat(4, 5);
+        assertEquals(Seq.of(1, 2, 3), seq);
+        seq.preConcat(4, 5);
+        assertEquals(Seq.of(1, 2, 3), seq);
     }
 }

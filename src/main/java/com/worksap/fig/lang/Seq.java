@@ -1,5 +1,6 @@
 package com.worksap.fig.lang;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.*;
 
@@ -157,8 +158,9 @@ public interface Seq<T> extends List<T> {
         return -1;
     }
 
+    @SuppressWarnings({"unchecked", "varargs"})
     default Seq<T> push(T... values) {
-        addAll(Arrays.asList(values));
+        push(Arrays.asList(values));
         return this;
     }
 
@@ -167,11 +169,40 @@ public interface Seq<T> extends List<T> {
         return this;
     }
 
+    @SuppressWarnings({"unchecked", "varargs"})
     default Seq<T> prepend(T... values) {
-        for(int i=values.length-1; i>=0; i--){
+        for (int i = values.length - 1; i >= 0; i--) {
             add(0, values[i]);
         }
         return this;
+    }
+
+    @SuppressWarnings({"unchecked", "varargs"})
+    default Seq<T> prepend(Collection<? extends T> collection) {
+        T[] array = (T[]) collection.toArray();
+        return prepend(array);
+    }
+
+    @SuppressWarnings({"unchecked", "varargs"})
+    default Seq<T> concat(T... values) {
+        return concat(Arrays.asList(values));
+    }
+
+    default Seq<T> concat(Collection<? extends T> collection) {
+        Seq<T> copy = new SeqImpl<>(this);
+        copy.addAll(collection);
+        return copy;
+    }
+
+    @SuppressWarnings({"unchecked", "varargs"})
+    default Seq<T> preConcat(T... values) {
+        return preConcat(Arrays.asList(values));
+    }
+
+    default Seq<T> preConcat(Collection<? extends T> collection) {
+        Seq<T> copy = new SeqImpl<>(collection);
+        copy.addAll(this);
+        return copy;
     }
 
     @SafeVarargs

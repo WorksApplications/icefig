@@ -13,4 +13,5 @@ class SeqImpl<T> extends ArrayList<T> implements Seq<T> {
 
     SeqImpl() {
     }
+
 }
