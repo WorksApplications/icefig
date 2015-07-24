@@ -42,7 +42,18 @@ public interface Seq<T> extends List<T> {
         }
     }
 
-    default void forEachCons(int n, Consumer<List<T>> action) {
+    default Seq<Seq<T>> eachCons(int n){
+        if (n <= 0) {
+            throw new IllegalArgumentException("n should be positive number!");
+        }
+        Seq<Seq<T>> result = new SeqImpl<>();
+        for (int i = 0; i <= this.size() - n; i++) {
+            result.add(this.subList(i, i + n));
+        }
+        return result;
+    }
+
+    default void forEachCons(int n, Consumer<Seq<T>> action) {
         if (n <= 0) {
             throw new IllegalArgumentException("n should be positive number!");
         }
@@ -55,6 +66,10 @@ public interface Seq<T> extends List<T> {
     static <T> Seq<T> of(T... values) {
         Collection<T> col = Arrays.asList(values);
         return new SeqImpl<>(col);
+    }
+
+    static <T> Seq<T> newSeq(){
+        return new SeqImpl<>();
     }
 
     static <T> Seq<T> of(Collection<? extends T> values) {
