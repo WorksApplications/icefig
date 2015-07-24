@@ -48,3 +48,7 @@ In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for 
 ### Zero dependency
 
 Fig has no external dependency except JDK 8.
+
+### Conventions
+
+Fig uses conventions on method names similar with Ruby. If there is a pair of methods `name, name$`, method ends with `$` means calling this method will change the object itself, while calling the other won't.
