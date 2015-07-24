@@ -53,6 +53,21 @@ public interface Seq<T> extends List<T> {
         return result;
     }
 
+    default Seq<T> order(Comparator<? super T> comparator){
+        Seq<T> copy = new SeqImpl<>(this);
+        Collections.sort(copy, comparator);
+        return copy;
+    }
+
+    default Seq<T> order$(Comparator<? super T> comparator){
+        Collections.sort(this, comparator);
+        return this;
+    }
+
+    default Seq<T> distinct(){
+        return new SeqImpl<>(new LinkedHashSet<>(this));
+    }
+
     default void forEachCons(int n, Consumer<Seq<T>> action) {
         if (n <= 0) {
             throw new IllegalArgumentException("n should be positive number!");
