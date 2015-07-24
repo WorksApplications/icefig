@@ -39,7 +39,7 @@ Stream has several characteristics:
 
 Thus, Stream may not be able to support operations related with the size of it, nor operations involving multiple or even random elements.
 
-Fig targets on "small data" operations within application logic, to provide simple & beaufitul code writing about String, List, Map operation & transformation.
+Fig targets on "small data" operations within application logic, to provide simple & beautiful code writing about String, List, Map operation & transformation.
 
 ### No utilities
 
