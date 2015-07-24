@@ -4,6 +4,7 @@ import com.worksap.fig.lang.Seq;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -129,6 +130,7 @@ public class SeqTest {
         assertEquals("123", seq.join());
         assertEquals("1,2,3", seq.join(","));
         assertEquals("!1-2-3!", seq.join("-", "!", "!"));
+
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
@@ -140,5 +142,57 @@ public class SeqTest {
         assertEquals((Integer) 3, seq.last());
         seq.clear();
         seq.first();
+    }
+
+    static class TestObj {
+        private String name;
+        private int age;
+
+        public TestObj(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getAge() {
+            return age;
+        }
+
+        public void setAge(int age) {
+            this.age = age;
+        }
+    }
+
+    static TestObj jim = new TestObj("Jim", 15);
+    static TestObj tom = new TestObj("Tom", 16);
+    static TestObj kate = new TestObj("Kate", 15);
+    static TestObj john = new TestObj("John", 20);
+    static Seq<TestObj> people = Seq.of(Arrays.asList(new TestObj[]{jim,tom,kate,john}));
+
+    @Test
+    public void testFind() {
+        assertEquals(jim, people.findFirst(p->p.age == 15));
+        assertEquals(kate, people.findLast(p -> p.age == 15));
+        assertEquals(0, people.findFirstIndex(p -> p.age == 15));
+        assertEquals(2, people.findLastIndex(p -> p.age == 15));
+        assertEquals(-1, people.findFirstIndex(p -> p.age == 1));
+        assertEquals(-1, people.findLastIndex(p -> p.age == 1));
+        assertNull(people.findFirst(p -> p.age == 1));
+        assertNull(people.findLast(p -> p.age == 1));
+    }
+
+    @Test
+    public void testPushPrepend(){
+        assertEquals(Seq.of(1, 2, 3 ,4 ,5), Seq.of(1,2,3).push(4,5));
+        assertEquals(Seq.of(1, 2, 3 ,4 ,5), Seq.of(1,2,3).push(Arrays.asList(new Integer[]{4, 5})));
+        assertEquals(Seq.of(1, 2, 3 ,4), Seq.of(1,2,3).push(4));
+        assertEquals(Seq.of(1, 2, 3 ,4 ,5), Seq.of(3,4,5).prepend(1, 2));
     }
 }

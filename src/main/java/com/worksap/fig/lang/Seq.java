@@ -1,11 +1,7 @@
 package com.worksap.fig.lang;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.function.*;
 
 /**
  * Created by liuyang on 7/23/15.
@@ -24,10 +20,6 @@ public interface Seq<T> extends List<T> {
         return result;
     }
 
-    default String join() {
-        return join("");
-    }
-
     default T first() {
         return get(0);
     }
@@ -42,6 +34,10 @@ public interface Seq<T> extends List<T> {
 
     default T last() {
         return get(size() - 1);
+    }
+
+    default String join() {
+        return join("");
     }
 
     default String join(CharSequence delimiter) {
@@ -119,6 +115,63 @@ public interface Seq<T> extends List<T> {
         for (int i = 0; i <= this.size() - n; i++) {
             action.accept(this.subSeq(i, i + n));
         }
+    }
+
+    default T findFirst(Predicate<T> condition) {
+        for (int i = 0; i < size(); i++) {
+            T t = get(i);
+            if (condition.test(t)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    default T findLast(Predicate<T> condition) {
+        for (int i = size() - 1; i >= 0; i--) {
+            T t = get(i);
+            if (condition.test(t)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    default int findFirstIndex(Predicate<T> condition) {
+        for (int i = 0; i < size(); i++) {
+            T t = get(i);
+            if (condition.test(t)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    default int findLastIndex(Predicate<T> condition) {
+        for (int i = size() - 1; i >= 0; i--) {
+            T t = get(i);
+            if (condition.test(t)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    default Seq<T> push(T... values) {
+        addAll(Arrays.asList(values));
+        return this;
+    }
+
+    default Seq<T> push(Collection<? extends T> collection) {
+        addAll(collection);
+        return this;
+    }
+
+    default Seq<T> prepend(T... values) {
+        for(int i=values.length-1; i>=0; i--){
+            add(0, values[i]);
+        }
+        return this;
     }
 
     @SafeVarargs
