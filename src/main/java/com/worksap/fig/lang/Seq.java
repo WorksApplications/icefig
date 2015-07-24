@@ -1,6 +1,5 @@
 package com.worksap.fig.lang;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.*;
 
@@ -77,19 +76,21 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Randomly find an element in the seq.
+     *
      * @return The selected element, or null if the seq is empty.
      */
     default T sample() {
         if (size() == 0) {
             return null;
         }
-        Random rand= new Random();
+        Random rand = new Random();
         int randomNum = rand.nextInt(size());
         return get(randomNum);
     }
 
     /**
      * Randomly find n elements in the seq.
+     *
      * @return A new seq of the selected elements. If the size of seq is lower than n, return all elements.
      * Return empty result if the seq is empty. The order of selected elements may be changed.
      */
@@ -127,9 +128,10 @@ public interface Seq<T> extends List<T> {
     /**
      * Transform the seq, to a seq of each continuous n elements starting from each element.
      * <p>
-     *     [1, 2, 3, 4] with n=2 will result to [[1, 2], [2, 3], [3, 4]]
+     * [1, 2, 3, 4] with n=2 will result to [[1, 2], [2, 3], [3, 4]]
      * </p>
      * If the size of seq is lower than n, result will be empty.
+     *
      * @throws IllegalArgumentException if n <= 0
      */
     default Seq<Seq<T>> eachCons(int n) {
@@ -145,6 +147,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Similar with {@link #eachCons(int)}, but instead of to return the transformed seq, it iterates the transformed seq and do action.
+     *
      * @throws IllegalArgumentException if n <= 0
      */
     default void forEachCons(int n, Consumer<Seq<T>> action) {
@@ -158,6 +161,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Sort the seq by the comparator, resulting a new seq, without changing the original seq.
+     *
      * @return A new seq sorted
      */
     default Seq<T> order(Comparator<? super T> comparator) {
@@ -168,6 +172,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Sort the seq itself by the comparator.
+     *
      * @return The seq itself after sorting
      */
     default Seq<T> order$(Comparator<? super T> comparator) {
@@ -177,6 +182,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Reduce duplicated elements, keeping only the first occurrence, resulting a new seq.
+     *
      * @return A new seq reduced
      */
     default Seq<T> distinct() {
@@ -185,6 +191,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Reduce duplicated elements, keeping only the first occurrence.
+     *
      * @return The seq itself after reduced
      */
     default Seq<T> distinct$() {
@@ -196,6 +203,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Find the first element which satisfy the condition.
+     *
      * @return The element, or null if no element found.
      */
     default T findFirst(Predicate<T> condition) {
@@ -207,8 +215,10 @@ public interface Seq<T> extends List<T> {
         }
         return null;
     }
+
     /**
      * Find the last element which satisfy the condition.
+     *
      * @return The element, or null if no element found.
      */
     default T findLast(Predicate<T> condition) {
@@ -220,8 +230,10 @@ public interface Seq<T> extends List<T> {
         }
         return null;
     }
+
     /**
      * Find the index of the first element which satisfy the condition.
+     *
      * @return The index, or -1 if no element found.
      */
     default int findFirstIndex(Predicate<T> condition) {
@@ -233,8 +245,10 @@ public interface Seq<T> extends List<T> {
         }
         return -1;
     }
+
     /**
      * Find the index of the last element which satisfy the condition.
+     *
      * @return The index, or -1 if no element found.
      */
     default int findLastIndex(Predicate<T> condition) {
@@ -366,6 +380,7 @@ public interface Seq<T> extends List<T> {
         Collection<T> col = Arrays.asList(values);
         return new SeqImpl<>(col);
     }
+
     /**
      * Create a empty new seq.
      */
@@ -382,10 +397,9 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Create a new seq which is the sub seq of the current one.
-     * @param fromIndex
-     * The start index, inclusive.
-     * @param toIndex
-     * The end index, exclusive.
+     *
+     * @param fromIndex The start index, inclusive.
+     * @param toIndex   The end index, exclusive.
      */
     default Seq<T> subSeq(int fromIndex, int toIndex) {
         return new SeqImpl<>(this.subList(fromIndex, toIndex));

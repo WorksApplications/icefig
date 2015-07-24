@@ -1,7 +1,7 @@
 package com.worksap.fig.lang;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by liuyang on 7/23/15.
