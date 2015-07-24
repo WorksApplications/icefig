@@ -28,6 +28,22 @@ public interface Seq<T> extends List<T> {
         return join("");
     }
 
+    default T first() {
+        return get(0);
+    }
+
+    default T second() {
+        return get(1);
+    }
+
+    default T third() {
+        return get(2);
+    }
+
+    default T last() {
+        return get(size() - 1);
+    }
+
     default String join(CharSequence delimiter) {
         return join(delimiter, "", "");
     }

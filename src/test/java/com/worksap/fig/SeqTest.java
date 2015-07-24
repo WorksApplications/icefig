@@ -130,4 +130,15 @@ public class SeqTest {
         assertEquals("1,2,3", seq.join(","));
         assertEquals("!1-2-3!", seq.join("-", "!", "!"));
     }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testFirstLast() {
+        Seq<Integer> seq = Seq.of(1, 2, 3);
+        assertEquals((Integer) 1, seq.first());
+        assertEquals((Integer) 2, seq.second());
+        assertEquals((Integer) 3, seq.third());
+        assertEquals((Integer) 3, seq.last());
+        seq.clear();
+        seq.first();
+    }
 }
