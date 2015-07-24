@@ -38,7 +38,8 @@ public class SeqTest {
 
     @Test
     public void testSample() {
-        assertEquals(1, Seq.of(1, 2, 3).sample().size());
+        assertNull(Seq.newSeq().sample());
+        assertEquals(0, Seq.newSeq().sample(1).size());
         assertEquals(2, Seq.of(1, 2, 3).sample(2).size());
         assertEquals(3, Seq.of(1, 2, 3).sample(3).size());
         assertEquals(3, Seq.of(1, 2, 3).sample(4).size());
@@ -137,8 +138,6 @@ public class SeqTest {
     public void testFirstLast() {
         Seq<Integer> seq = Seq.of(1, 2, 3);
         assertEquals((Integer) 1, seq.first());
-        assertEquals((Integer) 2, seq.second());
-        assertEquals((Integer) 3, seq.third());
         assertEquals((Integer) 3, seq.last());
         seq.clear();
         seq.first();
