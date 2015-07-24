@@ -43,7 +43,7 @@ Fig targets on "small data" operations within application logic, to provide simp
 
 ### No utilities
 
-In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for the missing methods in starndard library. While in Fig, we make an object oriented and functional way to free you from tedious code.
+In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for the missing methods in standard library. While in Fig, we make an object oriented and functional way to free you from tedious code.
 
 ### Zero dependency
 
