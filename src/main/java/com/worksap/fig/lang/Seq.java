@@ -5,6 +5,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by liuyang on 7/23/15.
@@ -21,6 +22,26 @@ public interface Seq<T> extends List<T> {
         Seq<R> result = new SeqImpl<>();
         this.forEachWithIndex((s, i) -> result.add(func.apply(s, i)));
         return result;
+    }
+
+    default String join() {
+        return join("");
+    }
+
+    default String join(CharSequence delimiter) {
+        return join(delimiter, "", "");
+    }
+
+    default String join(CharSequence delimiter, CharSequence prefix, CharSequence suffix) {
+        StringBuilder stringBuilder = new StringBuilder(prefix);
+        forEachWithIndex((t, i) -> {
+            if (i != 0) {
+                stringBuilder.append(delimiter);
+            }
+            stringBuilder.append(t);
+        });
+        stringBuilder.append(suffix);
+        return stringBuilder.toString();
     }
 
     default Seq<T> sample() {
@@ -49,7 +70,7 @@ public interface Seq<T> extends List<T> {
         }
     }
 
-    default Seq<Seq<T>> eachCons(int n){
+    default Seq<Seq<T>> eachCons(int n) {
         if (n <= 0) {
             throw new IllegalArgumentException("n should be positive number!");
         }
@@ -60,18 +81,18 @@ public interface Seq<T> extends List<T> {
         return result;
     }
 
-    default Seq<T> order(Comparator<? super T> comparator){
+    default Seq<T> order(Comparator<? super T> comparator) {
         Seq<T> copy = new SeqImpl<>(this);
         Collections.sort(copy, comparator);
         return copy;
     }
 
-    default Seq<T> order$(Comparator<? super T> comparator){
+    default Seq<T> order$(Comparator<? super T> comparator) {
         Collections.sort(this, comparator);
         return this;
     }
 
-    default Seq<T> distinct(){
+    default Seq<T> distinct() {
         return new SeqImpl<>(new LinkedHashSet<>(this));
     }
 
@@ -90,7 +111,7 @@ public interface Seq<T> extends List<T> {
         return new SeqImpl<>(col);
     }
 
-    static <T> Seq<T> newSeq(){
+    static <T> Seq<T> newSeq() {
         return new SeqImpl<>();
     }
 

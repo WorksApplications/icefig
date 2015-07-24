@@ -122,4 +122,12 @@ public class SeqTest {
         assertArrayEquals(new Integer[]{3, 2, 1}, seq.order$((a, b) -> b - a).toArray());
         assertArrayEquals(new Integer[]{3, 2, 1}, seq.toArray());
     }
+
+    @Test
+    public void testJoin() {
+        Seq<Integer> seq = Seq.of(1, 2, 3);
+        assertEquals("123", seq.join());
+        assertEquals("1,2,3", seq.join(","));
+        assertEquals("!1-2-3!", seq.join("-", "!", "!"));
+    }
 }
