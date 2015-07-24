@@ -29,6 +29,12 @@ public class SeqTest {
         assertArrayEquals(new String[]{"x1", "x2", "x3"}, Seq.of(1, 2, 3).map(i -> "x" + i).toArray());
     }
 
+
+    @Test
+    public void testMapWithIndex() {
+        assertArrayEquals(new String[]{"a1", "b2", "c3"}, Seq.of("a", "b", "c").mapWithIndex((s, i) -> s + (i + 1)).toArray());
+    }
+
     @Test
     public void testSample() {
         assertEquals(1, Seq.of(1, 2, 3).sample().size());
@@ -65,16 +71,17 @@ public class SeqTest {
         });
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testEachCons() {
         final Seq<String> seq = Seq.of("a", "b", "c", "d");
         assertArrayEquals(new Object[]{Seq.of("a", "b"), Seq.of("b", "c"), Seq.of("c", "d")}, seq.eachCons(2).toArray());
         assertArrayEquals(new Object[]{Seq.of("a", "b", "c"), Seq.of("b", "c", "d")}, seq.eachCons(3).toArray());
         assertArrayEquals(new Object[]{Seq.of("a", "b", "c", "d")}, seq.eachCons(4).toArray());
         assertArrayEquals(new Object[]{}, seq.eachCons(5).toArray());
+        seq.eachCons(-1);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testForEachCons() {
         final Seq<String> seq = Seq.of("a", "b", "c", "d");
         Seq<Seq<String>> result = Seq.newSeq();
@@ -89,6 +96,7 @@ public class SeqTest {
         result.clear();
         seq.forEachCons(5, result::add);
         assertArrayEquals(new Object[]{}, result.toArray());
+        seq.eachCons(0);
     }
 
     @Test

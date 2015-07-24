@@ -11,14 +11,6 @@ class SeqImpl<T> extends ArrayList<T> implements Seq<T> {
         super(c);
     }
 
-    SeqImpl(int initialCapacity) {
-        super(initialCapacity);
-    }
-
     SeqImpl() {
-    }
-
-    public Seq<T> subList(int fromIndex, int toIndex){
-        return new SeqImpl<>(super.subList(fromIndex, toIndex));
     }
 }

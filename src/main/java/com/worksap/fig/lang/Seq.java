@@ -2,6 +2,7 @@ package com.worksap.fig.lang;
 
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -16,13 +17,19 @@ public interface Seq<T> extends List<T> {
         return result;
     }
 
+    default <R> Seq<R> mapWithIndex(BiFunction<T, Integer, R> func) {
+        Seq<R> result = new SeqImpl<>();
+        this.forEachWithIndex((s, i) -> result.add(func.apply(s, i)));
+        return result;
+    }
+
     default Seq<T> sample() {
         return sample(1);
     }
 
     default Seq<T> sample(int n) {
         Seq<T> shuffled = shuffle();
-        return shuffled.subList(0, Math.min(n, this.size()));
+        return shuffled.subSeq(0, Math.min(n, this.size()));
     }
 
     default Seq<T> shuffle() {
@@ -48,7 +55,7 @@ public interface Seq<T> extends List<T> {
         }
         Seq<Seq<T>> result = new SeqImpl<>();
         for (int i = 0; i <= this.size() - n; i++) {
-            result.add(this.subList(i, i + n));
+            result.add(this.subSeq(i, i + n));
         }
         return result;
     }
@@ -73,7 +80,7 @@ public interface Seq<T> extends List<T> {
             throw new IllegalArgumentException("n should be positive number!");
         }
         for (int i = 0; i <= this.size() - n; i++) {
-            action.accept(this.subList(i, i + n));
+            action.accept(this.subSeq(i, i + n));
         }
     }
 
@@ -92,5 +99,7 @@ public interface Seq<T> extends List<T> {
     }
 
     //override return type
-    Seq<T> subList(int fromIndex, int toIndex);
+    default Seq<T> subSeq(int fromIndex, int toIndex) {
+        return new SeqImpl<>(this.subList(fromIndex, toIndex));
+    }
 }
