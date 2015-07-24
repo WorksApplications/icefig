@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Fig by wapatesh</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Fig</h1>
+      <h2 class="project-tagline">Java lambda supplement</h2>
+      <a href="https://github.com/wapatesh/fig" class="btn">View on GitHub</a>
+      <a href="https://github.com/wapatesh/fig/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/wapatesh/fig/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
+
+<p>Java 8 delivered lambda expressions, but without the enhancement of basic libraries like List, Map, String, which makes
+lambda expression still not delightful.</p>
+
+<p>Borrowered from Ruby basic library, Fig intends to supply the missing.</p>
+
+<h2>
+<a id="quick-scan" class="anchor" href="#quick-scan" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick Scan</h2>
+
+<div class="highlight highlight-java"><pre><span class="pl-k">Seq&lt;<span class="pl-smi">Integer</span>&gt;</span> seq <span class="pl-k">=</span> <span class="pl-smi">Seq</span><span class="pl-k">.</span>of(<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>);
+seq<span class="pl-k">.</span>shuffle(); <span class="pl-c">// copy to a new seq and shuffle it</span>
+seq<span class="pl-k">.</span>shuffle$(); <span class="pl-c">// shuffle the original seq</span>
+seq<span class="pl-k">.</span>forEachWithIndex((value, idx) <span class="pl-k">-</span><span class="pl-k">&gt;</span> {
+    <span class="pl-c">// (1, 0)  (2, 1)  (3, 2)</span>
+});
+seq<span class="pl-k">.</span>forEachCons(<span class="pl-c1">2</span>, (values)<span class="pl-k">-</span><span class="pl-k">&gt;</span>{
+    <span class="pl-c">// [1,2]  [2, 3]</span>
+});
+
+seq<span class="pl-k">.</span>join(<span class="pl-s"><span class="pl-pds">"</span>-<span class="pl-pds">"</span></span>); <span class="pl-c">//"1-2-3"</span>
+
+seq<span class="pl-k">.</span>map(a <span class="pl-k">-</span><span class="pl-k">&gt;</span> a<span class="pl-k">+</span> <span class="pl-c1">1</span>)<span class="pl-k">.</span>distinct()<span class="pl-k">.</span>reverse()<span class="pl-k">.</span>join()</pre></div>
+
+<h2>
+<a id="concepts" class="anchor" href="#concepts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Concepts</h2>
+
+<h3>
+<a id="not-stream" class="anchor" href="#not-stream" aria-hidden="true"><span class="octicon octicon-link"></span></a>Not stream</h3>
+
+<p>Fig is different from Stream, and implemented without Stream. While, it is simpler concept -- supplement methods on basic library.</p>
+
+<p>Stream has several characteristics:</p>
+
+<ol>
+<li>Trends to process each element independently</li>
+<li>Infinite that we can not get the size</li>
+<li>Designed for large data flow performance</li>
+</ol>
+
+<p>Thus, Stream may not be able to support operations related with the size of it, nor operations involving multiple or even random elements.</p>
+
+<p>Fig targets on "small data" operations within application logic, to provide simple &amp; beaufitul code writing about String, List, Map operation &amp; transformation.</p>
+
+<h3>
+<a id="no-utilities" class="anchor" href="#no-utilities" aria-hidden="true"><span class="octicon octicon-link"></span></a>No utilities</h3>
+
+<p>In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for the missing methods in standard library. While in Fig, we make an object oriented and functional way to free you from tedious code.</p>
+
+<h3>
+<a id="zero-dependency" class="anchor" href="#zero-dependency" aria-hidden="true"><span class="octicon octicon-link"></span></a>Zero dependency</h3>
+
+<p>Fig has no external dependency except JDK 8.</p>
+
+<h3>
+<a id="conventions" class="anchor" href="#conventions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conventions</h3>
+
+<p>Fig uses conventions on method names similar with Ruby. If there is a pair of methods <code>name, name$</code>, method ends with <code>$</code> means calling this method will change the object itself, while calling the other won't.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/wapatesh/fig">Fig</a> is maintained by <a href="https://github.com/wapatesh">wapatesh</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
