@@ -34,8 +34,13 @@ public class CharSeq{
     public boolean isEmpty(){
         return str.isEmpty();
     }
+
+
+    /**
+     * Make the first letter upper case, and all other letter lower case.
+     */
     public CharSeq capitalize() {
-        return isEmpty() ? this : this.subSeq(0, 1).toUpperCase().suffix(this.subSeq(1));
+        return isEmpty() ? this : this.subSeq(0, 1).toUpperCase().suffix(this.subSeq(1).toLowerCase());
     }
 
     public CharSeq toUpperCase() {
