@@ -57,3 +57,7 @@ Fig uses conventions on method names similar with Ruby. If there is a pair of me
 ## License
 
 [Apache License 2.0](LICENSE)
+
+## Contribution
+
+Feel free to submit issues & PRs
