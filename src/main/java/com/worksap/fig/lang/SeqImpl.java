@@ -14,4 +14,14 @@ class SeqImpl<T> extends ArrayList<T> implements Seq<T> {
     SeqImpl() {
     }
 
+    SeqImpl(int size) {
+        this(size, null);
+    }
+    SeqImpl(int size, T defaultValue) {
+        super(size);
+        while (size > 0) {
+            this.add(defaultValue);
+            size--;
+        }
+    }
 }

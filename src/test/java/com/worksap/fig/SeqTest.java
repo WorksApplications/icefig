@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -224,6 +225,7 @@ public class SeqTest {
         Seq<Integer> seq1$ = seq$.removeIf$((e, i) -> (e > 1 && i % 2 == 0));
         assertEquals(Seq.of(1, 2), seq$);
         assertEquals(Seq.of(1, 2), seq1$);
+        assertEquals(seq$, seq1$);
     }
 
     @Test
@@ -236,5 +238,81 @@ public class SeqTest {
         Seq<Integer> seq1$ = seq.getIf(e -> e > 1);
         assertEquals(Seq.of(1, 2, 3), seq);
         assertEquals(Seq.of(2, 3), seq1$);
+
+    }
+
+    @Test
+    public void testGet() {
+        Seq<Integer> seq = Seq.of(1, 2, 3);
+        assertEquals(new Integer(1), seq.get(0));
+        assertEquals(new Integer(100), seq.get(-1, 100));
+        assertEquals(new Integer(100), seq.get(4, 100));
+    }
+
+    @Test
+    public void testNewSeq() {
+        assertEquals(Seq.of(), Seq.newSeq());
+        Seq<Integer> seq = Seq.newSeq();
+        seq.add(null);
+        assertEquals(seq, Seq.newSeq(1));
+        assertEquals(Seq.of(1), Seq.newSeq(1, 1));
+        assertEquals(Seq.of(0, 1, 4, 9), Seq.newSeq(4, i -> i * i));
+        Seq<Seq<Integer>> seqs = Seq.newSeq(2, seq);
+        assertEquals(null, seqs.get(1).get(0));
+        seqs.get(0).set(0, 1);
+        assertEquals(new Integer(1), seqs.get(0 ).get(0));
+        assertEquals(new Integer(1), seqs.get(1).get(0));
+
+    }
+
+    @Test
+    public void testRepeat() {
+        Seq<Integer> seq = Seq.of(1, 2);
+        assertEquals(Seq.of(1, 2, 1, 2), seq.repeat(2));
+        assertEquals(Seq.of(1, 2), seq);
+        assertEquals(Seq.of(), seq.repeat(0));
+        assertEquals(Seq.of(1, 2), seq);
+
+        seq = Seq.of(1, 2);
+        assertEquals(Seq.of(1, 2), seq.repeat$(1));
+        assertEquals(Seq.of(1, 2, 1, 2), seq.repeat$(2));
+        assertEquals(Seq.of(1, 2, 1, 2), seq);
+        assertEquals(Seq.of(), seq.repeat$(0));
+        assertEquals(Seq.of(), seq);
+    }
+
+    @Test
+    public void testAt() {
+        Seq<Integer> seq = Seq.of(1, 2, 3, 4, 5, 6);
+        assertEquals(new Integer(1), seq.at(0));
+        assertEquals(new Integer(6), seq.at(5));
+        assertEquals(new Integer(6), seq.at(-1));
+        assertEquals(new Integer(1), seq.at(-6));
+//        seq.at(6);
+//        seq.at(-7);
+    }
+
+    @Test
+    public void testCompact() {
+        Seq<Integer> seq = Seq.of(1, 2, null, 3, 4, 5, null);
+        assertEquals(Seq.of(1, 2, 3, 4, 5), seq.compact());
+        assertEquals(Seq.of(1, 2, null, 3, 4, 5, null), seq);
+        assertEquals(Seq.of(1, 2, 3, 4, 5), seq.compact$());
+        assertEquals(Seq.of(1, 2, 3, 4, 5), seq);
+    }
+    @Test
+    public void testCount() {
+        Seq<Integer> seq = Seq.of(1, 1, null, 2, null, 3, 1, 4);
+        assertEquals(3, seq.count(1));
+        assertEquals(1, seq.count(2));
+        assertEquals(2, seq.count(e -> e == null));
+        assertEquals(3, seq.count(e -> e != null && e > 1));
+        assertEquals(2, seq.count((e, i) -> e != null && e > 1 && i < seq.size() - 1));
+    }
+    @Test
+    public void test() {
+        Seq<Integer> seq = Seq.of(1);
+        seq.clear();
+
     }
 }
