@@ -1,4 +1,4 @@
-# Fig
+# Fig [![Build Status](https://travis-ci.org/wapatesh/fig.svg)](https://travis-ci.org/wapatesh/fig)
 
 Java lambda supplement
 
