@@ -53,4 +53,9 @@ public class CharSeq{
     public static CharSeq of(String str) {
         return new CharSeq(str);
     }
+
+    @Override
+    public String toString() {
+        return str;
+    }
 }

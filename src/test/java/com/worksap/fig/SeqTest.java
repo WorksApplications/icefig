@@ -128,9 +128,9 @@ public class SeqTest {
     @Test
     public void testJoin() {
         Seq<Integer> seq = Seq.of(1, 2, 3);
-        assertEquals("123", seq.join());
-        assertEquals("1,2,3", seq.join(","));
-        assertEquals("!1-2-3!", seq.join("-", "!", "!"));
+        assertEquals("123", seq.join().toString());
+        assertEquals("1,2,3", seq.join(",").toString());
+        assertEquals("!1-2-3!", seq.join("-", "!", "!").toString());
 
     }
 
