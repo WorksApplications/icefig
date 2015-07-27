@@ -13,6 +13,6 @@ public class CharSeqTest {
     public void testCapitalize(){
         assertEquals("", CharSeq.of("").capitalize().toString());
         assertEquals("Abc", CharSeq.of("abc").capitalize().toString());
-        assertEquals("abcd EFG", CharSeq.of("Abcd efg").capitalize().toString());
+        assertEquals("Abcd efg", CharSeq.of("abcd EFG").capitalize().toString());
     }
 }
