@@ -52,3 +52,8 @@ Fig has no external dependency except JDK 8.
 ### Conventions
 
 Fig uses conventions on method names similar with Ruby. If there is a pair of methods `name, name$`, method ends with `$` means calling this method will change the object itself, while calling the other won't.
+
+
+## License
+
+[Apache License 2.0](LICENSE)
