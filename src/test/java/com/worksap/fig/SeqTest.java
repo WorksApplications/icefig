@@ -390,4 +390,16 @@ public class SeqTest {
         assertEquals(Seq.of(1), Seq.of(1).reverse());
         assertEquals(Seq.of(1, null), Seq.of(null, 1).reverse());
     }
+
+    @Test
+    public void testGetIf() {
+        Seq<Integer> seq = Seq.of(1, 2, 3);
+        Seq<Integer> seq1 = seq.getIf((e, i) -> (e > 1 && i % 2 == 0));
+        assertEquals(Seq.of(1, 2, 3), seq);
+        assertEquals(Seq.of(3), seq1);
+
+        Seq<Integer> seq1$ = seq.getIf(e -> e > 1);
+        assertEquals(Seq.of(1, 2, 3), seq);
+        assertEquals(Seq.of(2, 3), seq1$);
+    }
 }
