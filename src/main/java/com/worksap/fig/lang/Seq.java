@@ -46,7 +46,7 @@ public interface Seq<T> extends List<T> {
     /**
      * Convert all elements into String, and connect each String together to a single String, following the same order of the seq.
      */
-    default String join() {
+    default CharSeq join() {
         return join("");
     }
 
@@ -54,7 +54,7 @@ public interface Seq<T> extends List<T> {
      * Convert all elements into String, and connect each String together to a single String, following the same order of the seq.
      * Insert a delimiter at each connection point.
      */
-    default String join(CharSequence delimiter) {
+    default CharSeq join(CharSequence delimiter) {
         return join(delimiter, "", "");
     }
 
@@ -62,7 +62,7 @@ public interface Seq<T> extends List<T> {
      * Convert all elements into String, and connect each String together to a single String, following the same order of the seq.
      * Insert a delimiter at each connection point. Add prefix and suffix to the final result.
      */
-    default String join(CharSequence delimiter, CharSequence prefix, CharSequence suffix) {
+    default CharSeq join(CharSequence delimiter, CharSequence prefix, CharSequence suffix) {
         StringBuilder stringBuilder = new StringBuilder(prefix);
         forEachWithIndex((t, i) -> {
             if (i != 0) {
@@ -71,7 +71,7 @@ public interface Seq<T> extends List<T> {
             stringBuilder.append(t);
         });
         stringBuilder.append(suffix);
-        return stringBuilder.toString();
+        return CharSeq.of(stringBuilder.toString());
     }
 
     /**
