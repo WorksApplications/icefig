@@ -1,6 +1,6 @@
 # Fig [![Build Status](https://travis-ci.org/wapatesh/fig.svg)](https://travis-ci.org/wapatesh/fig)
 
-Java lambda supplement
+Java elegant supplement
 
 Java 8 delivered lambda expressions, but without the enhancement of basic libraries like List, Map, String, which makes
 lambda expression still not delightful.
