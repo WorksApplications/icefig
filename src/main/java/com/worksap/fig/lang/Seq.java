@@ -404,4 +404,42 @@ public interface Seq<T> extends List<T> {
     default Seq<T> subSeq(int fromIndex, int toIndex) {
         return new SeqImpl<>(this.subList(fromIndex, toIndex));
     }
+
+    /**
+     * Remove elements which satisfy the condition, resulting a new seq without changing the original one.
+     *
+     * @return The new seq after the change
+     */
+    default Seq<T> removeIf(BiPredicate<T, Integer> condition) {
+        Seq<T> copy = new SeqImpl<>();
+        this.forEachWithIndex((e, i) -> {
+            if (!condition.test(e, i))
+                copy.add(e);
+        });
+        return copy;
+    }
+
+    /**
+     * Remove elements which satisfy the condition.
+     *
+     * @return The seq itself after the change
+     */
+    default Seq<T> removeIf$(BiPredicate<T, Integer> condition) {
+        Seq<T> toBeRemoved = new SeqImpl<>();
+        this.forEachWithIndex((e, i) -> {
+            if (condition.test(e, i))
+                toBeRemoved.add(e);
+        });
+        this.removeAll(toBeRemoved);
+        return this;
+    }
+
+    default Seq<T> getIf(BiPredicate<T, Integer> condition) {
+        Seq<T> copy = new SeqImpl<>();
+        this.forEachWithIndex((e, i) -> {
+            if (condition.test(e, i))
+                copy.add(e);
+        });
+        return copy;
+    }
 }

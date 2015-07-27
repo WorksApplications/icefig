@@ -212,4 +212,17 @@ public class SeqTest {
         seq.preConcat(4, 5);
         assertEquals(Seq.of(1, 2, 3), seq);
     }
+
+    @Test
+    public void testRemoveIf() {
+        Seq<Integer> seq = Seq.of(1, 2, 3);
+        Seq<Integer> seq1 = seq.removeIf((e, i) -> (e > 1 && i % 2 == 0));
+        assertEquals(Seq.of(1, 2, 3), seq);
+        assertEquals(Seq.of(1, 2), seq1);
+
+        Seq<Integer> seq$ = Seq.of(1, 2, 3);
+        Seq<Integer> seq1$ = seq$.removeIf$((e, i) -> (e > 1 && i % 2 == 0));
+        assertEquals(Seq.of(1, 2), seq$);
+        assertEquals(Seq.of(1, 2), seq1$);
+    }
 }
