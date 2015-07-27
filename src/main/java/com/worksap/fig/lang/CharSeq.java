@@ -1,5 +1,7 @@
 package com.worksap.fig.lang;
 
+import java.util.Objects;
+
 /**
  * Created by liuyang on 7/27/15.
  */
@@ -7,10 +9,7 @@ public class CharSeq{
     private final String str;
 
     CharSeq(String str) {
-        if(str == null) {
-            throw new IllegalArgumentException("str should not be null");
-        }
-        this.str = str;
+        this.str = Objects.requireNonNull(str);
     }
 
     public CharSeq subSeq(int fromIndex, int toIndex) {
