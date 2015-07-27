@@ -434,6 +434,25 @@ public interface Seq<T> extends List<T> {
         return this;
     }
 
+    /**
+     * Get elements which satisfy the condition, resulting a new seq without changing the original one.
+     *
+     * @return The new seq after the change
+     */
+    default Seq<T> getIf(Predicate<T> condition) {
+        Seq<T> copy = new SeqImpl<>();
+        this.forEach(e -> {
+            if (condition.test(e))
+                copy.add(e);
+        });
+        return copy;
+    }
+
+    /**
+     * Get elements which satisfy the condition, resulting a new seq without changing the original one.
+     *
+     * @return The new seq after the change
+     */
     default Seq<T> getIf(BiPredicate<T, Integer> condition) {
         Seq<T> copy = new SeqImpl<>();
         this.forEachWithIndex((e, i) -> {
