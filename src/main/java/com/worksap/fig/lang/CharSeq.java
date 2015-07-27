@@ -3,6 +3,7 @@ package com.worksap.fig.lang;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,10 +19,25 @@ public class CharSeq {
     }
 
     public CharSeq subSeq(int fromIndex, int toIndex) {
-        return new CharSeq(str.substring(fromIndex, toIndex));
+        if (this.isEmpty()) {
+            return this;
+        }
+        int from = fromIndex, to = toIndex;
+        if (fromIndex < 0) {
+            from = 0;
+        } else if (fromIndex >= str.length()) {
+            return CharSeq.of("");
+        }
+
+        if (toIndex < 0) {
+            return CharSeq.of("");
+        } else if (toIndex > str.length()) {
+            toIndex = str.length();
+        }
+        return new CharSeq(str.substring(from, toIndex));
     }
     public CharSeq subSeq(int fromIndex) {
-        return new CharSeq(str.substring(fromIndex));
+        return this.subSeq(fromIndex, str.length());
     }
 
     public CharSeq concat(CharSeq another){
@@ -122,13 +138,13 @@ public class CharSeq {
 
     public CharSeq eachChar(Consumer<Character> action) {
         Objects.requireNonNull(action);
-        char[] chars = str.toCharArray();
-        Character[] characters = new Character[str.length()];
-        for (int i = 0; i < characters.length; i++) {
-            characters[i] = chars[i];
-        }
-        Seq<Character> characterSeq = Seq.of(characters);
-        characterSeq.forEach(action);
+        this.getCharacterSequence().forEach(action);
+        return this;
+    }
+
+    public CharSeq eachCharWithIndex(BiConsumer<Character, Integer> action) {
+        Objects.requireNonNull(action);
+        this.getCharacterSequence().forEachWithIndex(action);
         return this;
     }
 
@@ -202,5 +218,14 @@ public class CharSeq {
         } else {
             return Seq.of(CharSeq.of(str), CharSeq.of(""), CharSeq.of(""));
         }
+    }
+
+    public Seq<Character> getCharacterSequence() {
+        char[] chars = str.toCharArray();
+        Character[] characters = new Character[str.length()];
+        for (int i = 0; i < characters.length; i++) {
+            characters[i] = chars[i];
+        }
+       return Seq.of(characters);
     }
 }

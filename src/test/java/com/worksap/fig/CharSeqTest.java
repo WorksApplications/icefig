@@ -1,6 +1,7 @@
 package com.worksap.fig;
 
 import com.worksap.fig.lang.CharSeq;
+import com.worksap.fig.lang.Seq;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -14,7 +15,14 @@ public class CharSeqTest {
         CharSeq seq = CharSeq.of("Father Charles gets down and ends battle.");
         assertEquals(CharSeq.of("Father"), seq.subSeq(0, 6));
         assertEquals(CharSeq.of("Charles "), seq.subSeq(7, 15));
+        assertEquals(CharSeq.of("Charles gets down and ends battle."), seq.subSeq(7, 41));
+        assertEquals(CharSeq.of("Charles gets down and ends battle."), seq.subSeq(7, 42));
         assertEquals(CharSeq.of("Charles gets down and ends battle."), seq.subSeq(7));
+        assertEquals(CharSeq.of("."), seq.subSeq(40));
+        assertEquals(CharSeq.of(""), seq.subSeq(41));
+        assertEquals(CharSeq.of(""), seq.subSeq(0, -10));
+        assertEquals(CharSeq.of("Father Charles gets down and ends battle."), seq.subSeq(-1));
+        assertEquals(CharSeq.of("Father Cha"), seq.subSeq(-1, 10));
     }
 
     @Test
@@ -31,14 +39,15 @@ public class CharSeqTest {
         CharSeq seq = CharSeq.of("the quick brown fox jumps over a lazy dog");
         assertEquals(CharSeq.of("The quick brown fox jumps over a lazy dog"), seq.capitalize());
 
-        CharSeq emptySeq = CharSeq.of("");
-        assertEquals(CharSeq.of(""), emptySeq.capitalize());
+        assertEquals(CharSeq.of(""), CharSeq.of("").capitalize());
     }
 
     @Test
     public void testToLowerCase() {
         assertEquals(CharSeq.of("the quick brown fox jumps over a lazy dog"),
                 CharSeq.of("THE QUICK BROWN FOX JUMPS OVER A LAZY DOG").toLowerCase());
+
+        assertEquals(CharSeq.of(""), CharSeq.of("").toLowerCase());
     }
 
     @Test
@@ -52,11 +61,13 @@ public class CharSeqTest {
 
     @Test
     public void testReverse() {
+        assertEquals(CharSeq.of(""), CharSeq.of("").reverse());
         assertEquals(CharSeq.of("was i tac a ro rac a ti saw"), CharSeq.of("was it a car or a cat i saw").reverse());
     }
 
     @Test
     public void testSwapcase() {
+        assertEquals(CharSeq.of(""), CharSeq.of("").swapcase());
         assertEquals(CharSeq.of("tHe QuIck bRown fOx jumpS ovEr a laZy DoG"),
                 CharSeq.of("ThE qUiCK BrOWN FoX JUMPs OVeR A LAzY dOg").swapcase());
     }
@@ -67,11 +78,14 @@ public class CharSeqTest {
                 CharSeq.of("021 50242132").split("[- ]").toArray());
         assertArrayEquals(new CharSeq[]{CharSeq.of("021"), CharSeq.of("50242132")},
                 CharSeq.of("021-50242132").split("[- ]").toArray());
+        assertArrayEquals(new CharSeq[]{CharSeq.of("021_50242132")},
+                CharSeq.of("021_50242132").split("[- ]").toArray());
     }
 
     @Test
     public void testStartsWithAndEndsWith() {
         assertTrue(CharSeq.of("021 50242132").startsWith(CharSeq.of("021")));
+        assertFalse(CharSeq.of("021 50242132").startsWith(CharSeq.of("021 502421321")));
         assertFalse(CharSeq.of("021 50242132").endsWith(CharSeq.of("232")));
     }
 
@@ -141,4 +155,16 @@ public class CharSeqTest {
         assertFalse(CharSeq.of("ljxnegod@1  ").matches(regex));
         assertFalse(CharSeq.of("ljxnegod@1..com.cn").matches(regex));
     }
+
+    @Test
+    public void testEachLines() {
+        CharSeq seq = CharSeq.of("凤凰台上凤凰游，凤去台空江自流。\n" +
+                "吴宫花草埋幽径，晋代衣冠成古丘。\n" +
+                "三山半落青天外，二水中分白鹭洲。\n" +
+                "总为浮云能蔽日，长安不见使人愁。");
+        Seq<CharSeq> result = Seq.of();
+        seq.eachLine(result::add);
+        assertEquals(seq.getLines(), result);
+    }
+
 }
