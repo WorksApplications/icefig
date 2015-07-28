@@ -1,14 +1,35 @@
+
+plugins {
+    id "com.jfrog.bintray" version "1.2"
+}
+
 group 'com.worksap'
-version '0.0.1-SNAPSHOT'
+version '0.0.1'
 
 apply plugin: 'java'
 
 sourceCompatibility = 1.8
 
+//Turn off doclint http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
 repositories {
     mavenCentral()
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+if (hasProperty('env') && env == 'production') {
+    apply from: 'gradle/production.gradle'
+}
+
+if (hasProperty('env') && env == 'bintray') {
+    apply from: 'gradle/bintray.gradle'
 }

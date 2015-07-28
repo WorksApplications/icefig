@@ -8,6 +8,7 @@ import java.util.function.*;
  */
 public interface Seq<T> extends List<T> {
 
+
     /**
      * Transform each element of the seq into another value using the same function, resulting a new seq without changing the original one.
      *
@@ -382,10 +383,47 @@ public interface Seq<T> extends List<T> {
     }
 
     /**
-     * Create a empty new seq.
+     * Constructs an empty seq.
+     * @return an empty seq
      */
     static <T> Seq<T> newSeq() {
         return new SeqImpl<>();
+    }
+
+    /**
+     * Constructs a seq of the specified size. Each element in the seq is null.
+     * @param size the initial size of the seq
+     * @return the new seq
+     */
+    static <T> Seq<T> newSeq(int size) {
+        return new SeqImpl<>(size);
+    }
+
+    /**
+     * Constructs a seq of the specified size. Each element in the seq is defaultValue.
+     * @param size the initial size of the seq
+     * @param defaultValue the value of each element in the seq
+     * @return the new seq
+     */
+    static <T> Seq<T> newSeq(int size, T defaultValue) {
+        return new SeqImpl<>(size, defaultValue);
+    }
+
+    /**
+     * Constructs a seq of the specified size.
+     * Each element in this seq is created by passing the element’s index to the given {@link Function} and storing the return value.
+     * @param size the initial size of the seq
+     * @param func the {@link Function} used to create elements, accepting the element's index and returning a value to be stored into the seq.
+     * @return the new seq
+     * @throws NullPointerException if func is null
+     */
+    static <T> Seq<T> newSeq(int size, Function<Integer, T> func) {
+        Objects.requireNonNull(func);
+        Seq<T> seq = new SeqImpl<>(size);
+        for (int i = 0; i < size; i++) {
+            seq.set(i, func.apply(i));
+        }
+        return seq;
     }
 
     /**
@@ -406,11 +444,52 @@ public interface Seq<T> extends List<T> {
     }
 
     /**
-     * Remove elements which satisfy the condition, resulting a new seq without changing the original one.
-     *
-     * @return The new seq after the change
+     * Removes elements which satisfy the condition, resulting a new seq without changing the original one.
+     * @param condition the condition used to filter elements by passing the element,
+     *                  returns true if the element satisfies the condition, otherwise returns false.
+     * @return the new seq without elements which satisfy the condition
+     * @throws NullPointerException if condition is null
      */
-    default Seq<T> removeIf(BiPredicate<T, Integer> condition) {
+    default Seq<T> reject(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
+        Seq<T> copy = new SeqImpl<>();
+        this.forEach(e -> {
+            if (!condition.test(e))
+                copy.add(e);
+        });
+        return copy;
+    }
+
+    /**
+     * Removes elements which satisfy the condition on the seq itself.
+     * @param condition the condition used to filter elements by passing the element,
+     *                  returns true if the element satisfies the condition, otherwise returns false.
+     * @return the seq itself after removing elements which satisfy the condition
+     * @throws NullPointerException if condition is null
+     */
+    default Seq<T> reject$(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
+        final Iterator<T> each = iterator();
+        while (each.hasNext()) {
+            if (condition.test(each.next())) {
+                each.remove();
+            }
+        }
+        return this;
+    }
+
+    /**
+     * Removes elements which satisfy the condition, resulting a new seq without changing the original one.
+     * <p>
+     *     Similar to {@link #reject(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression
+     * </p>
+     * @param condition the condition used to filter elements by passing the element and its index,
+     *                  returns true if the element satisfies the condition, otherwise returns false.
+     * @return the new seq without elements which satisfy the condition
+     * @throws NullPointerException if condition is null
+     */
+    default Seq<T> rejectWithIndex(BiPredicate<T, Integer> condition) {
+        Objects.requireNonNull(condition);
         Seq<T> copy = new SeqImpl<>();
         this.forEachWithIndex((e, i) -> {
             if (!condition.test(e, i))
@@ -420,26 +499,37 @@ public interface Seq<T> extends List<T> {
     }
 
     /**
-     * Remove elements which satisfy the condition.
-     *
-     * @return The seq itself after the change
+     * Removes elements which satisfy the condition on the seq itself.
+     * <p>
+     *     Similar to {@link #reject$(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression
+     * </p>
+     * @param condition the condition used to filter elements by passing the element and its index,
+     *                  returns true if the element satisfies the condition, otherwise returns false.
+     * @return the seq itself after removing elements which satisfy the condition
+     * @throws NullPointerException if condition is null
      */
-    default Seq<T> removeIf$(BiPredicate<T, Integer> condition) {
-        Seq<T> toBeRemoved = new SeqImpl<>();
-        this.forEachWithIndex((e, i) -> {
-            if (condition.test(e, i))
-                toBeRemoved.add(e);
-        });
-        this.removeAll(toBeRemoved);
+    default Seq<T> rejectWithIndex$(BiPredicate<T, Integer> condition) {
+        Objects.requireNonNull(condition);
+        final Iterator<T> each = iterator();
+        int index = 0;
+        while (each.hasNext()) {
+            if (condition.test(each.next(), index)) {
+                each.remove();
+            }
+            index++;
+        }
         return this;
     }
 
     /**
-     * Get elements which satisfy the condition, resulting a new seq without changing the original one.
-     *
-     * @return The new seq after the change
+     * Gets elements which satisfy the condition, resulting a new seq without changing the original one.
+     * @param condition the condition used to filter elements by passing the element's index,
+     *                  returns true if the element satisfies the condition, otherwise returns false
+     * @return the new seq containing only the elements satisfying the condition
+     * @throws NullPointerException if condition is null
      */
-    default Seq<T> getIf(Predicate<T> condition) {
+    default Seq<T> filter(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
         Seq<T> copy = new SeqImpl<>();
         this.forEach(e -> {
             if (condition.test(e))
@@ -449,11 +539,17 @@ public interface Seq<T> extends List<T> {
     }
 
     /**
-     * Get elements which satisfy the condition, resulting a new seq without changing the original one.
-     *
-     * @return The new seq after the change
+     * Gets elements which satisfy the condition, resulting a new seq without changing the original one.
+     * <p>
+     *     Similar to {@link #filter(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression.
+     * </p>
+     * @param condition the condition used to filter elements by passing the element and its index,
+     *                  returns true if the element satisfies the condition, otherwise returns false
+     * @return the new seq containing only the elements satisfying the condition
+     * @throws NullPointerException if condition is null
      */
-    default Seq<T> getIf(BiPredicate<T, Integer> condition) {
+    default Seq<T> filterWithIndex(BiPredicate<T, Integer> condition) {
+        Objects.requireNonNull(condition);
         Seq<T> copy = new SeqImpl<>();
         this.forEachWithIndex((e, i) -> {
             if (condition.test(e, i))
@@ -461,4 +557,144 @@ public interface Seq<T> extends List<T> {
         });
         return copy;
     }
+
+    /**
+     * Returns a new seq built by concatenating the <tt>times</tt> copies of this seq.
+     * @param times times to repeat
+     * @return the new seq
+     * @throws IllegalArgumentException if <tt>times &lt;= 0</tt>
+     */
+    default Seq<T> repeat(int times) {
+        if (times <= 0)
+            throw new IllegalArgumentException("times must be a positive number.");
+        Seq<T> result = new SeqImpl<>();
+        while (times > 0) {
+            result.addAll(this);
+            times--;
+        }
+        return result;
+    }
+
+    /**
+     * Returns the seq itself by concatenating the <tt>times</tt> copies of self.
+     * @param times times to repeat
+     * @return the seq itself after the change
+     * @throws IllegalArgumentException if <tt>times &lt;= 0</tt>
+     */
+    default Seq<T> repeat$(int times) {
+        if (times <= 0)
+            throw new IllegalArgumentException("times must be a positive number.");
+        else if (times >= 2) {
+            times--;
+            Seq<T> copy = Seq.of(this);
+            while (times > 0) {
+                this.addAll(copy);
+                times--;
+            }
+        }
+        return this;
+    }
+    
+    /**
+     * Returns a copy of the seq itself with all null elements removed.
+     * @return the new seq with all null elements removed
+     */
+    default Seq<T> compact() {
+        return this.filter(e -> e != null);
+    }
+
+    /**
+     * Returns the seq itself with all null elements removed.
+     * @return the seq itself with all null elements removed
+     */
+    default Seq<T> compact$() {
+        removeIf(e -> e == null);
+        return this;
+    }
+
+    /**
+     * Returns the number of the specified element.
+     * @param element the element to count
+     * @return the number of the specified element
+     */
+    default int count(T element) {
+        int count = 0;
+        for (int i = 0; i < size(); i++){
+            if (element == null) {
+                if (this.get(i) == null)
+                    count++;
+            } else {
+                if (this.get(i) != null && this.get(i).equals(element))
+                    count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Returns the number of elements which satisfy the condition.
+     * @param condition the condition used to filter elements by passing the element,
+     *               returns true if the element satisfies the condition, otherwise returns false.
+     * @return the number of elements which satisfy the condition
+     * @throws NullPointerException if condition is null
+     */
+    default int countCondition(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
+        int count = 0;
+        for (int i = 0; i < size(); i++){
+            if (condition.test(this.get(i)))
+                count++;
+        }
+        return count;
+    }
+
+    /**
+     * Returns the number of elements which satisfy the condition.
+     * <p>
+     *     Similar to {@link #countCondition(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression.
+     * </p>
+     * @param condition the condition used to filter elements by passing the element and its index,
+     *               returns true if the element satisfies the condition, otherwise returns false.
+     * @return the number of elements which satisfy the condition
+     * @throws NullPointerException if condition is null
+     */
+    default int countConditionWithIndex(BiPredicate<T, Integer> condition) {
+        Objects.requireNonNull(condition);
+        int count = 0;
+        for (int i = 0; i < size(); i++){
+            if (condition.test(this.get(i), i))
+                count++;
+        }
+        return count;
+    }
+
+    /**
+     * Returns the element at index. A negative index counts from the end of self.
+     * If the index is out of range(<tt>index &lt; -size() || index &gt;= size()</tt>), a default value is returned.
+     * <p>
+     *     Similar to {@link #get(int)}. The difference between these two functions is how to solve the situation of illegal index.<br/>
+     *     {@link #get(int, Object)} returns a default value when the index is illegal. <br/>
+     *     {@link #get(int)} throws an exception({@link IndexOutOfBoundsException}) when the index is illegal.
+     * </p>
+     * @param index index of the element to return
+     * @param defaultValue default value to return when the index is out of range
+     * @return The element at the specified position in this seq, or default value if the index is out of range
+     */
+    default T get(int index, T defaultValue) {
+        if (index < -this.size() || index >= this.size()) {
+            return defaultValue;
+        }
+        return this.get(index);
+    }
+
+    /**
+     * Returns the element at index. A negative index counts from the end of self.
+     * @param index index of the element to return
+     * @return the element at the specified position in this seq
+     * @throws IndexOutOfBoundsException if the index is out of range
+     *         (<tt>index &gt;= size() || index &lt; -size()</tt>)
+     */
+    T get(int index);
+
+
 }

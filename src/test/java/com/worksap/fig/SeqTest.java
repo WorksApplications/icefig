@@ -128,9 +128,9 @@ public class SeqTest {
     @Test
     public void testJoin() {
         Seq<Integer> seq = Seq.of(1, 2, 3);
-        assertEquals("123", seq.join());
-        assertEquals("1,2,3", seq.join(","));
-        assertEquals("!1-2-3!", seq.join("-", "!", "!"));
+        assertEquals("123", seq.join().toString());
+        assertEquals("1,2,3", seq.join(",").toString());
+        assertEquals("!1-2-3!", seq.join("-", "!", "!").toString());
 
     }
 
@@ -213,28 +213,115 @@ public class SeqTest {
         assertEquals(Seq.of(1, 2, 3), seq);
     }
 
-    @Test
-    public void testRemoveIf() {
+    @Test(expected = NullPointerException.class)
+    public void testReject() {
         Seq<Integer> seq = Seq.of(1, 2, 3);
-        Seq<Integer> seq1 = seq.removeIf((e, i) -> (e > 1 && i % 2 == 0));
+        Seq<Integer> seq1 = seq.rejectWithIndex((e, i) -> (e > 1 && i % 2 == 0));
         assertEquals(Seq.of(1, 2, 3), seq);
         assertEquals(Seq.of(1, 2), seq1);
 
         Seq<Integer> seq$ = Seq.of(1, 2, 3);
-        Seq<Integer> seq1$ = seq$.removeIf$((e, i) -> (e > 1 && i % 2 == 0));
+        Seq<Integer> seq1$ = seq$.rejectWithIndex$((e, i) -> (e > 1 && i % 2 == 0));
         assertEquals(Seq.of(1, 2), seq$);
         assertEquals(Seq.of(1, 2), seq1$);
+        assertEquals(seq$, seq1$);
+
+        seq = Seq.of(1, 2, 3);
+        seq1 = seq.reject(e -> e > 1);
+        assertEquals(Seq.of(1, 2, 3), seq);
+        assertEquals(Seq.of(1), seq1);
+
+        seq$ = Seq.of(1, 2, 3);
+        seq1$ = seq$.reject$(e -> e > 1);
+        assertEquals(Seq.of(1), seq$);
+        assertEquals(Seq.of(1), seq1$);
+        assertEquals(seq$, seq1$);
+
+        seq.rejectWithIndex(null);
+
     }
 
-    @Test
-    public void testGetIf() {
+    @Test(expected = NullPointerException.class)
+    public void testFilter() {
         Seq<Integer> seq = Seq.of(1, 2, 3);
-        Seq<Integer> seq1 = seq.getIf((e, i) -> (e > 1 && i % 2 == 0));
+        Seq<Integer> seq1 = seq.filterWithIndex((e, i) -> (e > 1 && i % 2 == 0));
         assertEquals(Seq.of(1, 2, 3), seq);
         assertEquals(Seq.of(3), seq1);
 
-        Seq<Integer> seq1$ = seq.getIf(e -> e > 1);
+        Seq<Integer> seq1$ = seq.filter(e -> e > 1);
         assertEquals(Seq.of(1, 2, 3), seq);
         assertEquals(Seq.of(2, 3), seq1$);
+
+        seq.filter(null);
     }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGet() {
+        Seq<Integer> seq = Seq.of(1, 2, 3, 4, 5, 6);
+        assertEquals(new Integer(1), seq.get(0));
+        assertEquals(new Integer(6), seq.get(5));
+        assertEquals(new Integer(6), seq.get(-1));
+        assertEquals(new Integer(1), seq.get(-6));
+
+        assertEquals(new Integer(2), seq.get(1, 100));
+        assertEquals(new Integer(6), seq.get(-1, 100));
+        assertEquals(new Integer(100), seq.get(6, 100));
+        assertEquals(new Integer(100), seq.get(-7, 100));
+
+        seq.get(6);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testNewSeq() {
+        assertEquals(Seq.of(), Seq.newSeq());
+        Seq<Integer> seq = Seq.newSeq();
+        seq.add(null);
+        assertEquals(seq, Seq.newSeq(1));
+        assertEquals(Seq.of(1), Seq.newSeq(1, 1));
+        assertEquals(Seq.of(0, 1, 4, 9), Seq.newSeq(4, i -> i * i));
+        Seq<Seq<Integer>> seqs = Seq.newSeq(2, seq);
+        assertEquals(null, seqs.get(1).get(0));
+        seqs.get(0).set(0, 1);
+        assertEquals(new Integer(1), seqs.get(0).get(0));
+        assertEquals(new Integer(1), seqs.get(1).get(0));
+
+        assertEquals(10, Seq.newSeq(10).size());
+        assertEquals(10, Seq.newSeq(10, 1).size());
+        assertEquals(10, Seq.newSeq(10, i -> i + 1).size());
+
+        Seq.newSeq(10, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testRepeat() {
+        Seq<Integer> seq = Seq.of(1, 2);
+        assertEquals(Seq.of(1, 2, 1, 2, 1, 2, 1, 2), seq.repeat(4));
+        assertEquals(Seq.of(1, 2), seq);
+        assertEquals(Seq.of(1, 2), seq.repeat$(1));
+        assertEquals(Seq.of(1, 2, 1, 2, 1, 2, 1, 2), seq.repeat$(4));
+        assertEquals(Seq.of(1, 2, 1, 2, 1, 2, 1, 2), seq);
+        assertEquals(Seq.of(), seq.repeat$(0));
+    }
+
+    @Test
+    public void testCompact() {
+        Seq<Integer> seq = Seq.of(1, 2, null, 3, 4, 5, null);
+        assertEquals(Seq.of(1, 2, 3, 4, 5), seq.compact());
+        assertEquals(Seq.of(1, 2, null, 3, 4, 5, null), seq);
+        assertEquals(Seq.of(1, 2, 3, 4, 5), seq.compact$());
+        assertEquals(Seq.of(1, 2, 3, 4, 5), seq);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testCount() {
+        Seq<Integer> seq = Seq.of(1, 1, null, 2, null, 3, 1, 4);
+        assertEquals(3, seq.count(1));
+        assertEquals(1, seq.count(2));
+        assertEquals(2, seq.count(null));
+        assertEquals(2, seq.countCondition(e -> e == null));
+        assertEquals(3, seq.countCondition(e -> e != null && e > 1));
+        assertEquals(2, seq.countConditionWithIndex((e, i) -> e != null && e > 1 && i < seq.size() - 1));
+        seq.countConditionWithIndex(null);
+    }
+
 }

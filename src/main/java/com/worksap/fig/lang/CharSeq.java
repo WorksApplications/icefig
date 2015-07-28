@@ -1,5 +1,7 @@
 package com.worksap.fig.lang;
 
+import java.util.Objects;
+
 /**
  * Created by liuyang on 7/27/15.
  */
@@ -7,10 +9,7 @@ public class CharSeq{
     private final String str;
 
     CharSeq(String str) {
-        if(str == null) {
-            throw new IllegalArgumentException("str should not be null");
-        }
-        this.str = str;
+        this.str = Objects.requireNonNull(str);
     }
 
     public CharSeq subSeq(int fromIndex, int toIndex) {
@@ -34,8 +33,13 @@ public class CharSeq{
     public boolean isEmpty(){
         return str.isEmpty();
     }
+
+
+    /**
+     * Make the first letter upper case, and all other letter lower case.
+     */
     public CharSeq capitalize() {
-        return isEmpty() ? this : this.subSeq(0, 1).toUpperCase().suffix(this.subSeq(1));
+        return isEmpty() ? this : this.subSeq(0, 1).toUpperCase().suffix(this.subSeq(1).toLowerCase());
     }
 
     public CharSeq toUpperCase() {
@@ -52,5 +56,10 @@ public class CharSeq{
 
     public static CharSeq of(String str) {
         return new CharSeq(str);
+    }
+
+    @Override
+    public String toString() {
+        return str;
     }
 }

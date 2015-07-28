@@ -1,0 +1,72 @@
+
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from tasks.javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+def ossrhUsername = hasProperty('ossrhUsername')? ossrhUsername : System.getenv('ossrhUsername')
+def ossrhPassword = hasProperty('ossrhPassword')? ossrhPassword : System.getenv('ossrhPassword')
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'Fig'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'Java lambda supplement'
+                url 'http://wapatesh.github.io/fig/'
+
+                scm {
+                    connection 'scm:git:git@github.com:wapatesh/fig.git'
+                    developerConnection 'scm:git:git@github.com:wapatesh/fig.git'
+                    url 'git@github.com:wapatesh/fig.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'liuyang'
+                        name 'Liu Yang'
+                        email 'liu_yang@worksap.co.jp'
+                    }
+                }
+            }
+        }
+    }
+}

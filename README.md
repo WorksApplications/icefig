@@ -1,6 +1,6 @@
-# Fig
+# Fig [![Build Status](https://travis-ci.org/wapatesh/fig.svg)](https://travis-ci.org/wapatesh/fig)
 
-Java lambda supplement
+Java elegant supplement
 
 Java 8 delivered lambda expressions, but without the enhancement of basic libraries like List, Map, String, which makes
 lambda expression still not delightful.
@@ -52,3 +52,12 @@ Fig has no external dependency except JDK 8.
 ### Conventions
 
 Fig uses conventions on method names similar with Ruby. If there is a pair of methods `name, name$`, method ends with `$` means calling this method will change the object itself, while calling the other won't.
+
+
+## License
+
+[Apache License 2.0](LICENSE)
+
+## Contribution
+
+Feel free to submit issues & PRs
