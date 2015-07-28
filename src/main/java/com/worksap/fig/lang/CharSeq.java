@@ -78,61 +78,153 @@ public class CharSeq {
         return this.subSeq(fromIndex, str.length());
     }
 
+    /**
+     * Append string of the given CharSeq to this CharSeq
+     *
+     * @param   another   the given CharSeq
+     * @return  appended result
+     */
     public CharSeq concat(CharSeq another){
         return new CharSeq(str + another.str);
     }
 
+    /**
+     * Append the given string to this CharSeq
+     * @param   another   the given string
+     * @return  appended result
+     */
     public CharSeq concat(String another){
         return new CharSeq(str + another);
     }
 
+    /**
+     * Prepend string of the given CharSeq to this CharSeq
+     * @param   another   the given string
+     * @return  prepended result
+     */
     public CharSeq prepend(CharSeq another){
         return new CharSeq(another.str + str);
     }
 
+    /**
+     * Prepend the given string to this CharSeq
+     * @param   another   the given string
+     * @return  prepended result
+     */
     public CharSeq prepend(String another){
         return new CharSeq(another + str);
     }
 
+    /**
+     * Returns the length of string of this CharSeq.
+     * The length is equal to the number of Unicode
+     * code units in the string.
+     *
+     * @return  the length
+     */
     public int length(){
         return str.length();
     }
 
+    /**
+     * Returns {@code true} if, and only if, {@link #length()} is {@code 0}.
+     *
+     * @return {@code true} if {@link #length()} is {@code 0}, otherwise
+     * {@code false}
+     */
     public boolean isEmpty(){
         return str.isEmpty();
     }
 
     /**
-     * Make the first letter upper case, and all other letters lower case.
+     * Returns a copy of CharSeq with the string's first character
+     * converted to uppercase and the remainder to lowercase.
+     *
+     * @return  CharSeq with capitalized string
      */
     public CharSeq capitalize() {
         return isEmpty() ? this : this.subSeq(0, 1).toUpperCase().concat(this.subSeq(1).toLowerCase());
     }
 
+    /**
+     * Returns a copy of CharSeq with the string's characters all
+     * converted to uppercase.
+     *
+     * @return
+     */
     public CharSeq toUpperCase() {
         return new CharSeq(str.toUpperCase());
     }
 
+    /**
+     * Returns a copy of this CharSeq with characters all
+     * converted to lowercase.
+     *
+     * @return
+     */
     public CharSeq toLowerCase() {
         return new CharSeq(str.toLowerCase());
     }
 
+    /**
+     * Splits this CharSeq around matches of the given regular expression.
+     *
+     * @param regex
+     * @return
+     */
     public Seq<CharSeq> split(String regex) {
         return Seq.of(str.split(regex)).map(CharSeq::new);
     }
 
+    /**
+     * Construct a new CharSeq with the given string
+     *
+     * @param str the given string
+     * @return
+     */
     public static CharSeq of(String str) {
         return new CharSeq(str);
     }
 
-    public static CharSeq of(char[] str) {
-        return new CharSeq(new String(str));
+    /**
+     * Construct a new CharSeq with the given char array
+     *
+     * @param charArr the given char array
+     * @return
+     */
+    public static CharSeq of(char[] charArr) {
+        return new CharSeq(new String(charArr));
     }
 
+    /**
+     * Return a new CharSeq with the characters from
+     * this CharSeq in reverse order.
+     *
+     * <p>
+     * Examples:
+     * <blockquote><pre>
+     * CharSeq.of("stressed").reverse() returns CharSeq.of("desserts")
+     * </pre></blockquote>
+     * </p>
+     *
+     * @return
+     */
     public CharSeq reverse() {
         return CharSeq.of(new StringBuilder(str).reverse().toString());
     }
 
+    /**
+     * Return a new CharSeq with all characters' cases toggled.
+     *
+     * <p>
+     * Examples:
+     * <blockquote><pre>
+     * CharSeq.of("sTrEsSed").swapcase() returns CharSeq.of("StReSsED")
+     * </pre></blockquote>
+     * </p>
+     *
+     * @return
+     */
     public CharSeq swapcase() {
         char[] chars = str.toCharArray();
         for (int i = 0; i < chars.length; i++) {
@@ -148,13 +240,36 @@ public class CharSeq {
         return CharSeq.of(chars);
     }
 
-    public boolean endsWith(CharSeq another) {
-        return str.endsWith(another.str);
+    /**
+     * Tests whether this CharSeq ends with the specified suffix
+     *
+     * @param suffix   suffix
+     * @return
+     */
+    public boolean endsWith(CharSeq suffix) {
+        return this.endsWith(suffix.str);
     }
 
-    public boolean startsWith(CharSeq another) {
-        return str.startsWith(another.str);
+    /**
+     * Tests whether this CharSeq ends with the specified suffix
+     *
+     * @param suffix   suffix
+     * @return
+     */
+    public boolean endsWith(String suffix) {
+        return str.endsWith(suffix);
     }
+
+    /**
+     * Tests whether this CharSeq starts with the specified prefix
+     *
+     * @param prefix   prefix
+     * @return
+     */
+    public boolean startsWith(CharSeq prefix) {
+        return str.startsWith(prefix.str);
+    }
+
 
     public Character charAt(int index) {
         return str.charAt(index);
