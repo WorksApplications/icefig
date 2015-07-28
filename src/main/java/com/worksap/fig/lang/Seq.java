@@ -696,5 +696,108 @@ public interface Seq<T> extends List<T> {
      */
     T get(int index);
 
+    /**
+     * Slices this seq to construct some slices in the original order,
+     * each of slice contains <tt>n</tt> elements(only the last slice can contain less than <tt>n</tt> elements).
+     * @param n the number of elements in each slice except the last one
+     * @return the collection of these slices
+     * @throws IllegalArgumentException if <tt>n &lt;= 0</tt>
+     */
+    default Seq<Seq<T>> eachSlice(int n) {
+        if (n <= 0)
+            throw new IllegalArgumentException("n should be a positive number.");
+        Seq<Seq<T>> result = new SeqImpl<>();
+        int size = this.size();
+        for (int i = 0; i < size; i += n) {
+            result.add(this.subSeq(i, i + n > size ? size : i + n));
+        }
+        return result;
+    }
 
+    /**
+     * Slices the seq to construct some slices and take action on each slice.
+     * <p>
+     *     Similar to {@link #eachSlice(int)}, but instead of returning the slice collection,
+     *     it iterates the slice collection and takes action on each slice.
+     * </p>
+     * @param n the number of elements in each slice except the last one
+     * @param action the action to take on each slice
+     * @throws IllegalArgumentException if <tt>n &lt;= 0</tt>
+     * @throws NullPointerException if action is null
+     */
+    default void forEachSlice(int n, Consumer<Seq<T>> action) {
+        Objects.requireNonNull(action);
+        if (n <= 0)
+            throw new IllegalArgumentException("n should be a positive number.");
+        int size = this.size();
+        for (int i = 0; i < size; i += n) {
+            action.accept(this.subSeq(i, i + n > size ? size : i + n));
+        }
+    }
+
+    /**
+     * Performs a reduction on the elements of this seq, using the provided
+     * binary operation, and returns the reduced value.
+     * @param accumulator the binary operation for combining two values
+     * @return the result of the reduction, or null if the seq is empty
+     * @throws NullPointerException if accumulator is null
+     */
+    default T reduce(BinaryOperator<T> accumulator) {
+        Objects.requireNonNull(accumulator);
+        boolean foundAny = false;
+        T result = null;
+        for (int i = 0; i < size(); i++) {
+            if (!foundAny) {
+                foundAny = true;
+                result = this.get(i);
+            } else
+                result = accumulator.apply(result, this.get(i));
+        }
+        return result;
+    }
+
+    /**
+     * Performs a reduction on the elements of this seq, using the provided initial value
+     * and a binary function, and returns the reduced value.
+     * <p>
+     *     Similar to {@link #reduce(BinaryOperator)},
+     *     with an additional parameter "init" as the initial value of the reduction
+     * </p>
+     * @param init the initial value for the accumulating function
+     * @param accumulator the binary function for combining two values
+     * @return the result of the reduction
+     * @throws NullPointerException if accumulator is null
+     */
+    default <R> R reduce(R init, BiFunction<R, T, R> accumulator) {
+        Objects.requireNonNull(accumulator);
+        R result = init;
+        for (int i = 0; i < size(); i++)
+            result = accumulator.apply(result, this.get(i));
+        return result;
+    }
+
+    /**
+     * Constructs a new seq containing all the elements of this seq in reverse order.
+     * @return the new seq with elements in reverse order
+     */
+    default Seq<T> reverse() {
+        Seq<T> result = new SeqImpl<>();
+        for (int i = size() - 1; i >= 0; i--)
+            result.add(this.get(i));
+        return result;
+    }
+
+    /**
+     * Reverses the elements of this seq itself.
+     * @return the seq itself with elements in reverse order
+     */
+    default Seq<T> reverse$() {
+        int size = size();
+        for (int i = 0; i < size / 2; i++) {
+            T temp = this.get(i);
+            this.set(i, this.get(size - 1 - i));
+            this.set(size - 1 - i, temp);
+        }
+        return this;
+    }
 }
