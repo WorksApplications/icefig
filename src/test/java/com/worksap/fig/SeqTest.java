@@ -3,9 +3,7 @@ package com.worksap.fig;
 import com.worksap.fig.lang.Seq;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -324,4 +322,70 @@ public class SeqTest {
         seq.countConditionWithIndex(null);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testEachSlice() {
+        final Seq<String> seq = Seq.of("a", "b", "c", "d", "e");
+        assertArrayEquals(new Object[]{Seq.of("a"), Seq.of("b"), Seq.of("c"), Seq.of("d"), Seq.of("e")}, seq.eachSlice(1).toArray());
+        assertArrayEquals(new Object[]{Seq.of("a", "b"), Seq.of("c", "d"), Seq.of("e")}, seq.eachSlice(2).toArray());
+        assertArrayEquals(new Object[]{Seq.of("a", "b", "c"), Seq.of("d", "e")}, seq.eachSlice(3).toArray());
+        assertArrayEquals(new Object[]{Seq.of("a", "b", "c", "d"), Seq.of("e")}, seq.eachSlice(4).toArray());
+        assertArrayEquals(new Object[]{seq}, seq.eachSlice(5).toArray());
+        assertArrayEquals(new Object[]{seq}, seq.eachSlice(6).toArray());
+        seq.eachSlice(0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testForEachSlice() {
+        final Seq<String> seq = Seq.of("a", "b", "c", "d");
+        Seq<Seq<String>> result = Seq.newSeq();
+        seq.forEachSlice(2, result::add);
+        assertArrayEquals(new Object[]{Seq.of("a", "b"), Seq.of("c", "d")}, result.toArray());
+        result.clear();
+        seq.forEachSlice(3, result::add);
+        assertArrayEquals(new Object[]{Seq.of("a", "b", "c"), Seq.of("d")}, result.toArray());
+        result.clear();
+        seq.forEachSlice(4, result::add);
+        assertArrayEquals(new Object[]{Seq.of("a", "b", "c", "d")}, result.toArray());
+        result.clear();
+        seq.forEachSlice(5, result::add);
+        assertArrayEquals(new Object[]{Seq.of("a", "b", "c", "d")}, result.toArray());
+        seq.forEachSlice(1, s -> s.forEach(e -> System.out.println(e)));
+        seq.forEachSlice(0, result::add);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testReduce() {
+        Seq<Integer> seq = Seq.of(1, 2, 3, 4, 5);
+        assertEquals(new Integer(15), seq.reduce(0, Integer::sum));
+        assertEquals(new Integer(15), seq.reduce(Integer::sum));
+        seq = Seq.of();
+        assertEquals(null, seq.reduce(Integer::sum));
+
+        Seq<TestObj> persons = Seq.of(new TestObj("wang", 26), new TestObj("sun", 30));
+        assertEquals(2, persons.size());
+        Map<String, Integer> map = new HashMap<>();
+        persons.reduce(map, (m, p) -> {
+            m.put(p.getName(), p.getAge());
+            return m;
+        });
+        assertEquals(2, map.size());
+        assertEquals(new Integer(26), map.get("wang"));
+        map.forEach((k, v) -> System.out.println(k + ":" + v));
+        seq.reduce(null);
+    }
+
+    @Test
+    public void testReverse() {
+        Seq<Integer> seq = Seq.of(1, 2, 3, 4, 5);
+        assertEquals(Seq.of(5, 4, 3, 2, 1), seq.reverse());
+        assertEquals(Seq.of(1, 2, 3, 4, 5), seq);
+        assertEquals(Seq.of(), Seq.of().reverse());
+        assertEquals(Seq.of(1), Seq.of(1).reverse());
+
+        assertEquals(Seq.of(5, 4, 3, 2, 1), seq.reverse$());
+        assertEquals(Seq.of(5, 4, 3, 2, 1), seq);
+        assertEquals(Seq.of(), Seq.of().reverse());
+        assertEquals(Seq.of(1), Seq.of(1).reverse());
+        assertEquals(Seq.of(1, null), Seq.of(null, 1).reverse());
+    }
 }

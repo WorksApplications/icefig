@@ -1,4 +1,4 @@
-# Fig [![Build Status](https://travis-ci.org/wapatesh/fig.svg)](https://travis-ci.org/wapatesh/fig)
+# Fig [![Build Status](https://travis-ci.org/wapatesh/fig.svg)](https://travis-ci.org/wapatesh/fig) [![Documentation](https://readthedocs.org/projects/svg-pottery/badge/?version=latest)](http://www.javadoc.io/doc/com.worksap/fig)
 
 Java elegant supplement
 

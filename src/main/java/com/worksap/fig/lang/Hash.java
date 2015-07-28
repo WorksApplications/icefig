@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.function.BiPredicate;
 
 /**
- * Created by liuyang on 7/27/15.
+ * Elegant supplement for Map in JDK
  */
 public interface Hash<K, V> extends Map<K, V> {
     default boolean containsAny(BiPredicate<K, V> condition) {

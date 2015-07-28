@@ -3,7 +3,7 @@ package com.worksap.fig.lang;
 import java.util.Objects;
 
 /**
- * Created by liuyang on 7/27/15.
+ * Elegant supplement for String in JDK
  */
 public class CharSeq{
     private final String str;
@@ -36,7 +36,7 @@ public class CharSeq{
 
 
     /**
-     * Make the first letter upper case, and all other letter lower case.
+     * Make the first letter upper case, and all other letters lower case.
      */
     public CharSeq capitalize() {
         return isEmpty() ? this : this.subSeq(0, 1).toUpperCase().suffix(this.subSeq(1).toLowerCase());
