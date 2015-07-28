@@ -18,6 +18,24 @@ public class CharSeq {
         this.str = Objects.requireNonNull(str);
     }
 
+    /**
+     * Returns a CharSeq that contains a substring of this CharSeq's string.
+     * The substring begins at the specified {@code beginIndex} and
+     * extends to the character at index {@code endIndex - 1}.
+     * Thus the length of the substring is {@code endIndex-beginIndex}.
+     *
+     * <p>
+     * Examples:
+     * <blockquote><pre>
+     * CharSeq.of("hamburger").subSeq(4, 8) returns CharSeq.of("urge")
+     * CharSeq.of("smiles").subSeq(1, 5) returns CharSeq.of("mile")
+     * </pre></blockquote>
+     * </p>
+     *
+     * @param   fromIndex   the beginning index, inclusive.
+     * @param   toIndex     the ending index, exclusive.
+     * @return  CharSeq with the specified substring.
+     */
     public CharSeq subSeq(int fromIndex, int toIndex) {
         if (this.isEmpty()) {
             return this;
@@ -32,10 +50,30 @@ public class CharSeq {
         if (toIndex < 0) {
             return CharSeq.of("");
         } else if (toIndex > str.length()) {
-            toIndex = str.length();
+            to = str.length();
         }
-        return new CharSeq(str.substring(from, toIndex));
+        return new CharSeq(str.substring(from, to));
     }
+
+    /**
+     * Returns a CharSeq that contains a substring of this CharSeq's string.
+     * The substring begins at the specified {@code beginIndex} and
+     * extends to the end of this string.
+     *
+     * <p>
+     * Examples:
+     * <blockquote><pre>
+     * CharSeq.of("unhappy").subSeq(-1) returns CharSeq.of("unhappy")
+     * CharSeq.of("unhappy").subSeq(2) returns CharSeq.of("happy")
+     * CharSeq.of("Harbison").subSeq(3) returns CharSeq.of("bison")
+     * CharSeq.of("emptiness").subSeq(9) returns CharSeq.of("")
+     * CharSeq.of("emptiness").subSeq(12) returns CharSeq.of("")
+     * </pre></blockquote>
+     * </p>
+     *
+     * @param   fromIndex   the beginning index, inclusive.
+     * @return  CharSeq with the specified substring.
+     */
     public CharSeq subSeq(int fromIndex) {
         return this.subSeq(fromIndex, str.length());
     }
@@ -48,6 +86,11 @@ public class CharSeq {
         return new CharSeq(str + another);
     }
 
+    /**
+     *
+     * @param another
+     * @return
+     */
     public CharSeq prepend(CharSeq another){
         return new CharSeq(another.str + str);
     }
@@ -138,25 +181,25 @@ public class CharSeq {
 
     public CharSeq eachChar(Consumer<Character> action) {
         Objects.requireNonNull(action);
-        this.getCharacterSequence().forEach(action);
+        getCharacterSequence().forEach(action);
         return this;
     }
 
     public CharSeq eachCharWithIndex(BiConsumer<Character, Integer> action) {
         Objects.requireNonNull(action);
-        this.getCharacterSequence().forEachWithIndex(action);
+        getCharacterSequence().forEachWithIndex(action);
         return this;
     }
 
     public CharSeq eachByte(Consumer<Byte> action) {
         Objects.requireNonNull(action);
-        byte[] rawBytes = str.getBytes();
-        Byte[] bytes = new Byte[rawBytes.length];
-        for (int i = 0; i < bytes.length; i++) {
-            bytes[i] = rawBytes[i];
-        }
-        Seq<Byte> byteSeq = Seq.of(bytes);
-        byteSeq.forEach(action);
+        getByteSequence().forEach(action);
+        return this;
+    }
+
+    public CharSeq eachByteWithIndex(BiConsumer<Byte, Integer> action) {
+        Objects.requireNonNull(action);
+        getByteSequence().forEachWithIndex(action);
         return this;
     }
 
@@ -226,6 +269,16 @@ public class CharSeq {
         for (int i = 0; i < characters.length; i++) {
             characters[i] = chars[i];
         }
-       return Seq.of(characters);
+        return Seq.of(characters);
     }
+
+    public Seq<Byte> getByteSequence() {
+        byte[] rawBytes = str.getBytes();
+        Byte[] bytes = new Byte[rawBytes.length];
+        for (int i = 0; i < bytes.length; i++) {
+            bytes[i] = rawBytes[i];
+        }
+        return Seq.of(bytes);
+    }
+
 }
