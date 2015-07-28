@@ -344,7 +344,7 @@ public class CharSeq {
      */
     public CharSeq forEachLine(Consumer<CharSeq> action) {
         Objects.requireNonNull(action);
-        Seq<CharSeq> lines = this.split("\n");
+        Seq<CharSeq> lines = this.lines();
         lines.forEach(action);
         return this;
     }
@@ -358,7 +358,7 @@ public class CharSeq {
      */
     public CharSeq forEachLineWithIndex(BiConsumer<CharSeq, Integer> action) {
         Objects.requireNonNull(action);
-        Seq<CharSeq> lines = this.split("\n");
+        Seq<CharSeq> lines = this.lines();
         lines.forEachWithIndex(action);
         return this;
     }

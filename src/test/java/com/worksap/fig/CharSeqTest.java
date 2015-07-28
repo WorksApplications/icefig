@@ -126,7 +126,7 @@ public class CharSeqTest {
     public void testGetLines() {
         CharSeq seq = CharSeq.of("凤凰台上凤凰游，凤去台空江自流。\n" +
                 "吴宫花草埋幽径，晋代衣冠成古丘。\n" +
-                "三山半落青天外，二水中分白鹭洲。\n" +
+                "三山半落青天外，二水中分白鹭洲。\r\n" +
                 "总为浮云能蔽日，长安不见使人愁。");
         assertArrayEquals(new CharSeq[]{
                 CharSeq.of("凤凰台上凤凰游，凤去台空江自流。"),
@@ -163,7 +163,7 @@ public class CharSeqTest {
 
     @Test
     public void testEachLines() {
-        CharSeq seq = CharSeq.of("凤凰台上凤凰游，凤去台空江自流。\n" +
+        CharSeq seq = CharSeq.of("凤凰台上凤凰游，凤去台空江自流。\r\n" +
                 "吴宫花草埋幽径，晋代衣冠成古丘。\n" +
                 "三山半落青天外，二水中分白鹭洲。\n" +
                 "总为浮云能蔽日，长安不见使人愁。");
