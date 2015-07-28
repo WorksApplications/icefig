@@ -19,13 +19,9 @@ public class CharSeqTest {
         assertEquals(CharSeq.of("Father"), seq.subSeq(0, 6));
         assertEquals(CharSeq.of("Charles "), seq.subSeq(7, 15));
         assertEquals(CharSeq.of("Charles gets down and ends battle."), seq.subSeq(7, 41));
-        assertEquals(CharSeq.of("Charles gets down and ends battle."), seq.subSeq(7, 42));
-        assertEquals(CharSeq.of("Charles gets down and ends battle."), seq.subSeq(7));
         assertEquals(CharSeq.of("."), seq.subSeq(40));
         assertEquals(CharSeq.of(""), seq.subSeq(41));
-        assertEquals(CharSeq.of(""), seq.subSeq(0, -10));
-        assertEquals(CharSeq.of("Father Charles gets down and ends battle."), seq.subSeq(-1));
-        assertEquals(CharSeq.of("Father Cha"), seq.subSeq(-1, 10));
+        assertEquals(CharSeq.of("Father Charles gets down and ends battle."), seq.subSeq(0));
     }
 
     @Test

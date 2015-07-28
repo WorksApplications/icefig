@@ -37,22 +37,7 @@ public class CharSeq {
      * @return  CharSeq with the specified substring.
      */
     public CharSeq subSeq(int fromIndex, int toIndex) {
-        if (this.isEmpty()) {
-            return this;
-        }
-        int from = fromIndex, to = toIndex;
-        if (fromIndex < 0) {
-            from = 0;
-        } else if (fromIndex >= str.length()) {
-            return CharSeq.of("");
-        }
-
-        if (toIndex < 0) {
-            return CharSeq.of("");
-        } else if (toIndex > str.length()) {
-            to = str.length();
-        }
-        return new CharSeq(str.substring(from, to));
+        return new CharSeq(str.substring(fromIndex, toIndex));
     }
 
     /**
@@ -63,11 +48,8 @@ public class CharSeq {
      * <p>
      * Examples:
      * <blockquote><pre>
-     * CharSeq.of("unhappy").subSeq(-1) returns CharSeq.of("unhappy")
      * CharSeq.of("unhappy").subSeq(2) returns CharSeq.of("happy")
      * CharSeq.of("Harbison").subSeq(3) returns CharSeq.of("bison")
-     * CharSeq.of("emptiness").subSeq(9) returns CharSeq.of("")
-     * CharSeq.of("emptiness").subSeq(12) returns CharSeq.of("")
      * </pre></blockquote>
      * </p>
      *
