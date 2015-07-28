@@ -1,7 +1,5 @@
 package com.worksap.fig.lang;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -281,11 +279,11 @@ public class CharSeq {
     public Seq<CharSeq> scan(String regex) {
         Pattern pat = Pattern.compile(regex);
         Matcher m = pat.matcher(str);
-        List<CharSeq> charSeqList = new ArrayList<>();
+        Seq<CharSeq> charSeq = Seq.of();
         while (m.find()) {
-            charSeqList.add(CharSeq.of(m.group()));
+            charSeq.add(CharSeq.of(m.group()));
         }
-        return Seq.of(charSeqList);
+        return charSeq;
     }
 
     /**
@@ -294,7 +292,7 @@ public class CharSeq {
      * @param action Consumer with single parameter of Character
      * @return  Self
      */
-    public CharSeq eachChar(Consumer<Character> action) {
+    public CharSeq forEachChar(Consumer<Character> action) {
         Objects.requireNonNull(action);
         getCharacterSequence().forEach(action);
         return this;
@@ -307,7 +305,7 @@ public class CharSeq {
      * @param action BiConsumer with parameters of Character and the index
      * @return  Self
      */
-    public CharSeq eachCharWithIndex(BiConsumer<Character, Integer> action) {
+    public CharSeq forEachCharWithIndex(BiConsumer<Character, Integer> action) {
         Objects.requireNonNull(action);
         getCharacterSequence().forEachWithIndex(action);
         return this;
@@ -319,7 +317,7 @@ public class CharSeq {
      * @param action Consumer with single parameter of Byte
      * @return  Self
      */
-    public CharSeq eachByte(Consumer<Byte> action) {
+    public CharSeq forEachByte(Consumer<Byte> action) {
         Objects.requireNonNull(action);
         getByteSequence().forEach(action);
         return this;
@@ -332,7 +330,7 @@ public class CharSeq {
      * @param action BiConsumer with parameters of Byte and the index
      * @return  Self
      */
-    public CharSeq eachByteWithIndex(BiConsumer<Byte, Integer> action) {
+    public CharSeq forEachByteWithIndex(BiConsumer<Byte, Integer> action) {
         Objects.requireNonNull(action);
         getByteSequence().forEachWithIndex(action);
         return this;
@@ -344,7 +342,7 @@ public class CharSeq {
      * @param action Consumer with single parameter of CharSeq
      * @return  Self
      */
-    public CharSeq eachLine(Consumer<CharSeq> action) {
+    public CharSeq forEachLine(Consumer<CharSeq> action) {
         Objects.requireNonNull(action);
         Seq<CharSeq> lines = this.split("\n");
         lines.forEach(action);
@@ -358,7 +356,7 @@ public class CharSeq {
      * @param action BiConsumer with parameters of CharSeq and the index
      * @return  Self
      */
-    public CharSeq eachLineWithIndex(BiConsumer<CharSeq, Integer> action) {
+    public CharSeq forEachLineWithIndex(BiConsumer<CharSeq, Integer> action) {
         Objects.requireNonNull(action);
         Seq<CharSeq> lines = this.split("\n");
         lines.forEachWithIndex(action);
@@ -371,8 +369,8 @@ public class CharSeq {
      *
      * @return A Seq of CharSeq
      */
-    public Seq<CharSeq> getLines() {
-        return this.split("\n");
+    public Seq<CharSeq> lines() {
+        return this.split("\n|\r\n");
     }
 
     /**

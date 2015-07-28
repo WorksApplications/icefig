@@ -127,7 +127,7 @@ public class CharSeqTest {
                 CharSeq.of("吴宫花草埋幽径，晋代衣冠成古丘。"),
                 CharSeq.of("三山半落青天外，二水中分白鹭洲。"),
                 CharSeq.of("总为浮云能蔽日，长安不见使人愁。")
-        }, seq.getLines().toArray());
+        }, seq.lines().toArray());
     }
 
     @Test
@@ -162,8 +162,8 @@ public class CharSeqTest {
                 "三山半落青天外，二水中分白鹭洲。\n" +
                 "总为浮云能蔽日，长安不见使人愁。");
         Seq<CharSeq> result = Seq.of();
-        seq.eachLine(result::add);
-        assertEquals(seq.getLines(), result);
+        seq.forEachLine(result::add);
+        assertEquals(seq.lines(), result);
     }
 
     @Test
@@ -171,10 +171,10 @@ public class CharSeqTest {
         CharSeq seq = CharSeq.of("Albert");
         Character[] increased = new Character[]{'B', 'm', 'c', 'f', 's', 'u'};
         List<Character> chars = new ArrayList<>();
-        seq.eachChar(ch -> chars.add((char) (ch + 1)));
+        seq.forEachChar(ch -> chars.add((char) (ch + 1)));
 
         assertArrayEquals(increased, chars.toArray());
-        seq.eachCharWithIndex((ch, index) -> assertEquals(new Character((char) (ch + 1)), increased[index]));
+        seq.forEachCharWithIndex((ch, index) -> assertEquals(new Character((char) (ch + 1)), increased[index]));
     }
 
     @Test
@@ -182,7 +182,7 @@ public class CharSeqTest {
         String einstein = "Einstein";
         CharSeq seq = CharSeq.of(einstein);
         Seq<Byte> bytes = Seq.of();
-        seq.eachByte(bytes::add);
-        seq.eachByteWithIndex((b, i) -> assertEquals(new Character((char) (b.byteValue())), seq.charAt(i)));
+        seq.forEachByte(bytes::add);
+        seq.forEachByteWithIndex((b, i) -> assertEquals(new Character((char) (b.byteValue())), seq.charAt(i)));
     }
 }
