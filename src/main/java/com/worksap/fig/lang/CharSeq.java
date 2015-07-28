@@ -36,7 +36,7 @@ public class CharSeq{
 
 
     /**
-     * Make the first letter upper case, and all other letter lower case.
+     * Make the first letter upper case, and all other letters lower case.
      */
     public CharSeq capitalize() {
         return isEmpty() ? this : this.subSeq(0, 1).toUpperCase().suffix(this.subSeq(1).toLowerCase());
