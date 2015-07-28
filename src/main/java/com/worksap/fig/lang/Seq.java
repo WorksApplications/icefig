@@ -758,19 +758,19 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Performs a reduction on the elements of this seq, using the provided initial value
-     * and a binary operation, and returns the reduced value.
+     * and a binary function, and returns the reduced value.
      * <p>
      *     Similar to {@link #reduce(BinaryOperator)},
      *     with an additional parameter "init" as the initial value of the reduction
      * </p>
      * @param init the initial value for the accumulating function
-     * @param accumulator the binary operation for combining two values
+     * @param accumulator the binary function for combining two values
      * @return the result of the reduction
      * @throws NullPointerException if accumulator is null
      */
-    default T reduce(T init, BinaryOperator<T> accumulator) {
+    default <R> R reduce(R init, BiFunction<R, T, R> accumulator) {
         Objects.requireNonNull(accumulator);
-        T result = init;
+        R result = init;
         for (int i = 0; i < size(); i++)
             result = accumulator.apply(result, this.get(i));
         return result;

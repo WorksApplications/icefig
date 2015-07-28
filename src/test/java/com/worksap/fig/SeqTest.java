@@ -3,9 +3,7 @@ package com.worksap.fig;
 import com.worksap.fig.lang.Seq;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -362,7 +360,18 @@ public class SeqTest {
         assertEquals(new Integer(15), seq.reduce(Integer::sum));
         seq = Seq.of();
         assertEquals(null, seq.reduce(Integer::sum));
-        seq.reject(null);
+
+        Seq<TestObj> persons = Seq.of(new TestObj("wang", 26), new TestObj("sun", 30));
+        assertEquals(2, persons.size());
+        Map<String, Integer> map = new HashMap<>();
+        persons.reduce(map, (m, p) -> {
+            m.put(p.getName(), p.getAge());
+            return m;
+        });
+        assertEquals(2, map.size());
+        assertEquals(new Integer(26), map.get("wang"));
+        map.forEach((k, v) -> System.out.println(k + ":" + v));
+        seq.reduce(null);
     }
 
     @Test
