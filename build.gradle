@@ -1,9 +1,12 @@
+
+plugins {
+    id "com.jfrog.bintray" version "1.2"
+}
+
 group 'com.worksap'
-version '0.0.1-SNAPSHOT'
+version '0.0.1'
 
 apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'signing'
 
 sourceCompatibility = 1.8
 
@@ -25,4 +28,8 @@ dependencies {
 
 if (hasProperty('env') && env == 'production') {
     apply from: 'gradle/production.gradle'
+}
+
+if (hasProperty('env') && env == 'bintray') {
+    apply from: 'gradle/bintray.gradle'
 }

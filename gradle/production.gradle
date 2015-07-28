@@ -1,4 +1,7 @@
 
+apply plugin: 'maven'
+apply plugin: 'signing'
+
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from tasks.javadoc.destinationDir
