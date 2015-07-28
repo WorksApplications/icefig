@@ -3,7 +3,7 @@ package com.worksap.fig.lang;
 import java.util.Objects;
 
 /**
- * Created by liuyang on 7/27/15.
+ * Elegant supplement for String in JDK
  */
 public class CharSeq{
     private final String str;

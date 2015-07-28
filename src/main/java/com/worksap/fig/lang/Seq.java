@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.function.*;
 
 /**
- * Created by liuyang on 7/23/15.
+ * Elegant supplement for List in JDK
  */
 public interface Seq<T> extends List<T> {
 
