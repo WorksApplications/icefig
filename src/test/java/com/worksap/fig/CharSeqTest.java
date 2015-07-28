@@ -4,6 +4,9 @@ import com.worksap.fig.lang.CharSeq;
 import com.worksap.fig.lang.Seq;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 /**
@@ -167,4 +170,24 @@ public class CharSeqTest {
         assertEquals(seq.getLines(), result);
     }
 
+    @Test
+    public void testEachChar() {
+        CharSeq seq = CharSeq.of("Albert");
+        Character[] increased = new Character[]{'B', 'm', 'c', 'f', 's', 'u'};
+        List<Character> chars = new ArrayList<>();
+        seq.eachChar(ch -> chars.add((char) (ch + 1)));
+
+        assertArrayEquals(increased, chars.toArray());
+        seq.eachCharWithIndex((ch, index) -> assertEquals(new Character((char) (ch + 1)), increased[index]));
+    }
+
+
+    @Test
+    public void testEachByte() {
+        String einstein = "Einstein";
+        CharSeq seq = CharSeq.of(einstein);
+        Seq<Byte> bytes = Seq.of();
+        seq.eachByte(bytes::add);
+        seq.eachByteWithIndex((b, i) -> assertEquals(new Character((char) (b.byteValue())), seq.charAt(i)));
+    }
 }

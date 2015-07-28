@@ -86,11 +86,6 @@ public class CharSeq {
         return new CharSeq(str + another);
     }
 
-    /**
-     *
-     * @param another
-     * @return
-     */
     public CharSeq prepend(CharSeq another){
         return new CharSeq(another.str + str);
     }
@@ -280,5 +275,4 @@ public class CharSeq {
         }
         return Seq.of(bytes);
     }
-
 }
