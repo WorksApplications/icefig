@@ -181,7 +181,6 @@ public class CharSeqTest {
         seq.eachCharWithIndex((ch, index) -> assertEquals(new Character((char) (ch + 1)), increased[index]));
     }
 
-
     @Test
     public void testEachByte() {
         String einstein = "Einstein";

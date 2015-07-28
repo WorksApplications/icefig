@@ -169,7 +169,7 @@ public class CharSeq {
     /**
      * Splits this CharSeq around matches of the given regular expression.
      *
-     * @param regex
+     * @param regex Regular expression
      * @return
      */
     public Seq<CharSeq> split(String regex) {
@@ -207,7 +207,7 @@ public class CharSeq {
      * </pre></blockquote>
      * </p>
      *
-     * @return
+     * @return  A new Seq
      */
     public CharSeq reverse() {
         return CharSeq.of(new StringBuilder(str).reverse().toString());
@@ -223,7 +223,7 @@ public class CharSeq {
      * </pre></blockquote>
      * </p>
      *
-     * @return
+     * @return  A new CharSeq
      */
     public CharSeq swapcase() {
         char[] chars = str.toCharArray();
@@ -243,8 +243,8 @@ public class CharSeq {
     /**
      * Tests whether this CharSeq ends with the specified suffix
      *
-     * @param suffix   suffix
-     * @return
+     * @param   suffix   suffix
+     * @return  A boolean
      */
     public boolean endsWith(CharSeq suffix) {
         return this.endsWith(suffix.str);
@@ -253,8 +253,8 @@ public class CharSeq {
     /**
      * Tests whether this CharSeq ends with the specified suffix
      *
-     * @param suffix   suffix
-     * @return
+     * @param   suffix   suffix
+     * @return  A boolean
      */
     public boolean endsWith(String suffix) {
         return str.endsWith(suffix);
@@ -263,22 +263,39 @@ public class CharSeq {
     /**
      * Tests whether this CharSeq starts with the specified prefix
      *
-     * @param prefix   prefix
-     * @return
+     * @param   prefix   prefix
+     * @return  A boolean
      */
     public boolean startsWith(CharSeq prefix) {
         return str.startsWith(prefix.str);
     }
 
-
-    public Character charAt(int index) {
-        return str.charAt(index);
+    /**
+     * Return the Character at the index i of this CharSeq
+     * @param   i the index
+     * @return  The specified Character
+     */
+    public Character charAt(int i) {
+        return str.charAt(i);
     }
 
+    /**
+     * Returns a CharSeq whose value is this CharSeq, with any leading and trailing
+     * whitespace removed.
+     *
+     * @return A new CharSeq with leading and trailing whitespace removed
+     */
     public CharSeq trim() {
         return CharSeq.of(str.trim());
     }
 
+    /**
+     * Scan through this CharSeq iteratively, generate a Seq of CharSeq
+     * with all the matching subStrings.
+     *
+     * @param   regex The regular expression
+     * @return  A Seq of CharSeq
+     */
     public Seq<CharSeq> scan(String regex) {
         Pattern pat = Pattern.compile(regex);
         Matcher m = pat.matcher(str);
@@ -289,30 +306,62 @@ public class CharSeq {
         return Seq.of(charSeqList);
     }
 
+    /**
+     * Performs the given action for each character of the CharSeq.
+     *
+     * @param action Consumer with single parameter of Character
+     * @return  Self
+     */
     public CharSeq eachChar(Consumer<Character> action) {
         Objects.requireNonNull(action);
         getCharacterSequence().forEach(action);
         return this;
     }
 
+    /**
+     * Performs the given action for each character of the CharSeq,
+     * with additional parameter "index" as the second parameter.
+     *
+     * @param action BiConsumer with parameters of Character and the index
+     * @return  Self
+     */
     public CharSeq eachCharWithIndex(BiConsumer<Character, Integer> action) {
         Objects.requireNonNull(action);
         getCharacterSequence().forEachWithIndex(action);
         return this;
     }
 
+    /**
+     * Performs the given action for each byte of the CharSeq.
+     *
+     * @param action Consumer with single parameter of Byte
+     * @return  Self
+     */
     public CharSeq eachByte(Consumer<Byte> action) {
         Objects.requireNonNull(action);
         getByteSequence().forEach(action);
         return this;
     }
 
+    /**
+     * Performs the given action for each byte of the CharSeq,
+     * with additional parameter "index" as the second parameter.
+     *
+     * @param action BiConsumer with parameters of Byte and the index
+     * @return  Self
+     */
     public CharSeq eachByteWithIndex(BiConsumer<Byte, Integer> action) {
         Objects.requireNonNull(action);
         getByteSequence().forEachWithIndex(action);
         return this;
     }
 
+    /**
+     * Performs the given action for each line of the CharSeq.
+     *
+     * @param action Consumer with single parameter of CharSeq
+     * @return  Self
+     */
     public CharSeq eachLine(Consumer<CharSeq> action) {
         Objects.requireNonNull(action);
         Seq<CharSeq> lines = this.split("\n");
@@ -320,26 +369,86 @@ public class CharSeq {
         return this;
     }
 
+    /**
+     * Performs the given action for each line of the CharSeq,
+     * with additional parameter "index" as the second parameter.
+     *
+     * @param action BiConsumer with parameters of CharSeq and the index
+     * @return  Self
+     */
+    public CharSeq eachLineWithIndex(BiConsumer<CharSeq, Integer> action) {
+        Objects.requireNonNull(action);
+        Seq<CharSeq> lines = this.split("\n");
+        lines.forEachWithIndex(action);
+        return this;
+    }
+
+    /**
+     * Split the CharSeq by the newline character and return the
+     * result as a Seq of CharSeq.
+     *
+     * @return A Seq of CharSeq
+     */
     public Seq<CharSeq> getLines() {
         return this.split("\n");
     }
 
+    /**
+     * Tells whether or not this CharSeq matches the given regular expression.
+     *
+     * @return A boolean
+     */
     public boolean matches(String regex) {
         return this.str.matches(regex);
     }
 
+
+    /**
+     * Return a new CharSeq by replacing the first substring of this CharSeq
+     * that matches the given regular expression with the given CharSeq replacement.
+     *
+     * @param regex         The regular expression
+     * @param replacement   The replacement CharSeq
+     * @return  A new CharSeq
+     */
     public CharSeq replaceFirst(String regex, CharSeq replacement) {
         return this.replaceFirst(regex, replacement.str);
     }
 
+    /**
+     * Return a new CharSeq by replacing the first substring of this CharSeq
+     * that matches the given regular expression with the given String replacement.
+     *
+     * @param regex         The regular expression
+     * @param replacement   The replacement String
+     * @return  A new CharSeq
+     */
     public CharSeq replaceFirst(String regex, String replacement) {
         return CharSeq.of(str.replaceFirst(regex, replacement));
     }
 
+    /**
+     * Return a new CharSeq by replacing each substring of this
+     * CharSeq that matches the given regular expression with
+     * the given CharSeq replacement.
+     *
+     * @param regex         The regular expression
+     * @param replacement   The replacement CharSeq
+     * @return  A new CharSeq
+     */
     public CharSeq replaceAll(String regex, CharSeq replacement) {
         return this.replaceAll(regex, replacement.str);
     }
 
+    /**
+     * Return a new CharSeq by replacing each substring of this
+     * CharSeq that matches the given regular expression with
+     * the given String replacement.
+     *
+     * @param regex         The regular expression
+     * @param replacement   The replacement String
+     * @return  A new CharSeq
+     */
     public CharSeq replaceAll(String regex, String replacement) {
         return CharSeq.of(str.replaceAll(regex, replacement));
     }
@@ -354,14 +463,38 @@ public class CharSeq {
         return str;
     }
 
+    /**
+     * Compares two CharSeqs lexicographically.
+
+     * @return  the value {@code 0} if the argument CharSeq is equal to
+     *          this CharSeq; a value less than {@code 0} if this CharSeq
+     *          is lexicographically less than the CharSeq argument; and a
+     *          value greater than {@code 0} if this CharSeq is
+     *          lexicographically greater than the CharSeq argument.
+     */
     public int compareTo(CharSeq another) {
         return str.compareTo(another.str);
     }
 
+    /**
+     * Compares two CharSeqs lexicographically ignore case differences.
+     *
+     * @return  a negative integer, zero, or a positive integer as the
+     *          specified String is greater than, equal to, or less
+     *          than this String, ignoring case considerations.
+     */
     public int compareToIgnoreCase(CharSeq another) {
         return str.compareToIgnoreCase(another.str);
     }
 
+    /**
+     * Searches pattern (regex) in the CharSeq and returns
+     * a Seq of CharSeq consists of the part before it,
+     * the match, and the part after it.
+     *
+     * @param regex Regular Expression
+     * @return A Seq of CharSeq
+     */
     public Seq<CharSeq> partition(String regex) {
         Matcher m = Pattern.compile(regex).matcher(str);
         if (m.find()) {
@@ -373,6 +506,11 @@ public class CharSeq {
         }
     }
 
+    /**
+     * Converts this CharSeq to a new Character Seq.
+     *
+     * @return  A Seq of Character
+     */
     public Seq<Character> getCharacterSequence() {
         char[] chars = str.toCharArray();
         Character[] characters = new Character[str.length()];
@@ -382,6 +520,12 @@ public class CharSeq {
         return Seq.of(characters);
     }
 
+    /**
+     * Encodes this {@code CharSeq} into a sequence of bytes using the
+     * platform's default charset, storing the result into a new Byte Seq.
+     *
+     * @return  A Seq of Byte
+     */
     public Seq<Byte> getByteSequence() {
         byte[] rawBytes = str.getBytes();
         Byte[] bytes = new Byte[rawBytes.length];
