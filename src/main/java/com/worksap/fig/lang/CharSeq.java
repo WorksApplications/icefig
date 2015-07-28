@@ -472,6 +472,9 @@ public class CharSeq {
      * a Seq of CharSeq consists of the part before it,
      * the match, and the part after it.
      *
+     * If no such match is found in this CharSeq, return a Seq
+     * of CharSeq consists of the CharSeq itself and two empty CharSeqs.
+     *
      * @param regex Regular Expression
      * @return A Seq of CharSeq
      */
@@ -483,6 +486,29 @@ public class CharSeq {
                     CharSeq.of(str.substring(m.end())));
         } else {
             return Seq.of(CharSeq.of(str), CharSeq.of(""), CharSeq.of(""));
+        }
+    }
+
+    /**
+     * Searches pattern (regex) in the CharSeq and returns
+     * a Seq of CharSeq consists of the part after it,
+     * the match, and the part before it.
+     *
+     * If no such match is found in this CharSeq, return a Seq
+     * of CharSeq consists of two empty CharSeqs and the CharSeq itself.
+     *
+     * @param regex Regular Expression
+     * @return A Seq of CharSeq
+     */
+    public Seq<CharSeq> rPartition(String regex) {
+        Matcher m = Pattern.compile(regex).matcher(str);
+        if (m.find()) {
+            return Seq.of(CharSeq.of(str.substring(m.end())),
+                    CharSeq.of(m.group()),
+                    CharSeq.of(str.substring(0, m.start()))
+            );
+        } else {
+            return Seq.of(CharSeq.of(""), CharSeq.of(""), CharSeq.of(str));
         }
     }
 

@@ -108,6 +108,8 @@ public class CharSeqTest {
         CharSeq seq = CharSeq.of("var sample = 'Good good study, day day up.'");
         assertArrayEquals(new CharSeq[]{CharSeq.of("var sample "), CharSeq.of("="), CharSeq.of(" 'Good good study, day day up.'")},
                 seq.partition("=").toArray());
+        assertArrayEquals(new CharSeq[]{CharSeq.of(" 'Good good study, day day up.'"), CharSeq.of("="), CharSeq.of("var sample ")},
+                seq.rPartition("=").toArray());
 
         CharSeq seq1 = CharSeq.of("_word");
         assertArrayEquals(new CharSeq[]{CharSeq.of(""), CharSeq.of("_word"), CharSeq.of("")},
