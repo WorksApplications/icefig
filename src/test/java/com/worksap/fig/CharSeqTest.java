@@ -35,7 +35,7 @@ public class CharSeqTest {
 
     @Test
     public void testCapitalize() {
-        CharSeq seq = CharSeq.of("the quick brown fox jumps over a lazy dog");
+        CharSeq seq = CharSeq.of("the Quick Brown FoX JumpS Over A lazy dog");
         assertEquals(CharSeq.of("The quick brown fox jumps over a lazy dog"), seq.capitalize());
 
         assertEquals(CharSeq.of(""), CharSeq.of("").capitalize());

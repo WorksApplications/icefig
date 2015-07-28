@@ -294,7 +294,7 @@ public class CharSeq {
      */
     public CharSeq forEachChar(Consumer<Character> action) {
         Objects.requireNonNull(action);
-        getCharacterSequence().forEach(action);
+        characterSequence().forEach(action);
         return this;
     }
 
@@ -307,7 +307,7 @@ public class CharSeq {
      */
     public CharSeq forEachCharWithIndex(BiConsumer<Character, Integer> action) {
         Objects.requireNonNull(action);
-        getCharacterSequence().forEachWithIndex(action);
+        characterSequence().forEachWithIndex(action);
         return this;
     }
 
@@ -319,7 +319,7 @@ public class CharSeq {
      */
     public CharSeq forEachByte(Consumer<Byte> action) {
         Objects.requireNonNull(action);
-        getByteSequence().forEach(action);
+        byteSequence().forEach(action);
         return this;
     }
 
@@ -332,7 +332,7 @@ public class CharSeq {
      */
     public CharSeq forEachByteWithIndex(BiConsumer<Byte, Integer> action) {
         Objects.requireNonNull(action);
-        getByteSequence().forEachWithIndex(action);
+        byteSequence().forEachWithIndex(action);
         return this;
     }
 
@@ -524,7 +524,7 @@ public class CharSeq {
      *
      * @return  A Seq of Character
      */
-    public Seq<Character> getCharacterSequence() {
+    public Seq<Character> characterSequence() {
         char[] chars = str.toCharArray();
         Character[] characters = new Character[str.length()];
         for (int i = 0; i < characters.length; i++) {
@@ -539,7 +539,7 @@ public class CharSeq {
      *
      * @return  A Seq of Byte
      */
-    public Seq<Byte> getByteSequence() {
+    public Seq<Byte> byteSequence() {
         byte[] rawBytes = str.getBytes();
         Byte[] bytes = new Byte[rawBytes.length];
         for (int i = 0; i < bytes.length; i++) {
