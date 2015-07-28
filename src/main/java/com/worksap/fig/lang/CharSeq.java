@@ -470,10 +470,10 @@ public class CharSeq {
     /**
      * Searches pattern (regex) in the CharSeq and returns
      * a Seq of CharSeq consists of the part before it,
-     * the match, and the part after it.
+     * the first match, and the part after it.
      *
      * If no such match is found in this CharSeq, return a Seq
-     * of CharSeq consists of the CharSeq itself and two empty CharSeqs.
+     * of CharSeq consists two empty CharSeqs and the CharSeq itself.
      *
      * @param regex Regular Expression
      * @return A Seq of CharSeq
@@ -485,14 +485,14 @@ public class CharSeq {
                     CharSeq.of(m.group()),
                     CharSeq.of(str.substring(m.end())));
         } else {
-            return Seq.of(CharSeq.of(str), CharSeq.of(""), CharSeq.of(""));
+            return Seq.of(CharSeq.of(""), CharSeq.of(""), CharSeq.of(str));
         }
     }
 
     /**
      * Searches pattern (regex) in the CharSeq and returns
-     * a Seq of CharSeq consists of the part after it,
-     * the match, and the part before it.
+     * a Seq of CharSeq consists of the part before it,
+     * the last match, and the part after it.
      *
      * If no such match is found in this CharSeq, return a Seq
      * of CharSeq consists of two empty CharSeqs and the CharSeq itself.
@@ -502,14 +502,21 @@ public class CharSeq {
      */
     public Seq<CharSeq> rPartition(String regex) {
         Matcher m = Pattern.compile(regex).matcher(str);
-        if (m.find()) {
-            return Seq.of(CharSeq.of(str.substring(m.end())),
-                    CharSeq.of(m.group()),
-                    CharSeq.of(str.substring(0, m.start()))
-            );
-        } else {
-            return Seq.of(CharSeq.of(""), CharSeq.of(""), CharSeq.of(str));
+
+        String match = null;
+        int start = 0, end = 0;
+        while (m.find()) {
+            match = m.group();
+            start = m.start();
+            end = m.end();
         }
+        if (match != null) {
+            return Seq.of(CharSeq.of(str.substring(0, start)),
+                    CharSeq.of(match),
+                    CharSeq.of(str.substring(end))
+            );
+        }
+        return Seq.of(CharSeq.of(""), CharSeq.of(""), CharSeq.of(str));
     }
 
     /**

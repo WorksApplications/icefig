@@ -108,14 +108,18 @@ public class CharSeqTest {
         CharSeq seq = CharSeq.of("var sample = 'Good good study, day day up.'");
         assertArrayEquals(new CharSeq[]{CharSeq.of("var sample "), CharSeq.of("="), CharSeq.of(" 'Good good study, day day up.'")},
                 seq.partition("=").toArray());
-        assertArrayEquals(new CharSeq[]{CharSeq.of(" 'Good good study, day day up.'"), CharSeq.of("="), CharSeq.of("var sample ")},
-                seq.rPartition("=").toArray());
 
         CharSeq seq1 = CharSeq.of("_word");
         assertArrayEquals(new CharSeq[]{CharSeq.of(""), CharSeq.of("_word"), CharSeq.of("")},
                 seq1.partition("\\w+").toArray());
-        assertArrayEquals(new CharSeq[]{CharSeq.of("_word"), CharSeq.of(""), CharSeq.of("")},
+        assertArrayEquals(new CharSeq[]{CharSeq.of(""), CharSeq.of(""), CharSeq.of("_word")},
                 seq1.partition("\\W+").toArray());
+
+        CharSeq seq2 = CharSeq.of("hello");
+        assertArrayEquals(new CharSeq[]{CharSeq.of("he"), CharSeq.of("l"), CharSeq.of("lo")},
+                seq2.partition("l").toArray());
+        assertArrayEquals(new CharSeq[]{CharSeq.of("hel"), CharSeq.of("l"), CharSeq.of("o")},
+                seq2.rPartition("l").toArray());
     }
 
     @Test
