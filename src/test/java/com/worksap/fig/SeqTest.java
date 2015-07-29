@@ -390,4 +390,5 @@ public class SeqTest {
         assertEquals(Seq.of(1), Seq.of(1).reverse());
         assertEquals(Seq.of(1, null), Seq.of(null, 1).reverse());
     }
+
 }
