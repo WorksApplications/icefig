@@ -40,14 +40,18 @@ public class HashTest {
         hash.put(1, 2);
         hash.put(2, 4);
         hash.put(5, 1);
+        Hash<Integer, Integer> origin = Hash.of(hash);
+        assertEquals(origin, hash);
 
         Hash<Integer, Integer> rejected = Hash.newHash();
         rejected.put(2, 4);
         rejected.put(5, 1);
         assertTrue(rejected.equals(hash.reject((k, v) -> k + v != 6)));
         assertFalse(rejected.equals(hash));
+        assertEquals(origin, hash);
         assertEquals(Hash.newHash(), hash.reject((k, v) -> k != v));
         assertNotEquals(Hash.newHash(), hash);
+        assertEquals(origin, hash);
     }
 
 
@@ -57,13 +61,17 @@ public class HashTest {
         hash.put(1, 2);
         hash.put(2, 4);
         hash.put(5, 1);
+        Hash<Integer, Integer> origin = Hash.of(hash);
+        assertEquals(origin, hash);
 
         Hash<Integer, Integer> filtered = Hash.newHash();
         filtered.put(1, 2);
         assertTrue(filtered.equals(hash.filter((k, v) -> k + v != 6)));
         assertFalse(filtered.equals(hash));
+        assertEquals(origin, hash);
         assertEquals(Hash.newHash(), hash.filter((k, v) -> k == v));
         assertNotEquals(Hash.newHash(), hash);
+        assertEquals(origin, hash);
     }
 
     @Test(expected = NullPointerException.class)
