@@ -191,4 +191,15 @@ public class CharSeqTest {
         seq.forEachByte(bytes::add);
         seq.forEachByteWithIndex((b, i) -> assertEquals(new Character((char) (b.byteValue())), seq.charAt(i)));
     }
+
+    @Test(expected = NullPointerException.class)
+    public void testEachCodePoint() {
+        CharSeq cs = CharSeq.of("hello\u0639");
+        assertEquals(6, cs.length());
+        assertEquals(6, cs.eachCodePoint().size());
+        assertEquals(Seq.of(104, 101, 108, 108, 111, 1593), cs.eachCodePoint());
+
+        cs.forEachCodePoint(i -> System.out.println(i));
+        cs.forEachCodePoint(null);
+    }
 }
