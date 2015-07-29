@@ -83,7 +83,7 @@ public interface Hash<K, V> extends Map<K, V> {
      * @return this hash itself with all key-value pairs which satisfy the condition removed
      * @throws NullPointerException if condition is null
      */
-    default Hash<K, V> removeIf(BiPredicate<K, V> condition) {
+    default Hash<K, V> reject$(BiPredicate<K, V> condition) {
         Objects.requireNonNull(condition);
         Seq<K> toBeRemoved = Seq.newSeq();
         this.forEach((k, v) -> {
@@ -104,7 +104,7 @@ public interface Hash<K, V> extends Map<K, V> {
      * @return this hash itself with all key-value pairs which don't satisfy the condition removed
      * @throws NullPointerException if condition is null
      */
-    default Hash<K, V> keepIf(BiPredicate<K, V> condition) {
+    default Hash<K, V> filter$(BiPredicate<K, V> condition) {
         Objects.requireNonNull(condition);
         Seq<K> toBeRemoved = Seq.newSeq();
         this.forEach((k, v) -> {
