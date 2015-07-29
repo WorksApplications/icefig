@@ -1,6 +1,7 @@
 package com.worksap.fig.lang;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiPredicate;
 
 /**
@@ -73,5 +74,47 @@ public interface Hash<K, V> extends Map<K, V> {
 
     static <K, V> Hash<K, V> of(Map<? extends K, ? extends V> map) {
         return new HashImpl<>(map);
+    }
+
+    /**
+     * Removes all key-value pairs which satisfy the condition on the hash itself.
+     * @param condition the condition used to filter key-value pairs by passing the key and value of the pair,
+     *                  returns true if the key-value pair satisfies the condition, otherwise returns false.
+     * @return this hash itself with all key-value pairs which satisfy the condition removed
+     * @throws NullPointerException if condition is null
+     */
+    default Hash<K, V> reject$(BiPredicate<K, V> condition) {
+        Objects.requireNonNull(condition);
+        Seq<K> toBeRemoved = Seq.newSeq();
+        this.forEach((k, v) -> {
+            if (condition.test(k, v)) {
+                toBeRemoved.add(k);
+            }
+        });
+        if (!toBeRemoved.isEmpty()) {
+            toBeRemoved.forEach(k -> this.remove(k));
+        }
+        return this;
+    }
+
+    /**
+     * Removes all the key-value pairs which don't satisfy the condition on the hash itself.
+     * @param condition the condition used to filter key-value pairs by passing the key and value of the pair,
+     *                  returns true if the key-value pair satisfies the condition, otherwise returns false.
+     * @return this hash itself with all key-value pairs which don't satisfy the condition removed
+     * @throws NullPointerException if condition is null
+     */
+    default Hash<K, V> filter$(BiPredicate<K, V> condition) {
+        Objects.requireNonNull(condition);
+        Seq<K> toBeRemoved = Seq.newSeq();
+        this.forEach((k, v) -> {
+            if (!condition.test(k, v)) {
+                toBeRemoved.add(k);
+            }
+        });
+        if (!toBeRemoved.isEmpty()) {
+            toBeRemoved.forEach(k -> this.remove(k));
+        }
+        return this;
     }
 }
