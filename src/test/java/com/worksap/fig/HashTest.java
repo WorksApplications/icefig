@@ -45,6 +45,9 @@ public class HashTest {
         rejected.put(2, 4);
         rejected.put(5, 1);
         assertTrue(rejected.equals(hash.reject((k, v) -> k + v != 6)));
+        assertFalse(rejected.equals(hash));
+        assertEquals(Hash.newHash(), hash.reject((k, v) -> k != v));
+        assertNotEquals(Hash.newHash(), hash);
     }
 
 
@@ -58,6 +61,9 @@ public class HashTest {
         Hash<Integer, Integer> filtered = Hash.newHash();
         filtered.put(1, 2);
         assertTrue(filtered.equals(hash.filter((k, v) -> k + v != 6)));
+        assertFalse(filtered.equals(hash));
+        assertEquals(Hash.newHash(), hash.filter((k, v) -> k == v));
+        assertNotEquals(Hash.newHash(), hash);
     }
 
     @Test(expected = NullPointerException.class)
