@@ -14,6 +14,8 @@ public class SeqTest {
 
     @Test
     public void testConstruction() {
+        Integer[] ints = new Integer[]{1, 2, 3};
+        assertEquals(3, Seq.of(ints).size());
         assertArrayEquals(new Integer[]{1, 2, 3}, Seq.of(1, 2, 3).toArray());
         assertArrayEquals(new Integer[]{2}, Seq.of(2).toArray());
         List<Integer> list = new ArrayList<>();

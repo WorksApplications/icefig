@@ -62,6 +62,10 @@ public interface Hash<K, V> extends Map<K, V> {
         return result;
     }
 
+    default Hash<K, V> set(K key, V value) {
+        put(key, value);
+        return this;
+    }
 
     static <K, V> Hash<K, V> newHash() {
         return new HashImpl<>();

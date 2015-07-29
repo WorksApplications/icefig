@@ -1,5 +1,8 @@
+plugins {
+    id 'net.researchgate.release' version '2.1.2'
+}
+
 group 'com.worksap'
-version '0.0.2-SNAPSHOT'
 
 apply plugin: 'java'
 
