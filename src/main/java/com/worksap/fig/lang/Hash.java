@@ -123,7 +123,7 @@ public interface Hash<K, V> extends Map<K, V> {
      * @param value the value
      * @return the collection of keys whose value is the given value
      */
-    default Seq<K> getKey(V value) {
+    default Seq<K> keysOf(V value) {
         Seq<K> result = Seq.newSeq();
         this.forEach((k, v) -> {
             if (value == null && v == null)
