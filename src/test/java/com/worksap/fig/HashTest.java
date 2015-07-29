@@ -59,4 +59,31 @@ public class HashTest {
         filtered.put(1, 2);
         assertTrue(filtered.equals(hash.filter((k, v) -> k + v != 6)));
     }
+
+    @Test(expected = NullPointerException.class)
+    public void testRemoveIf() {
+        Hash<Integer, Integer> hash = Hash.newHash();
+        hash.put(1, 2);
+        hash.put(2, 4);
+        hash.put(5, 1);
+        assertEquals(2, hash.removeIf((k, v) -> k > 1 && v > 1).size());
+        assertEquals(null, hash.get(2));
+        assertEquals(2, hash.removeIf((k, v) -> k == v).size());
+        assertEquals(Hash.newHash(), hash.removeIf((k, v) -> k != v));
+        hash.removeIf(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testKeepIf() {
+        Hash<Integer, Integer> hash = Hash.newHash();
+        hash.put(1, 2);
+        hash.put(2, 4);
+        hash.put(5, 1);
+        assertEquals(2, hash.keepIf((k, v) -> !(k > 1 && v > 1)).size());
+        assertEquals(null, hash.get(2));
+        assertEquals(2, hash.keepIf((k, v) -> k != v).size());
+        assertEquals(Hash.newHash(), hash.keepIf((k, v) -> k == v));
+        hash.keepIf(null);
+    }
+
 }
