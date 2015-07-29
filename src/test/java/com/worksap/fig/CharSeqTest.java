@@ -198,6 +198,7 @@ public class CharSeqTest {
         assertEquals(6, cs.length());
         assertEquals(6, cs.eachCodePoint().size());
         assertEquals(Seq.of(104, 101, 108, 108, 111, 1593), cs.eachCodePoint());
+        assertEquals(Seq.of(), CharSeq.of("").eachCodePoint());
 
         cs.forEachCodePoint(i -> System.out.println(i));
         cs.forEachCodePoint(null);
