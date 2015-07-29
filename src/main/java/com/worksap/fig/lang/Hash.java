@@ -117,4 +117,47 @@ public interface Hash<K, V> extends Map<K, V> {
         }
         return this;
     }
+
+    /**
+     * Returns the keys of the given value.
+     * @param value the value
+     * @return the collection of keys whose value is the given value
+     */
+    default Seq<K> getKey(V value) {
+        Seq<K> result = Seq.newSeq();
+        this.forEach((k, v) -> {
+            if (value == null && v == null)
+                result.add(k);
+            else if(value != null && v != null && v.equals(value))
+                result.add(k);
+        });
+        return result;
+    }
+
+    /**
+     * Returns a new hash containing the mappings of the specified hash and this hash itself.
+     * The value for entries with duplicate keys will be that of the specified hash.
+     * @param another the specified hash to be merged
+     * @return the new hash containing all the mappings of the specified hash and this hash itself
+     */
+    default Hash<K, V> merge(Hash<? extends K, ? extends V> another) {
+        Hash<K, V> result = Hash.of(this);
+        if (another != null)
+            result.putAll(another);
+        return result;
+    }
+    /**
+     * Copies all of the mappings from the specified hash to this hash.
+     * The value for entries with duplicate keys will be that of the specified hash.
+     * <p>
+     *     Similar to {@link #merge(Hash)}, the difference is that this function takes effect on this hash itself.
+     * </p>
+     * @param another the specified hash to be merged
+     * @return the hash itself containing all the mappings of the specified hash
+     */
+    default Hash<K, V> merge$(Hash<? extends K, ? extends V> another) {
+        if (another != null)
+            this.putAll(another);
+        return this;
+    }
 }

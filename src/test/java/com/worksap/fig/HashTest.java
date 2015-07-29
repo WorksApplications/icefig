@@ -1,6 +1,7 @@
 package com.worksap.fig;
 
 import com.worksap.fig.lang.Hash;
+import com.worksap.fig.lang.Seq;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -100,4 +101,93 @@ public class HashTest {
         hash.filter$(null);
     }
 
+    @Test
+    public void testGetKey() {
+        Hash<Integer, Integer> hash = Hash.newHash();
+        hash.put(1, 2);
+        hash.put(2, 4);
+        hash.put(3, 2);
+        hash.put(4, null);
+        hash.put(5, 1);
+        Seq<Integer> keys = hash.getKey(2);
+        keys.sort(Integer::compare);
+        assertEquals(Seq.of(1, 3), keys);
+        assertEquals(Seq.of(2), hash.getKey(4));
+        assertEquals(Seq.of(), hash.getKey(3));
+        assertEquals(Seq.of(4), hash.getKey(null));
+    }
+
+    @Test
+    public void testMerge() {
+        Hash<Integer, Integer> hash1 = Hash.newHash();
+        hash1.put(1, 2);
+        hash1.put(2, 4);
+        Hash<Integer, Integer> origin1 = Hash.of(hash1);
+        Hash<Integer, Integer> hash2 = Hash.newHash();
+        hash2.put(3, 2);
+        hash2.put(2, 3);
+        Hash<Integer, Integer> origin2 = Hash.of(hash2);
+
+        Hash<Integer, Integer> merged = Hash.newHash();
+        merged.put(1, 2);
+        merged.put(2, 3);
+        merged.put(3, 2);
+
+        assertEquals(merged, hash1.merge(hash2));
+        assertEquals(origin1, hash1);
+        assertEquals(origin2, hash2);
+
+        merged.set(2, 4);
+        assertEquals(merged, hash2.merge(hash1));
+        assertEquals(origin1, hash1);
+        assertEquals(origin2, hash2);
+
+        assertEquals(origin1, hash1.merge(Hash.newHash()));
+        assertEquals(origin1, Hash.newHash().merge(hash1));
+
+        assertEquals(origin1, hash1.merge(null));
+
+        hash1.put(null, 1);
+        merged.put(null, 1);
+        merged.set(2, 3);
+        assertEquals(merged, hash1.merge(hash2));
+    }
+
+    @Test
+    public void testMerge$() {
+        Hash<Integer, Integer> hash1 = Hash.newHash();
+        hash1.put(1, 2);
+        hash1.put(2, 4);
+        Hash<Integer, Integer> origin1 = Hash.of(hash1);
+        Hash<Integer, Integer> hash2 = Hash.newHash();
+        hash2.put(3, 2);
+        hash2.put(2, 3);
+        Hash<Integer, Integer> origin2 = Hash.of(hash2);
+
+        Hash<Integer, Integer> merged = Hash.newHash();
+        merged.put(1, 2);
+        merged.put(2, 3);
+        merged.put(3, 2);
+
+        assertEquals(merged, hash1.merge$(hash2));
+        assertEquals(merged, hash1);
+        assertEquals(origin2, hash2);
+
+        hash1 = Hash.of(origin1);
+        merged.set(2, 4);
+        assertEquals(merged, hash2.merge$(hash1));
+        assertEquals(origin1, hash1);
+        assertEquals(merged, hash2);
+
+        hash2 = Hash.of(origin2);
+        assertEquals(origin1, hash1.merge$(Hash.newHash()));
+        assertEquals(origin1, Hash.newHash().merge$(hash1));
+
+        assertEquals(origin1, hash1.merge$(null));
+
+        hash1.put(null, 1);
+        merged.put(null, 1);
+        merged.set(2, 3);
+        assertEquals(merged, hash1.merge$(hash2));
+    }
 }
