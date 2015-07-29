@@ -102,19 +102,19 @@ public class HashTest {
     }
 
     @Test
-    public void testGetKey() {
+    public void testKeysOf() {
         Hash<Integer, Integer> hash = Hash.newHash();
         hash.put(1, 2);
         hash.put(2, 4);
         hash.put(3, 2);
         hash.put(4, null);
         hash.put(5, 1);
-        Seq<Integer> keys = hash.getKey(2);
+        Seq<Integer> keys = hash.keysOf(2);
         keys.sort(Integer::compare);
         assertEquals(Seq.of(1, 3), keys);
-        assertEquals(Seq.of(2), hash.getKey(4));
-        assertEquals(Seq.of(), hash.getKey(3));
-        assertEquals(Seq.of(4), hash.getKey(null));
+        assertEquals(Seq.of(2), hash.keysOf(4));
+        assertEquals(Seq.of(), hash.keysOf(3));
+        assertEquals(Seq.of(4), hash.keysOf(null));
     }
 
     @Test
