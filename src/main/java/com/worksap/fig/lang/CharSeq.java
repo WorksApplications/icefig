@@ -307,7 +307,7 @@ public class CharSeq {
      */
     public CharSeq forEachCharWithIndex(BiConsumer<Character, Integer> action) {
         Objects.requireNonNull(action);
-        characterSequence().forEachWithIndex(action);
+        characterSequence().forEach(action);
         return this;
     }
 
@@ -332,7 +332,7 @@ public class CharSeq {
      */
     public CharSeq forEachByteWithIndex(BiConsumer<Byte, Integer> action) {
         Objects.requireNonNull(action);
-        byteSequence().forEachWithIndex(action);
+        byteSequence().forEach(action);
         return this;
     }
 
@@ -359,7 +359,7 @@ public class CharSeq {
     public CharSeq forEachLineWithIndex(BiConsumer<CharSeq, Integer> action) {
         Objects.requireNonNull(action);
         Seq<CharSeq> lines = this.lines();
-        lines.forEachWithIndex(action);
+        lines.forEach(action);
         return this;
     }
 

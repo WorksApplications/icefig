@@ -13,8 +13,10 @@ public interface Seq<T> extends List<T> {
      * Transform each element of the seq into another value using the same function, resulting a new seq without changing the original one.
      *
      * @return The new seq after transformation.
+     * @throws NullPointerException if func is null
      */
     default <R> Seq<R> map(Function<T, R> func) {
+        Objects.requireNonNull(func);
         Seq<R> result = new SeqImpl<>();
         this.forEach(i -> result.add(func.apply(i)));
         return result;
@@ -22,15 +24,18 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Similar to {@link #map(Function)}, with additional parameter "index" as the second parameter of the lambda expression.
+     * @throws NullPointerException if func is null
      */
-    default <R> Seq<R> mapWithIndex(BiFunction<T, Integer, R> func) {
+    default <R> Seq<R> map(BiFunction<T, Integer, R> func) {
+        Objects.requireNonNull(func);
         Seq<R> result = new SeqImpl<>();
-        this.forEachWithIndex((s, i) -> result.add(func.apply(s, i)));
+        this.forEach((s, i) -> result.add(func.apply(s, i)));
         return result;
     }
 
     /**
      * @return The beginning element of the seq.
+     * @throws IndexOutOfBoundsException if the seq is empty
      */
     default T first() {
         return get(0);
@@ -39,6 +44,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * @return The ending element of the seq.
+     * @throws IndexOutOfBoundsException if the seq is empty
      */
     default T last() {
         return get(size() - 1);
@@ -65,7 +71,7 @@ public interface Seq<T> extends List<T> {
      */
     default CharSeq join(CharSequence delimiter, CharSequence prefix, CharSequence suffix) {
         StringBuilder stringBuilder = new StringBuilder(prefix);
-        forEachWithIndex((t, i) -> {
+        forEach((t, i) -> {
             if (i != 0) {
                 stringBuilder.append(delimiter);
             }
@@ -119,8 +125,10 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Similar to {@link #forEach(Consumer)}, with additional parameter "index" as the second parameter of the lambda expression.
+     * @throws NullPointerException if action is null
      */
-    default void forEachWithIndex(BiConsumer<? super T, Integer> action) {
+    default void forEach(BiConsumer<? super T, Integer> action) {
+        Objects.requireNonNull(action);
         for (int i = 0; i < this.size(); i++) {
             action.accept(this.get(i), i);
         }
@@ -149,11 +157,13 @@ public interface Seq<T> extends List<T> {
     /**
      * Similar with {@link #eachCons(int)}, but instead of to return the transformed seq, it iterates the transformed seq and do action.
      *
+     * @throws NullPointerException if action is null
      * @throws IllegalArgumentException if n <= 0
      */
     default void forEachCons(int n, Consumer<Seq<T>> action) {
+        Objects.requireNonNull(action);
         if (n <= 0) {
-            throw new IllegalArgumentException("n should be positive number!");
+            throw new IllegalArgumentException("n should be a positive number!");
         }
         for (int i = 0; i <= this.size() - n; i++) {
             action.accept(this.subSeq(i, i + n));
@@ -162,7 +172,9 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Sort the seq by the comparator, resulting a new seq, without changing the original seq.
-     *
+     * @param comparator the comparator to determine the order of the seq. A
+     *        {@code null} value indicates that the elements' <i>natural
+     *        ordering</i> should be used.
      * @return A new seq sorted
      */
     default Seq<T> order(Comparator<? super T> comparator) {
@@ -173,7 +185,9 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Sort the seq itself by the comparator.
-     *
+     * @param comparator the comparator to determine the order of the seq. A
+     *        {@code null} value indicates that the elements' <i>natural
+     *        ordering</i> should be used.
      * @return The seq itself after sorting
      */
     default Seq<T> order$(Comparator<? super T> comparator) {
@@ -206,8 +220,10 @@ public interface Seq<T> extends List<T> {
      * Find the first element which satisfy the condition.
      *
      * @return The element, or null if no element found.
+     * @throws NullPointerException if condition is null
      */
     default T findFirst(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
         for (int i = 0; i < size(); i++) {
             T t = get(i);
             if (condition.test(t)) {
@@ -221,8 +237,10 @@ public interface Seq<T> extends List<T> {
      * Find the last element which satisfy the condition.
      *
      * @return The element, or null if no element found.
+     * @throws NullPointerException if condition is null
      */
     default T findLast(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
         for (int i = size() - 1; i >= 0; i--) {
             T t = get(i);
             if (condition.test(t)) {
@@ -236,8 +254,10 @@ public interface Seq<T> extends List<T> {
      * Find the index of the first element which satisfy the condition.
      *
      * @return The index, or -1 if no element found.
+     * @throws NullPointerException if condition is null
      */
     default int findFirstIndex(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
         for (int i = 0; i < size(); i++) {
             T t = get(i);
             if (condition.test(t)) {
@@ -251,8 +271,10 @@ public interface Seq<T> extends List<T> {
      * Find the index of the last element which satisfy the condition.
      *
      * @return The index, or -1 if no element found.
+     * @throws NullPointerException if condition is null
      */
     default int findLastIndex(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
         for (int i = size() - 1; i >= 0; i--) {
             T t = get(i);
             if (condition.test(t)) {
@@ -269,9 +291,11 @@ public interface Seq<T> extends List<T> {
      * </p>
      *
      * @return The seq itself after the change
+     * @throws NullPointerException if values is null
      */
     @SuppressWarnings({"unchecked", "varargs"})
     default Seq<T> push(T... values) {
+        Objects.requireNonNull(values);
         push(Arrays.asList(values));
         return this;
     }
@@ -283,8 +307,10 @@ public interface Seq<T> extends List<T> {
      * </p>
      *
      * @return The seq itself after the change
+     * @throws NullPointerException if collection is null
      */
     default Seq<T> push(Collection<? extends T> collection) {
+        Objects.requireNonNull(collection);
         addAll(collection);
         return this;
     }
@@ -296,9 +322,11 @@ public interface Seq<T> extends List<T> {
      * </p>
      *
      * @return The seq itself after the change
+     * @throws NullPointerException if values is null
      */
     @SuppressWarnings({"unchecked", "varargs"})
     default Seq<T> prepend(T... values) {
+        Objects.requireNonNull(values);
         for (int i = values.length - 1; i >= 0; i--) {
             add(0, values[i]);
         }
@@ -312,9 +340,11 @@ public interface Seq<T> extends List<T> {
      * </p>
      *
      * @return The seq itself after the change
+     * @throws NullPointerException is collection is null
      */
     @SuppressWarnings({"unchecked", "varargs"})
     default Seq<T> prepend(Collection<? extends T> collection) {
+        Objects.requireNonNull(collection);
         T[] array = (T[]) collection.toArray();
         return prepend(array);
     }
@@ -326,9 +356,11 @@ public interface Seq<T> extends List<T> {
      * </p>
      *
      * @return A new seq after the change
+     * @throws NullPointerException is values is null
      */
     @SuppressWarnings({"unchecked", "varargs"})
     default Seq<T> concat(T... values) {
+        Objects.requireNonNull(values);
         return concat(Arrays.asList(values));
     }
 
@@ -339,8 +371,10 @@ public interface Seq<T> extends List<T> {
      * </p>
      *
      * @return A new seq after the change
+     * @throws NullPointerException is collection is null
      */
     default Seq<T> concat(Collection<? extends T> collection) {
+        Objects.requireNonNull(collection);
         Seq<T> copy = new SeqImpl<>(this);
         copy.addAll(collection);
         return copy;
@@ -353,9 +387,11 @@ public interface Seq<T> extends List<T> {
      * </p>
      *
      * @return The seq itself after the change
+     * @throws NullPointerException is values is null
      */
     @SuppressWarnings({"unchecked", "varargs"})
     default Seq<T> preConcat(T... values) {
+        Objects.requireNonNull(values);
         return preConcat(Arrays.asList(values));
     }
 
@@ -366,8 +402,10 @@ public interface Seq<T> extends List<T> {
      * </p>
      *
      * @return The seq itself after the change.
+     * @throws NullPointerException is collection is null
      */
     default Seq<T> preConcat(Collection<? extends T> collection) {
+        Objects.requireNonNull(collection);
         Seq<T> copy = new SeqImpl<>(collection);
         copy.addAll(this);
         return copy;
@@ -375,11 +413,22 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Create a new seq from values.
+     * @throws NullPointerException if values is null
      */
     @SafeVarargs
     static <T> Seq<T> of(T... values) {
+        Objects.requireNonNull(values);
         Collection<T> col = Arrays.asList(values);
         return new SeqImpl<>(col);
+    }
+
+    /**
+     * Create a new seq from collection.
+     * @throws NullPointerException if values is null
+     */
+    static <T> Seq<T> of(Collection<? extends T> values) {
+        Objects.requireNonNull(values);
+        return new SeqImpl<>(values);
     }
 
     /**
@@ -427,17 +476,14 @@ public interface Seq<T> extends List<T> {
     }
 
     /**
-     * Create a new seq from collection.
-     */
-    static <T> Seq<T> of(Collection<? extends T> values) {
-        return new SeqImpl<>(values);
-    }
-
-    /**
      * Create a new seq which is the sub seq of the current one.
      *
      * @param fromIndex The start index, inclusive.
      * @param toIndex   The end index, exclusive.
+     * @throws IndexOutOfBoundsException if an endpoint index value is out of range
+     *         {@code (fromIndex < 0 || toIndex > size)}
+     * @throws IllegalArgumentException if the endpoint indices are out of order
+     *         {@code (fromIndex > toIndex)}
      */
     default Seq<T> subSeq(int fromIndex, int toIndex) {
         return new SeqImpl<>(this.subList(fromIndex, toIndex));
@@ -488,10 +534,10 @@ public interface Seq<T> extends List<T> {
      * @return the new seq without elements which satisfy the condition
      * @throws NullPointerException if condition is null
      */
-    default Seq<T> rejectWithIndex(BiPredicate<T, Integer> condition) {
+    default Seq<T> reject(BiPredicate<T, Integer> condition) {
         Objects.requireNonNull(condition);
         Seq<T> copy = new SeqImpl<>();
-        this.forEachWithIndex((e, i) -> {
+        this.forEach((e, i) -> {
             if (!condition.test(e, i))
                 copy.add(e);
         });
@@ -508,7 +554,7 @@ public interface Seq<T> extends List<T> {
      * @return the seq itself after removing elements which satisfy the condition
      * @throws NullPointerException if condition is null
      */
-    default Seq<T> rejectWithIndex$(BiPredicate<T, Integer> condition) {
+    default Seq<T> reject$(BiPredicate<T, Integer> condition) {
         Objects.requireNonNull(condition);
         final Iterator<T> each = iterator();
         int index = 0;
@@ -548,10 +594,10 @@ public interface Seq<T> extends List<T> {
      * @return the new seq containing only the elements satisfying the condition
      * @throws NullPointerException if condition is null
      */
-    default Seq<T> filterWithIndex(BiPredicate<T, Integer> condition) {
+    default Seq<T> filter(BiPredicate<T, Integer> condition) {
         Objects.requireNonNull(condition);
         Seq<T> copy = new SeqImpl<>();
-        this.forEachWithIndex((e, i) -> {
+        this.forEach((e, i) -> {
             if (condition.test(e, i))
                 copy.add(e);
         });
@@ -638,7 +684,7 @@ public interface Seq<T> extends List<T> {
      * @return the number of elements which satisfy the condition
      * @throws NullPointerException if condition is null
      */
-    default int countCondition(Predicate<T> condition) {
+    default int countIf(Predicate<T> condition) {
         Objects.requireNonNull(condition);
         int count = 0;
         for (int i = 0; i < size(); i++){
@@ -651,14 +697,14 @@ public interface Seq<T> extends List<T> {
     /**
      * Returns the number of elements which satisfy the condition.
      * <p>
-     *     Similar to {@link #countCondition(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression.
+     *     Similar to {@link #countIf(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression.
      * </p>
      * @param condition the condition used to filter elements by passing the element and its index,
      *               returns true if the element satisfies the condition, otherwise returns false.
      * @return the number of elements which satisfy the condition
      * @throws NullPointerException if condition is null
      */
-    default int countConditionWithIndex(BiPredicate<T, Integer> condition) {
+    default int countIf(BiPredicate<T, Integer> condition) {
         Objects.requireNonNull(condition);
         int count = 0;
         for (int i = 0; i < size(); i++){
