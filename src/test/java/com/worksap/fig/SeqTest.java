@@ -4,6 +4,7 @@ import com.worksap.fig.lang.Seq;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.function.*;
 
 import static org.junit.Assert.*;
 
@@ -22,18 +23,26 @@ public class SeqTest {
         list.add(3);
         list.add(4);
         assertArrayEquals(new Integer[]{3, 4}, Seq.of(list).toArray());
+        Integer[] values = null;
+        assertThrows(NullPointerException.class, () -> Seq.of(values));
+        Collection<Integer> cols = null;
+        assertThrows(NullPointerException.class, () -> Seq.of(cols));
     }
 
     @Test
     public void testMap() {
         assertArrayEquals(new Integer[]{2, 4, 6}, Seq.of(1, 2, 3).map(i -> i * 2).toArray());
         assertArrayEquals(new String[]{"x1", "x2", "x3"}, Seq.of(1, 2, 3).map(i -> "x" + i).toArray());
+        Function<Integer, Integer> f = null;
+        assertThrows(NullPointerException.class, () -> Seq.of(1).map(f));
     }
 
 
     @Test
     public void testMapWithIndex() {
-        assertArrayEquals(new String[]{"a1", "b2", "c3"}, Seq.of("a", "b", "c").mapWithIndex((s, i) -> s + (i + 1)).toArray());
+        assertArrayEquals(new String[]{"a1", "b2", "c3"}, Seq.of("a", "b", "c").map((s, i) -> s + (i + 1)).toArray());
+        BiFunction<Integer, Integer, Integer> f = null;
+        assertThrows(NullPointerException.class, () -> Seq.of(1).map(f));
     }
 
     @Test
@@ -68,22 +77,25 @@ public class SeqTest {
     @Test
     public void testForEachWithIndex() {
         final Seq<String> seq = Seq.of("a", "b", "c");
-        seq.forEachWithIndex((item, index) -> {
+        seq.forEach((item, index) -> {
             assertEquals(seq.get(index), item);
         });
+        seq.forEach(item -> assertTrue(seq.contains(item)));
+        BiConsumer<String, Integer> f = null;
+        assertThrows(NullPointerException.class, () -> seq.forEach(f));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testEachCons() {
         final Seq<String> seq = Seq.of("a", "b", "c", "d");
         assertArrayEquals(new Object[]{Seq.of("a", "b"), Seq.of("b", "c"), Seq.of("c", "d")}, seq.eachCons(2).toArray());
         assertArrayEquals(new Object[]{Seq.of("a", "b", "c"), Seq.of("b", "c", "d")}, seq.eachCons(3).toArray());
         assertArrayEquals(new Object[]{Seq.of("a", "b", "c", "d")}, seq.eachCons(4).toArray());
         assertArrayEquals(new Object[]{}, seq.eachCons(5).toArray());
-        seq.eachCons(-1);
+        assertThrows(IllegalArgumentException.class, () -> seq.eachCons(-1));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testForEachCons() {
         final Seq<String> seq = Seq.of("a", "b", "c", "d");
         Seq<Seq<String>> result = Seq.newSeq();
@@ -98,14 +110,48 @@ public class SeqTest {
         result.clear();
         seq.forEachCons(5, result::add);
         assertArrayEquals(new Object[]{}, result.toArray());
-        seq.eachCons(0);
+
+        assertThrows(NullPointerException.class, () -> seq.forEachCons(0, null));
+        assertThrows(IllegalArgumentException.class, () -> seq.forEachCons(0, result::add));
     }
 
     @Test
     public void testDistinct() {
-        assertArrayEquals(new Integer[]{1, 2, 3}, Seq.of(1, 2, 3).distinct().toArray());
-        assertArrayEquals(new Integer[]{1, 2, 3}, Seq.of(1, 2, 3, 2, 3).distinct().toArray());
-        assertArrayEquals(new Integer[]{3, 2, 1, 4}, Seq.of(3, 2, 1, 2, 3, 4).distinct().toArray());
+        Seq<Integer> seq = Seq.of(1, 2, 3);
+        assertArrayEquals(new Integer[]{1, 2, 3}, seq.distinct().toArray());
+        assertEquals(Seq.of(1, 2, 3), seq);
+        assertArrayEquals(new Integer[]{1, 2, 3}, seq.distinct$().toArray());
+        assertEquals(Seq.of(1, 2, 3), seq);
+
+        seq = Seq.of(1, 2 ,3, 2, 3);
+        assertArrayEquals(new Integer[]{1, 2, 3}, seq.distinct().toArray());
+        assertEquals(Seq.of(1, 2, 3, 2, 3), seq);
+        assertArrayEquals(new Integer[]{1, 2, 3}, seq.distinct$().toArray());
+        assertEquals(Seq.of(1, 2, 3), seq);
+
+        seq = Seq.of(3, 2, 1, 2, 3, 4);
+        assertArrayEquals(new Integer[]{3, 2, 1, 4}, seq.distinct().toArray());
+        assertEquals(Seq.of(3, 2, 1, 2, 3, 4), seq);
+        assertArrayEquals(new Integer[]{3, 2, 1, 4}, seq.distinct$().toArray());
+        assertEquals(Seq.of(3, 2, 1, 4), seq);
+
+        seq = Seq.of(1, 1, 1, 1);
+        assertEquals(Seq.of(1), seq.distinct());
+        assertEquals(Seq.of(1, 1, 1, 1), seq);
+        assertEquals(Seq.of(1), seq.distinct$());
+        assertEquals(Seq.of(1), seq);
+
+        seq = Seq.of(null, 1, null, 1, 2);
+        assertEquals(Seq.of(null, 1, 2), seq.distinct());
+        assertEquals(Seq.of(null, 1, null, 1, 2), seq);
+        assertEquals(Seq.of(null, 1, 2), seq.distinct$());
+        assertEquals(Seq.of(null, 1, 2), seq);
+
+        seq.clear();
+        assertEquals(Seq.newSeq(), seq.distinct());
+        assertEquals(Seq.newSeq(), seq);
+        assertEquals(Seq.newSeq(), seq.distinct$());
+        assertEquals(Seq.newSeq(), seq);
     }
 
     @Test
@@ -115,6 +161,9 @@ public class SeqTest {
         assertArrayEquals(new Integer[]{3, 2, 1}, seq.order((a, b) -> b - a).toArray());
         // original seq should remain unchanged
         assertArrayEquals(new Integer[]{2, 1, 3}, seq.toArray());
+
+        assertArrayEquals(new Integer[]{1, 2, 3}, seq.order(null).toArray());
+        assertEquals(Seq.newSeq(), Seq.newSeq().order(null));
     }
 
     @Test
@@ -123,6 +172,8 @@ public class SeqTest {
         assertArrayEquals(new Integer[]{1, 2, 3}, seq.order$((a, b) -> a - b).toArray());
         assertArrayEquals(new Integer[]{3, 2, 1}, seq.order$((a, b) -> b - a).toArray());
         assertArrayEquals(new Integer[]{3, 2, 1}, seq.toArray());
+        assertArrayEquals(new Integer[]{1, 2, 3}, seq.order$(null).toArray());
+        assertEquals(Seq.newSeq(), Seq.newSeq().order$(null));
     }
 
     @Test
@@ -134,13 +185,14 @@ public class SeqTest {
 
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void testFirstLast() {
         Seq<Integer> seq = Seq.of(1, 2, 3);
         assertEquals((Integer) 1, seq.first());
         assertEquals((Integer) 3, seq.last());
         seq.clear();
-        seq.first();
+        assertThrows(IndexOutOfBoundsException.class, () -> seq.first());
+        assertThrows(IndexOutOfBoundsException.class, () -> seq.last());
     }
 
     static class TestObj {
@@ -185,6 +237,10 @@ public class SeqTest {
         assertEquals(-1, people.findLastIndex(p -> p.age == 1));
         assertNull(people.findFirst(p -> p.age == 1));
         assertNull(people.findLast(p -> p.age == 1));
+        assertThrows(NullPointerException.class, () -> people.findFirst(null));
+        assertThrows(NullPointerException.class, () -> people.findLast(null));
+        assertThrows(NullPointerException.class, () -> people.findFirstIndex(null));
+        assertThrows(NullPointerException.class, () -> people.findLastIndex(null));
     }
 
     @Test
@@ -198,6 +254,10 @@ public class SeqTest {
         assertEquals(Seq.of(1, 2, 3, 4, 5), seq);
         seq.prepend(4, 5);
         assertEquals(Seq.of(4, 5, 1, 2, 3, 4, 5), seq);
+        Integer[] ints = null;
+        assertThrows(NullPointerException.class, () -> Seq.of(1).push(ints));
+        Collection<Integer> cols = null;
+        assertThrows(NullPointerException.class, () -> Seq.of(1).push(cols));
     }
 
     @Test
@@ -211,17 +271,25 @@ public class SeqTest {
         assertEquals(Seq.of(1, 2, 3), seq);
         seq.preConcat(4, 5);
         assertEquals(Seq.of(1, 2, 3), seq);
+        Integer[] ints = null;
+        assertThrows(NullPointerException.class, () -> Seq.of(1).prepend(ints));
+        assertThrows(NullPointerException.class, () -> Seq.of(1).concat(ints));
+        assertThrows(NullPointerException.class, () -> Seq.of(1).preConcat(ints));
+        Collection<Integer> cols = null;
+        assertThrows(NullPointerException.class, () -> Seq.of(1).prepend(cols));
+        assertThrows(NullPointerException.class, () -> Seq.of(1).concat(cols));
+        assertThrows(NullPointerException.class, () -> Seq.of(1).preConcat(cols));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testReject() {
         Seq<Integer> seq = Seq.of(1, 2, 3);
-        Seq<Integer> seq1 = seq.rejectWithIndex((e, i) -> (e > 1 && i % 2 == 0));
+        Seq<Integer> seq1 = seq.reject((e, i) -> (e > 1 && i % 2 == 0));
         assertEquals(Seq.of(1, 2, 3), seq);
         assertEquals(Seq.of(1, 2), seq1);
 
         Seq<Integer> seq$ = Seq.of(1, 2, 3);
-        Seq<Integer> seq1$ = seq$.rejectWithIndex$((e, i) -> (e > 1 && i % 2 == 0));
+        Seq<Integer> seq1$ = seq$.reject$((e, i) -> (e > 1 && i % 2 == 0));
         assertEquals(Seq.of(1, 2), seq$);
         assertEquals(Seq.of(1, 2), seq1$);
         assertEquals(seq$, seq1$);
@@ -237,14 +305,19 @@ public class SeqTest {
         assertEquals(Seq.of(1), seq1$);
         assertEquals(seq$, seq1$);
 
-        seq.rejectWithIndex(null);
+        Predicate<Integer> predicate = null;
+        assertThrows(NullPointerException.class, () -> Seq.of(1).reject(predicate));
+        assertThrows(NullPointerException.class, () -> Seq.of(1).reject$(predicate));
+        BiPredicate<Integer, Integer> biPredicate = null;
+        assertThrows(NullPointerException.class, () -> Seq.of(1).reject(biPredicate));
+        assertThrows(NullPointerException.class, () -> Seq.of(1).reject$(biPredicate));
 
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testFilter() {
         Seq<Integer> seq = Seq.of(1, 2, 3);
-        Seq<Integer> seq1 = seq.filterWithIndex((e, i) -> (e > 1 && i % 2 == 0));
+        Seq<Integer> seq1 = seq.filter((e, i) -> (e > 1 && i % 2 == 0));
         assertEquals(Seq.of(1, 2, 3), seq);
         assertEquals(Seq.of(3), seq1);
 
@@ -252,10 +325,13 @@ public class SeqTest {
         assertEquals(Seq.of(1, 2, 3), seq);
         assertEquals(Seq.of(2, 3), seq1$);
 
-        seq.filter(null);
+        Predicate<Integer> predicate = null;
+        assertThrows(NullPointerException.class, () -> seq.filter(predicate));
+        BiPredicate<Integer, Integer> biPredicate = null;
+        assertThrows(NullPointerException.class, () -> seq.filter(biPredicate));
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void testGet() {
         Seq<Integer> seq = Seq.of(1, 2, 3, 4, 5, 6);
         assertEquals(new Integer(1), seq.get(0));
@@ -268,10 +344,11 @@ public class SeqTest {
         assertEquals(new Integer(100), seq.get(6, 100));
         assertEquals(new Integer(100), seq.get(-7, 100));
 
-        seq.get(6);
+        assertThrows(IndexOutOfBoundsException.class, () -> seq.get(6));
+        assertThrows(IndexOutOfBoundsException.class, () -> seq.get(-7));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testNewSeq() {
         assertEquals(Seq.of(), Seq.newSeq());
         Seq<Integer> seq = Seq.newSeq();
@@ -288,11 +365,12 @@ public class SeqTest {
         assertEquals(10, Seq.newSeq(10).size());
         assertEquals(10, Seq.newSeq(10, 1).size());
         assertEquals(10, Seq.newSeq(10, i -> i + 1).size());
-
-        Seq.newSeq(10, null);
+        Integer ii = null;
+        assertEquals(Seq.of(null, null), Seq.newSeq(2, ii));
+        assertThrows(NullPointerException.class, () -> Seq.newSeq(10, null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testRepeat() {
         Seq<Integer> seq = Seq.of(1, 2);
         assertEquals(Seq.of(1, 2, 1, 2, 1, 2, 1, 2), seq.repeat(4));
@@ -300,7 +378,8 @@ public class SeqTest {
         assertEquals(Seq.of(1, 2), seq.repeat$(1));
         assertEquals(Seq.of(1, 2, 1, 2, 1, 2, 1, 2), seq.repeat$(4));
         assertEquals(Seq.of(1, 2, 1, 2, 1, 2, 1, 2), seq);
-        assertEquals(Seq.of(), seq.repeat$(0));
+        assertThrows(IllegalArgumentException.class, () -> seq.repeat(0));
+        assertThrows(IllegalArgumentException.class, () -> seq.repeat$(0));
     }
 
     @Test
@@ -312,19 +391,23 @@ public class SeqTest {
         assertEquals(Seq.of(1, 2, 3, 4, 5), seq);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testCount() {
         Seq<Integer> seq = Seq.of(1, 1, null, 2, null, 3, 1, 4);
         assertEquals(3, seq.count(1));
         assertEquals(1, seq.count(2));
         assertEquals(2, seq.count(null));
-        assertEquals(2, seq.countCondition(e -> e == null));
-        assertEquals(3, seq.countCondition(e -> e != null && e > 1));
-        assertEquals(2, seq.countConditionWithIndex((e, i) -> e != null && e > 1 && i < seq.size() - 1));
-        seq.countConditionWithIndex(null);
+        assertEquals(2, seq.countIf(e -> e == null));
+        assertEquals(3, seq.countIf(e -> e != null && e > 1));
+        assertEquals(2, seq.countIf((e, i) -> e != null && e > 1 && i < seq.size() - 1));
+
+        Predicate<Integer> predicate = null;
+        assertThrows(NullPointerException.class, () -> seq.countIf(predicate));
+        BiPredicate<Integer, Integer> biPredicate = null;
+        assertThrows(NullPointerException.class, () -> seq.countIf(biPredicate));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testEachSlice() {
         final Seq<String> seq = Seq.of("a", "b", "c", "d", "e");
         assertArrayEquals(new Object[]{Seq.of("a"), Seq.of("b"), Seq.of("c"), Seq.of("d"), Seq.of("e")}, seq.eachSlice(1).toArray());
@@ -333,10 +416,10 @@ public class SeqTest {
         assertArrayEquals(new Object[]{Seq.of("a", "b", "c", "d"), Seq.of("e")}, seq.eachSlice(4).toArray());
         assertArrayEquals(new Object[]{seq}, seq.eachSlice(5).toArray());
         assertArrayEquals(new Object[]{seq}, seq.eachSlice(6).toArray());
-        seq.eachSlice(0);
+        assertThrows(IllegalArgumentException.class, () -> seq.eachSlice(0));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testForEachSlice() {
         final Seq<String> seq = Seq.of("a", "b", "c", "d");
         Seq<Seq<String>> result = Seq.newSeq();
@@ -352,16 +435,20 @@ public class SeqTest {
         seq.forEachSlice(5, result::add);
         assertArrayEquals(new Object[]{Seq.of("a", "b", "c", "d")}, result.toArray());
         seq.forEachSlice(1, s -> s.forEach(e -> System.out.println(e)));
-        seq.forEachSlice(0, result::add);
+        assertThrows(IllegalArgumentException.class, () -> seq.forEachSlice(0, result::add));
+        assertThrows(NullPointerException.class, () -> seq.forEachSlice(0, null));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testReduce() {
         Seq<Integer> seq = Seq.of(1, 2, 3, 4, 5);
         assertEquals(new Integer(15), seq.reduce(0, Integer::sum));
         assertEquals(new Integer(15), seq.reduce(Integer::sum));
         seq = Seq.of();
         assertEquals(null, seq.reduce(Integer::sum));
+        assertEquals(new Integer(1), seq.reduce(1, Integer::sum));
+        seq.add(1);
+        assertEquals(new Integer(2), seq.reduce(1, Integer::sum));
 
         Seq<TestObj> persons = Seq.of(new TestObj("wang", 26), new TestObj("sun", 30));
         assertEquals(2, persons.size());
@@ -373,7 +460,8 @@ public class SeqTest {
         assertEquals(2, map.size());
         assertEquals(new Integer(26), map.get("wang"));
         map.forEach((k, v) -> System.out.println(k + ":" + v));
-        seq.reduce(null);
+        assertThrows(NullPointerException.class, () -> Seq.of(1).reduce(null));
+        assertThrows(NullPointerException.class, () -> Seq.of(1).reduce(1, null));
     }
 
     @Test
@@ -391,4 +479,28 @@ public class SeqTest {
         assertEquals(Seq.of(1, null), Seq.of(null, 1).reverse());
     }
 
+    @Test
+    public void testSubSeq() {
+        Seq<Integer> seq = Seq.of(1, 2, 3, 4, 5);
+        assertEquals(Seq.of(1, 2), seq.subSeq(0, 2));
+        assertThrows(IndexOutOfBoundsException.class, () -> seq.subSeq(-1, 2));
+        assertThrows(IndexOutOfBoundsException.class, () -> seq.subSeq(0, 12));
+        assertThrows(IllegalArgumentException.class, () -> seq.subSeq(2, 1));
+    }
+
+    public void assertThrows(Class<? extends Exception> exception, Runnable runnable) {
+        Class clazz = testException(runnable);
+        if (clazz == null)
+            throw new AssertionError("Expected exception: " + exception.getTypeName());
+        else if (!clazz.equals(exception))
+            throw new AssertionError("Expected exception: " + exception.getTypeName() + ", but was " + clazz.getTypeName());
+    }
+    private Class testException(Runnable action) {
+        try {
+            action.run();
+            return null;
+        } catch (Exception e) {
+            return e.getClass();
+        }
+    }
 }
