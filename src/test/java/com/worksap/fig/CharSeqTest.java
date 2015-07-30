@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worksap.fig.Helpers.assertThrows;
 import static org.junit.Assert.*;
 
 /**
@@ -133,7 +134,7 @@ public class CharSeqTest {
                 CharSeq.of("吴宫花草埋幽径，晋代衣冠成古丘。"),
                 CharSeq.of("三山半落青天外，二水中分白鹭洲。"),
                 CharSeq.of("总为浮云能蔽日，长安不见使人愁。")
-        }, seq.lines().toArray());
+        }, seq.eachLine().toArray());
     }
 
     @Test
@@ -168,8 +169,8 @@ public class CharSeqTest {
                 "三山半落青天外，二水中分白鹭洲。\n" +
                 "总为浮云能蔽日，长安不见使人愁。");
         Seq<CharSeq> result = Seq.of();
-        seq.forEachLine(result::add);
-        assertEquals(seq.lines(), result);
+        seq.forEachLine(line -> result.add(line));
+        assertEquals(seq.eachLine(), result);
     }
 
     @Test
@@ -180,7 +181,7 @@ public class CharSeqTest {
         seq.forEachChar(ch -> chars.add((char) (ch + 1)));
 
         assertArrayEquals(increased, chars.toArray());
-        seq.forEachCharWithIndex((ch, index) -> assertEquals(new Character((char) (ch + 1)), increased[index]));
+        seq.forEachChar((ch, index) -> assertEquals(new Character((char) (ch + 1)), increased[index]));
     }
 
     @Test
@@ -188,19 +189,17 @@ public class CharSeqTest {
         String einstein = "Einstein";
         CharSeq seq = CharSeq.of(einstein);
         Seq<Byte> bytes = Seq.of();
-        seq.forEachByte(bytes::add);
-        seq.forEachByteWithIndex((b, i) -> assertEquals(new Character((char) (b.byteValue())), seq.charAt(i)));
+        seq.forEachByte(byt -> bytes.add(byt));
+        seq.forEachByte((b, i) -> assertEquals(new Character((char) (b.byteValue())), seq.charAt(i)));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testEachCodePoint() {
         CharSeq cs = CharSeq.of("hello\u0639");
         assertEquals(6, cs.length());
         assertEquals(6, cs.eachCodePoint().size());
         assertEquals(Seq.of(104, 101, 108, 108, 111, 1593), cs.eachCodePoint());
         assertEquals(Seq.of(), CharSeq.of("").eachCodePoint());
-
-        cs.forEachCodePoint(i -> System.out.println(i));
-        cs.forEachCodePoint(null);
+        assertThrows(NullPointerException.class, () -> cs.forEachCodePoint(null));
     }
 }
