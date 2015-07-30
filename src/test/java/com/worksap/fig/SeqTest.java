@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.function.*;
 
 import static org.junit.Assert.*;
+import static com.worksap.fig.Helpers.*;
 
 /**
  * Created by liuyang on 7/23/15.
@@ -486,21 +487,5 @@ public class SeqTest {
         assertThrows(IndexOutOfBoundsException.class, () -> seq.subSeq(-1, 2));
         assertThrows(IndexOutOfBoundsException.class, () -> seq.subSeq(0, 12));
         assertThrows(IllegalArgumentException.class, () -> seq.subSeq(2, 1));
-    }
-
-    public void assertThrows(Class<? extends Exception> exception, Runnable runnable) {
-        Class clazz = testException(runnable);
-        if (clazz == null)
-            throw new AssertionError("Expected exception: " + exception.getTypeName());
-        else if (!clazz.equals(exception))
-            throw new AssertionError("Expected exception: " + exception.getTypeName() + ", but was " + clazz.getTypeName());
-    }
-    private Class testException(Runnable action) {
-        try {
-            action.run();
-            return null;
-        } catch (Exception e) {
-            return e.getClass();
-        }
     }
 }
