@@ -15,6 +15,7 @@ public interface Hash<K, V> extends Map<K, V> {
      * @param condition the condition used to filter key-value pairs by passing the key and value of the pair,
      *                  returns true if the key-value pair satisfies the condition, otherwise returns false.
      * @return whether this hash contains any key-value pair that satisfies the condition
+     * @throws NullPointerException if condition is null
      */
     default boolean containsAny(BiPredicate<K, V> condition) {
         Objects.requireNonNull(condition);
