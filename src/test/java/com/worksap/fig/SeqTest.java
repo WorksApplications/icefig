@@ -499,12 +499,6 @@ public class SeqTest {
         try {
             action.run();
             return null;
-        } catch (NullPointerException e) {
-            return NullPointerException.class;
-        } catch (IllegalArgumentException e) {
-            return IllegalArgumentException.class;
-        } catch (IndexOutOfBoundsException e) {
-            return IndexOutOfBoundsException.class;
         } catch (Exception e) {
             return e.getClass();
         }
