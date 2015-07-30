@@ -26,6 +26,12 @@ signing {
 def ossrhUsername = hasProperty('ossrhUsername')? ossrhUsername : System.getenv('ossrhUsername')
 def ossrhPassword = hasProperty('ossrhPassword')? ossrhPassword : System.getenv('ossrhPassword')
 
+nexusStaging {
+    packageGroup = "com.worksap" //optional if packageGroup == project.getGroup()
+    username = ossrhUsername
+    password = ossrhPassword
+}
+
 uploadArchives {
     repositories {
         mavenDeployer {
