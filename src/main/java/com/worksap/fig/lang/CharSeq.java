@@ -547,4 +547,33 @@ public class CharSeq {
         }
         return Seq.of(bytes);
     }
+
+    /**
+     * Returns the collection of the Unicode of each character in this {@code CharSeq}.
+     * @return the collection of ths Unicode of each character
+     */
+    public Seq<Integer> eachCodePoint() {
+        Seq<Integer> codePoints = Seq.newSeq();
+        char[] chars = str.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            codePoints.add((int)chars[i]);
+        }
+        return codePoints;
+    }
+
+    /**
+     * Takes action on the Unicode of each character in this {@code CharSeq}.
+     * <p>
+     *     Similar to {@link #eachCodePoint()}, but instead of returning the Unicode collection, it iterates the collection and takes action.
+     * </p>
+     * @param consumer the action to be taken on the Unicode of each character
+     * @throws NullPointerException if consumer is null
+     */
+    public void forEachCodePoint(Consumer<Integer> consumer) {
+        Objects.requireNonNull(consumer);
+        char[] chars = str.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            consumer.accept((int) chars[i]);
+        }
+    }
 }
