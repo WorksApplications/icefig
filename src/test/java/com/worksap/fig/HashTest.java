@@ -4,6 +4,9 @@ import com.worksap.fig.lang.Hash;
 import com.worksap.fig.lang.Seq;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.Assert.*;
 import static com.worksap.fig.Helpers.*;
 
@@ -20,6 +23,7 @@ public class HashTest {
         assertTrue(hash.containsAny((k, v) -> k + v == 3));
         assertTrue(hash.containsAny((k, v) -> k + v == 6));
         assertFalse(hash.containsAny((k, v) -> k + v == 5));
+        assertThrows(NullPointerException.class, () -> hash.containsAny(null));
     }
 
     @Test
@@ -54,6 +58,8 @@ public class HashTest {
         assertEquals(Hash.newHash(), hash.reject((k, v) -> k != v));
         assertNotEquals(Hash.newHash(), hash);
         assertEquals(origin, hash);
+
+        assertThrows(NullPointerException.class, () -> hash.reject(null));
     }
 
 
@@ -74,6 +80,7 @@ public class HashTest {
         assertEquals(Hash.newHash(), hash.filter((k, v) -> k == v));
         assertNotEquals(Hash.newHash(), hash);
         assertEquals(origin, hash);
+        assertThrows(NullPointerException.class, () -> hash.filter(null));
     }
 
     @Test
@@ -190,5 +197,38 @@ public class HashTest {
         merged.put(null, 1);
         merged.set(2, 3);
         assertEquals(merged, hash1.merge$(hash2));
+    }
+
+    @Test
+    public void testConstructor() {
+        Hash<Integer, Integer> hash1 = Hash.newHash();
+        hash1.put(1, 1);
+        hash1.put(2, 2);
+        Hash<Integer, Integer> hash2 = Hash.newHash();
+        hash2.put(2, 2);
+        hash2.put(1, 1);
+        assertEquals(hash1, hash2);
+
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(1, 1);
+        map.put(2, 2);
+        Hash<Integer, Integer> hash3 = Hash.of(map);
+        assertEquals(hash2, hash3);
+        assertThrows(NullPointerException.class, () -> Hash.of(null));
+    }
+
+    @Test
+    public void testKeysValues() {
+        Hash<Integer, Integer> hash = Hash.newHash();
+        assertEquals(Seq.of(), hash.keys());
+        assertEquals(Seq.of(), hash.values());
+        hash.set(1, null);
+        hash.set(null, 1);
+        assertEquals(2, hash.keys().size());
+        assertTrue(hash.keys().contains(null));
+        assertTrue(hash.keys().contains(1));
+        assertEquals(2, hash.values().size());
+        assertTrue(hash.values().contains(null));
+        assertTrue(hash.values().contains(1));
     }
 }

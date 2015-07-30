@@ -27,12 +27,27 @@ public interface Hash<K, V> extends Map<K, V> {
         return false;
     }
 
+    /**
+     * Returns a {@link Seq} view of the mappings contained in this hash.
+     *
+     * @return a seq view of the mappings contained in this hash
+     */
     default Seq<Entry<K, V>> entrySeq() {
         return Seq.of(entrySet());
     }
 
+    /**
+     * Returns a {@link Seq} view of the values contained in this hash.
+     *
+     * @return a seq view of the values contained in this hash
+     */
     Seq<V> values();
 
+    /**
+     * Returns a {@link Seq} view of the keys contained in this hash.
+     *
+     * @return a seq view of the keys contained in this hash
+     */
     Seq<K> keys();
 
     /**
@@ -91,11 +106,20 @@ public interface Hash<K, V> extends Map<K, V> {
         return this;
     }
 
+    /**
+     * Constructs an empty hash
+     * @return an empty hash
+     */
     static <K, V> Hash<K, V> newHash() {
         return new HashImpl<>();
     }
 
+    /**
+     * Creates a new hash from {@link Map}
+     * @throws NullPointerException if map is null
+     */
     static <K, V> Hash<K, V> of(Map<? extends K, ? extends V> map) {
+        Objects.requireNonNull(map);
         return new HashImpl<>(map);
     }
 
