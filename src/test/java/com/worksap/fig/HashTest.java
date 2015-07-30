@@ -5,6 +5,7 @@ import com.worksap.fig.lang.Seq;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static com.worksap.fig.Helpers.*;
 
 /**
  * Created by liuyang on 7/27/15.
@@ -75,7 +76,7 @@ public class HashTest {
         assertEquals(origin, hash);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testReject$() {
         Hash<Integer, Integer> hash = Hash.newHash();
         hash.put(1, 2);
@@ -85,10 +86,10 @@ public class HashTest {
         assertEquals(null, hash.get(2));
         assertEquals(2, hash.reject$((k, v) -> k == v).size());
         assertEquals(Hash.newHash(), hash.reject$((k, v) -> k != v));
-        hash.reject$(null);
+        assertThrows(NullPointerException.class, () -> hash.reject$(null));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testFilter$() {
         Hash<Integer, Integer> hash = Hash.newHash();
         hash.put(1, 2);
@@ -98,7 +99,7 @@ public class HashTest {
         assertEquals(null, hash.get(2));
         assertEquals(2, hash.filter$((k, v) -> k != v).size());
         assertEquals(Hash.newHash(), hash.filter$((k, v) -> k == v));
-        hash.filter$(null);
+        assertThrows(NullPointerException.class, () -> hash.filter$(null));
     }
 
     @Test

@@ -294,7 +294,7 @@ public class CharSeq {
      */
     public CharSeq forEachChar(Consumer<Character> action) {
         Objects.requireNonNull(action);
-        characterSequence().forEach(action);
+        eachChar().forEach(action);
         return this;
     }
 
@@ -305,9 +305,9 @@ public class CharSeq {
      * @param action BiConsumer with parameters of Character and the index
      * @return  Self
      */
-    public CharSeq forEachCharWithIndex(BiConsumer<Character, Integer> action) {
+    public CharSeq forEachChar(BiConsumer<Character, Integer> action) {
         Objects.requireNonNull(action);
-        characterSequence().forEach(action);
+        eachChar().forEach(action);
         return this;
     }
 
@@ -319,7 +319,7 @@ public class CharSeq {
      */
     public CharSeq forEachByte(Consumer<Byte> action) {
         Objects.requireNonNull(action);
-        byteSequence().forEach(action);
+        eachByte().forEach(action);
         return this;
     }
 
@@ -330,9 +330,9 @@ public class CharSeq {
      * @param action BiConsumer with parameters of Byte and the index
      * @return  Self
      */
-    public CharSeq forEachByteWithIndex(BiConsumer<Byte, Integer> action) {
+    public CharSeq forEachByte(BiConsumer<Byte, Integer> action) {
         Objects.requireNonNull(action);
-        byteSequence().forEach(action);
+        eachByte().forEach(action);
         return this;
     }
 
@@ -344,7 +344,7 @@ public class CharSeq {
      */
     public CharSeq forEachLine(Consumer<CharSeq> action) {
         Objects.requireNonNull(action);
-        Seq<CharSeq> lines = this.lines();
+        Seq<CharSeq> lines = this.eachLine();
         lines.forEach(action);
         return this;
     }
@@ -356,9 +356,9 @@ public class CharSeq {
      * @param action BiConsumer with parameters of CharSeq and the index
      * @return  Self
      */
-    public CharSeq forEachLineWithIndex(BiConsumer<CharSeq, Integer> action) {
+    public CharSeq forEachLine(BiConsumer<CharSeq, Integer> action) {
         Objects.requireNonNull(action);
-        Seq<CharSeq> lines = this.lines();
+        Seq<CharSeq> lines = this.eachLine();
         lines.forEach(action);
         return this;
     }
@@ -369,7 +369,7 @@ public class CharSeq {
      *
      * @return A Seq of CharSeq
      */
-    public Seq<CharSeq> lines() {
+    public Seq<CharSeq> eachLine() {
         return this.split("\n|\r\n");
     }
 
@@ -524,7 +524,7 @@ public class CharSeq {
      *
      * @return  A Seq of Character
      */
-    public Seq<Character> characterSequence() {
+    public Seq<Character> eachChar() {
         char[] chars = str.toCharArray();
         Character[] characters = new Character[str.length()];
         for (int i = 0; i < characters.length; i++) {
@@ -539,7 +539,7 @@ public class CharSeq {
      *
      * @return  A Seq of Byte
      */
-    public Seq<Byte> byteSequence() {
+    public Seq<Byte> eachByte() {
         byte[] rawBytes = str.getBytes();
         Byte[] bytes = new Byte[rawBytes.length];
         for (int i = 0; i < bytes.length; i++) {
