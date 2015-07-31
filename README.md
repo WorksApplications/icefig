@@ -74,9 +74,9 @@ Fig targets on "small data" operations within application logic, to provide simp
 
 In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for the missing methods in standard library. While in Fig, we make an object oriented and functional way to free you from tedious code.
 
-### Zero dependency
+### Zero runtime dependency
 
-Fig has no external dependency except JDK 8.
+Fig has no external runtime dependency except JDK 8.
 
 ### Conventions
 
