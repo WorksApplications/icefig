@@ -9,6 +9,7 @@ Borrowered from Ruby basic library, Fig intends to supply the missing.
 
 ## Quick Scan
 
+Elegant alternative to List: **Seq**
 ```java
 Seq<Integer> seq = Seq.of(1,2,3);
 seq.shuffle(); // copy to a new seq and shuffle it
@@ -23,6 +24,21 @@ seq.forEachCons(2, (values)->{
 seq.join("-"); //"1-2-3"
 
 seq.map(a -> a+ 1).distinct().reverse().join()
+```
+
+Elegant alternative to Map: **Hash**
+```java
+Hash<Integer, Integer> hash = Hash.newHash();
+hash.set(1, 2).set(2, 3).set(3, 3);
+hash.containsAny((k, v)-> k+v == 5 ); //true
+hash.keysOf(3); // [2, 3]
+```
+
+Elegant alternative to String: **CharSeq**
+```java
+CharSeq str = CharSeq.of("a b c d e f g");
+str.split(" ").join("-").capitalize(); //"A-b-c-d-e-f-g"
+str.partition("d e").map(CharSeq::trim);  //["a b c", "d e", "f g"]
 ```
 
 [Full Javadoc](http://www.javadoc.io/doc/com.worksap/fig)
