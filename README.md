@@ -13,7 +13,7 @@ Borrowered from Ruby basic library, Fig intends to supply the missing.
 Seq<Integer> seq = Seq.of(1,2,3);
 seq.shuffle(); // copy to a new seq and shuffle it
 seq.shuffle$(); // shuffle the original seq
-seq.forEachWithIndex((value, idx) -> {
+seq.forEach((value, idx) -> { // with index
     // (1, 0)  (2, 1)  (3, 2)
 });
 seq.forEachCons(2, (values)->{
