@@ -25,6 +25,17 @@ seq.join("-"); //"1-2-3"
 seq.map(a -> a+ 1).distinct().reverse().join()
 ```
 
+## Include it
+
+```xml
+<dependency>
+    <groupId>com.worksap</groupId>
+    <artifactId>fig</artifactId>
+    <version>0.1.0</version>
+</dependency>
+```
+
+
 ## Concept
 
 ### Not stream
