@@ -25,6 +25,8 @@ seq.join("-"); //"1-2-3"
 seq.map(a -> a+ 1).distinct().reverse().join()
 ```
 
+[Full Javadoc](http://www.javadoc.io/doc/com.worksap/fig)
+
 ## Include it
 
 ```xml
