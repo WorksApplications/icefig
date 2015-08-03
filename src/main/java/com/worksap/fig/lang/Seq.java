@@ -34,6 +34,31 @@ public interface Seq<T> extends List<T> {
     }
 
     /**
+     * Transform each element into a seq, and concat all seq together into a new seq.
+     *
+     * @return The new seq after transformation.
+     * @throws NullPointerException if func is null
+     */
+    default <R> Seq<R> flatMap(Function<T, Seq<R>> func) {
+        Objects.requireNonNull(func);
+        Seq<R> result = new SeqImpl<>();
+        this.forEach(i -> result.addAll(func.apply(i)));
+        return result;
+    }
+
+    /**
+     * Similar to {@link #flatMap(Function)}, with additional parameter "index" as the second parameter of the lambda expression.
+     *
+     * @throws NullPointerException if func is null
+     */
+    default <R> Seq<R> flatMap(BiFunction<T, Integer, Seq<R>> func) {
+        Objects.requireNonNull(func);
+        Seq<R> result = new SeqImpl<>();
+        this.forEach((s, i) -> result.addAll(func.apply(s, i)));
+        return result;
+    }
+
+    /**
      * @return The beginning element of the seq.
      * @throws IndexOutOfBoundsException if the seq is empty
      */
@@ -640,7 +665,7 @@ public interface Seq<T> extends List<T> {
         }
         return this;
     }
-    
+
     /**
      * Returns a copy of the seq itself with all null elements removed.
      * @return the new seq with all null elements removed

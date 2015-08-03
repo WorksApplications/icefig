@@ -40,6 +40,15 @@ public class SeqTest {
 
 
     @Test
+    public void testFlatMap() {
+        assertArrayEquals(new Integer[]{2, 3, 4, 3, 4, 5, 4, 5, 6}, Seq.of(1, 2, 3).flatMap(i -> Seq.of(i + 1, i + 2, i + 3)).toArray());
+        assertArrayEquals(new Integer[]{1, 0, 2, 1, 3, 2}, Seq.of(1, 2, 3).flatMap((i, idx) -> Seq.of(i, idx)).toArray());
+        Function<Integer, Seq<Integer>> f = null;
+        assertThrows(NullPointerException.class, () -> Seq.of(1).flatMap(f));
+    }
+
+
+    @Test
     public void testMapWithIndex() {
         assertArrayEquals(new String[]{"a1", "b2", "c3"}, Seq.of("a", "b", "c").map((s, i) -> s + (i + 1)).toArray());
         BiFunction<Integer, Integer, Integer> f = null;
@@ -124,7 +133,7 @@ public class SeqTest {
         assertArrayEquals(new Integer[]{1, 2, 3}, seq.distinct$().toArray());
         assertEquals(Seq.of(1, 2, 3), seq);
 
-        seq = Seq.of(1, 2 ,3, 2, 3);
+        seq = Seq.of(1, 2, 3, 2, 3);
         assertArrayEquals(new Integer[]{1, 2, 3}, seq.distinct().toArray());
         assertEquals(Seq.of(1, 2, 3, 2, 3), seq);
         assertArrayEquals(new Integer[]{1, 2, 3}, seq.distinct$().toArray());
