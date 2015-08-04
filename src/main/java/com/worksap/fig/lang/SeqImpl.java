@@ -63,8 +63,10 @@ class SeqImpl<T> extends ArrayList<T> implements Seq<T> {
         if (n > size()) {
             return;
         }
-        //Selected idxs
+        //Selected element indices of a valid combination
         int[] comb = new int[n];
+
+        //initialize first combination by the first n elements
         for (int i = 0; i < n; i++) {
             comb[i] = i;
         }
@@ -72,8 +74,9 @@ class SeqImpl<T> extends ArrayList<T> implements Seq<T> {
 
         while (comb[0] < size() - n) {
             for (int i = 0; i < n; i++) {
-                if (i == n - 1 || comb[i + 1] - comb[i] > 1) {
-                    comb[i]++;
+                if (i == n - 1 || comb[i + 1] - comb[i] > 1) { // find the first selected element that the next element of it is not selected
+                    comb[i]++; // make the next element selected instead
+                    // set all selected elements before i, to the beginning elements
                     for (int j = 0; j < i; j++) {
                         comb[j] = j;
                     }
