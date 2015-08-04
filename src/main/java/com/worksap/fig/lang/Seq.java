@@ -913,6 +913,8 @@ public interface Seq<T> extends List<T> {
     /**
      * Return a new Seq of all combinations of length n of elements from this seq.
      * The implementation makes no guarantees about the order in which the combinations are returned.
+     * This method uses the index as the identity of each element, thus it may return a combination with duplicated elements inside.
+     * If you want to avoid this, use {@link #distinct()} before calling this method.
      */
     Seq<Seq<T>> eachCombination(int n);
 }
