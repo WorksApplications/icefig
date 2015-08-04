@@ -24,6 +24,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Similar to {@link #map(Function)}, with additional parameter "index" as the second parameter of the lambda expression.
+     *
      * @throws NullPointerException if func is null
      */
     default <R> Seq<R> map(BiFunction<T, Integer, R> func) {
@@ -150,6 +151,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Similar to {@link #forEach(Consumer)}, with additional parameter "index" as the second parameter of the lambda expression.
+     *
      * @throws NullPointerException if action is null
      */
     default void forEach(BiConsumer<? super T, Integer> action) {
@@ -182,7 +184,7 @@ public interface Seq<T> extends List<T> {
     /**
      * Similar with {@link #eachCons(int)}, but instead of to return the transformed seq, it iterates the transformed seq and do action.
      *
-     * @throws NullPointerException if action is null
+     * @throws NullPointerException     if action is null
      * @throws IllegalArgumentException if n <= 0
      */
     default void forEachCons(int n, Consumer<Seq<T>> action) {
@@ -197,9 +199,10 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Sort the seq by the comparator, resulting a new seq, without changing the original seq.
+     *
      * @param comparator the comparator to determine the order of the seq. A
-     *        {@code null} value indicates that the elements' <i>natural
-     *        ordering</i> should be used.
+     *                   {@code null} value indicates that the elements' <i>natural
+     *                   ordering</i> should be used.
      * @return A new seq sorted
      */
     default Seq<T> order(Comparator<? super T> comparator) {
@@ -210,9 +213,10 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Sort the seq itself by the comparator.
+     *
      * @param comparator the comparator to determine the order of the seq. A
-     *        {@code null} value indicates that the elements' <i>natural
-     *        ordering</i> should be used.
+     *                   {@code null} value indicates that the elements' <i>natural
+     *                   ordering</i> should be used.
      * @return The seq itself after sorting
      */
     default Seq<T> order$(Comparator<? super T> comparator) {
@@ -438,6 +442,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Create a new seq from values.
+     *
      * @throws NullPointerException if values is null
      */
     @SafeVarargs
@@ -449,6 +454,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Create a new seq from collection.
+     *
      * @throws NullPointerException if values is null
      */
     static <T> Seq<T> of(Collection<? extends T> values) {
@@ -458,6 +464,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Constructs an empty seq.
+     *
      * @return an empty seq
      */
     static <T> Seq<T> newSeq() {
@@ -466,6 +473,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Constructs a seq of the specified size. Each element in the seq is null.
+     *
      * @param size the initial size of the seq
      * @return the new seq
      */
@@ -475,7 +483,8 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Constructs a seq of the specified size. Each element in the seq is defaultValue.
-     * @param size the initial size of the seq
+     *
+     * @param size         the initial size of the seq
      * @param defaultValue the value of each element in the seq
      * @return the new seq
      */
@@ -486,6 +495,7 @@ public interface Seq<T> extends List<T> {
     /**
      * Constructs a seq of the specified size.
      * Each element in this seq is created by passing the element’s index to the given {@link Function} and storing the return value.
+     *
      * @param size the initial size of the seq
      * @param func the {@link Function} used to create elements, accepting the element's index and returning a value to be stored into the seq.
      * @return the new seq
@@ -506,9 +516,9 @@ public interface Seq<T> extends List<T> {
      * @param fromIndex The start index, inclusive.
      * @param toIndex   The end index, exclusive.
      * @throws IndexOutOfBoundsException if an endpoint index value is out of range
-     *         {@code (fromIndex < 0 || toIndex > size)}
-     * @throws IllegalArgumentException if the endpoint indices are out of order
-     *         {@code (fromIndex > toIndex)}
+     *                                   {@code (fromIndex < 0 || toIndex > size)}
+     * @throws IllegalArgumentException  if the endpoint indices are out of order
+     *                                   {@code (fromIndex > toIndex)}
      */
     default Seq<T> subSeq(int fromIndex, int toIndex) {
         return new SeqImpl<>(this.subList(fromIndex, toIndex));
@@ -516,6 +526,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Removes elements which satisfy the condition, resulting a new seq without changing the original one.
+     *
      * @param condition the condition used to filter elements by passing the element,
      *                  returns true if the element satisfies the condition, otherwise returns false.
      * @return the new seq without elements which satisfy the condition
@@ -533,6 +544,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Removes elements which satisfy the condition on the seq itself.
+     *
      * @param condition the condition used to filter elements by passing the element,
      *                  returns true if the element satisfies the condition, otherwise returns false.
      * @return the seq itself after removing elements which satisfy the condition
@@ -552,8 +564,9 @@ public interface Seq<T> extends List<T> {
     /**
      * Removes elements which satisfy the condition, resulting a new seq without changing the original one.
      * <p>
-     *     Similar to {@link #reject(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression
+     * Similar to {@link #reject(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression
      * </p>
+     *
      * @param condition the condition used to filter elements by passing the element and its index,
      *                  returns true if the element satisfies the condition, otherwise returns false.
      * @return the new seq without elements which satisfy the condition
@@ -572,8 +585,9 @@ public interface Seq<T> extends List<T> {
     /**
      * Removes elements which satisfy the condition on the seq itself.
      * <p>
-     *     Similar to {@link #reject$(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression
+     * Similar to {@link #reject$(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression
      * </p>
+     *
      * @param condition the condition used to filter elements by passing the element and its index,
      *                  returns true if the element satisfies the condition, otherwise returns false.
      * @return the seq itself after removing elements which satisfy the condition
@@ -594,6 +608,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Gets elements which satisfy the condition, resulting a new seq without changing the original one.
+     *
      * @param condition the condition used to filter elements by passing the element's index,
      *                  returns true if the element satisfies the condition, otherwise returns false
      * @return the new seq containing only the elements satisfying the condition
@@ -612,8 +627,9 @@ public interface Seq<T> extends List<T> {
     /**
      * Gets elements which satisfy the condition, resulting a new seq without changing the original one.
      * <p>
-     *     Similar to {@link #filter(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression.
+     * Similar to {@link #filter(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression.
      * </p>
+     *
      * @param condition the condition used to filter elements by passing the element and its index,
      *                  returns true if the element satisfies the condition, otherwise returns false
      * @return the new seq containing only the elements satisfying the condition
@@ -631,6 +647,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Returns a new seq built by concatenating the <tt>times</tt> copies of this seq.
+     *
      * @param times times to repeat
      * @return the new seq
      * @throws IllegalArgumentException if <tt>times &lt;= 0</tt>
@@ -648,6 +665,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Returns the seq itself by concatenating the <tt>times</tt> copies of self.
+     *
      * @param times times to repeat
      * @return the seq itself after the change
      * @throws IllegalArgumentException if <tt>times &lt;= 0</tt>
@@ -668,6 +686,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Returns a copy of the seq itself with all null elements removed.
+     *
      * @return the new seq with all null elements removed
      */
     default Seq<T> compact() {
@@ -676,6 +695,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Returns the seq itself with all null elements removed.
+     *
      * @return the seq itself with all null elements removed
      */
     default Seq<T> compact$() {
@@ -685,12 +705,13 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Returns the number of the specified element.
+     *
      * @param element the element to count
      * @return the number of the specified element
      */
     default int count(T element) {
         int count = 0;
-        for (int i = 0; i < size(); i++){
+        for (int i = 0; i < size(); i++) {
             if (element == null) {
                 if (this.get(i) == null)
                     count++;
@@ -704,15 +725,16 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Returns the number of elements which satisfy the condition.
+     *
      * @param condition the condition used to filter elements by passing the element,
-     *               returns true if the element satisfies the condition, otherwise returns false.
+     *                  returns true if the element satisfies the condition, otherwise returns false.
      * @return the number of elements which satisfy the condition
      * @throws NullPointerException if condition is null
      */
     default int countIf(Predicate<T> condition) {
         Objects.requireNonNull(condition);
         int count = 0;
-        for (int i = 0; i < size(); i++){
+        for (int i = 0; i < size(); i++) {
             if (condition.test(this.get(i)))
                 count++;
         }
@@ -722,17 +744,18 @@ public interface Seq<T> extends List<T> {
     /**
      * Returns the number of elements which satisfy the condition.
      * <p>
-     *     Similar to {@link #countIf(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression.
+     * Similar to {@link #countIf(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression.
      * </p>
+     *
      * @param condition the condition used to filter elements by passing the element and its index,
-     *               returns true if the element satisfies the condition, otherwise returns false.
+     *                  returns true if the element satisfies the condition, otherwise returns false.
      * @return the number of elements which satisfy the condition
      * @throws NullPointerException if condition is null
      */
     default int countIf(BiPredicate<T, Integer> condition) {
         Objects.requireNonNull(condition);
         int count = 0;
-        for (int i = 0; i < size(); i++){
+        for (int i = 0; i < size(); i++) {
             if (condition.test(this.get(i), i))
                 count++;
         }
@@ -743,11 +766,12 @@ public interface Seq<T> extends List<T> {
      * Returns the element at index. A negative index counts from the end of self.
      * If the index is out of range(<tt>index &lt; -size() || index &gt;= size()</tt>), a default value is returned.
      * <p>
-     *     Similar to {@link #get(int)}. The difference between these two functions is how to solve the situation of illegal index.<br/>
-     *     {@link #get(int, Object)} returns a default value when the index is illegal. <br/>
-     *     {@link #get(int)} throws an exception({@link IndexOutOfBoundsException}) when the index is illegal.
+     * Similar to {@link #get(int)}. The difference between these two functions is how to solve the situation of illegal index.<br/>
+     * {@link #get(int, Object)} returns a default value when the index is illegal. <br/>
+     * {@link #get(int)} throws an exception({@link IndexOutOfBoundsException}) when the index is illegal.
      * </p>
-     * @param index index of the element to return
+     *
+     * @param index        index of the element to return
      * @param defaultValue default value to return when the index is out of range
      * @return The element at the specified position in this seq, or default value if the index is out of range
      */
@@ -760,16 +784,18 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Returns the element at index. A negative index counts from the end of self.
+     *
      * @param index index of the element to return
      * @return the element at the specified position in this seq
      * @throws IndexOutOfBoundsException if the index is out of range
-     *         (<tt>index &gt;= size() || index &lt; -size()</tt>)
+     *                                   (<tt>index &gt;= size() || index &lt; -size()</tt>)
      */
     T get(int index);
 
     /**
      * Slices this seq to construct some slices in the original order,
      * each of slice contains <tt>n</tt> elements(only the last slice can contain less than <tt>n</tt> elements).
+     *
      * @param n the number of elements in each slice except the last one
      * @return the collection of these slices
      * @throws IllegalArgumentException if <tt>n &lt;= 0</tt>
@@ -788,13 +814,14 @@ public interface Seq<T> extends List<T> {
     /**
      * Slices the seq to construct some slices and take action on each slice.
      * <p>
-     *     Similar to {@link #eachSlice(int)}, but instead of returning the slice collection,
-     *     it iterates the slice collection and takes action on each slice.
+     * Similar to {@link #eachSlice(int)}, but instead of returning the slice collection,
+     * it iterates the slice collection and takes action on each slice.
      * </p>
-     * @param n the number of elements in each slice except the last one
+     *
+     * @param n      the number of elements in each slice except the last one
      * @param action the action to take on each slice
      * @throws IllegalArgumentException if <tt>n &lt;= 0</tt>
-     * @throws NullPointerException if action is null
+     * @throws NullPointerException     if action is null
      */
     default void forEachSlice(int n, Consumer<Seq<T>> action) {
         Objects.requireNonNull(action);
@@ -809,6 +836,7 @@ public interface Seq<T> extends List<T> {
     /**
      * Performs a reduction on the elements of this seq, using the provided
      * binary operation, and returns the reduced value.
+     *
      * @param accumulator the binary operation for combining two values
      * @return the result of the reduction, or null if the seq is empty
      * @throws NullPointerException if accumulator is null
@@ -831,10 +859,11 @@ public interface Seq<T> extends List<T> {
      * Performs a reduction on the elements of this seq, using the provided initial value
      * and a binary function, and returns the reduced value.
      * <p>
-     *     Similar to {@link #reduce(BinaryOperator)},
-     *     with an additional parameter "init" as the initial value of the reduction
+     * Similar to {@link #reduce(BinaryOperator)},
+     * with an additional parameter "init" as the initial value of the reduction
      * </p>
-     * @param init the initial value for the accumulating function
+     *
+     * @param init        the initial value for the accumulating function
      * @param accumulator the binary function for combining two values
      * @return the result of the reduction
      * @throws NullPointerException if accumulator is null
@@ -849,6 +878,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Constructs a new seq containing all the elements of this seq in reverse order.
+     *
      * @return the new seq with elements in reverse order
      */
     default Seq<T> reverse() {
@@ -860,6 +890,7 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Reverses the elements of this seq itself.
+     *
      * @return the seq itself with elements in reverse order
      */
     default Seq<T> reverse$() {
@@ -871,4 +902,19 @@ public interface Seq<T> extends List<T> {
         }
         return this;
     }
+
+
+    /**
+     * Similar with {@link #eachCombination(int)}, but instead of to return the seq, it iterates the seq and do action.
+     */
+    void forEachCombination(int n, Consumer<Seq<T>> action);
+
+
+    /**
+     * Return a new Seq of all combinations of length n of elements from this seq.
+     * The implementation makes no guarantees about the order in which the combinations are returned.
+     * This method uses the index as the identity of each element, thus it may return a combination with duplicated elements inside.
+     * If you want to avoid this, use {@link #distinct()} before calling this method.
+     */
+    Seq<Seq<T>> eachCombination(int n);
 }

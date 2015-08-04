@@ -497,4 +497,26 @@ public class SeqTest {
         assertThrows(IndexOutOfBoundsException.class, () -> seq.subSeq(0, 12));
         assertThrows(IllegalArgumentException.class, () -> seq.subSeq(2, 1));
     }
+
+    @Test
+    public void testCombination() {
+        Seq<Integer> seq = Seq.of(1, 2, 3, 4, 5);
+        assertThrows(IllegalArgumentException.class, () -> seq.eachCombination(0));
+        assertThrows(IllegalArgumentException.class, () -> seq.eachCombination(-1));
+        assertTrue(seq.eachCombination(5).size() == 1);
+        assertEquals(Seq.of(1, 2, 3, 4, 5), seq.eachCombination(5).first());
+        Set<Seq<Integer>> resultSet = new HashSet<>(seq.eachCombination(3));
+        Set<Seq<Integer>> actual = new HashSet<>(Seq.of(Seq.of(1, 2, 3),
+                Seq.of(1, 2, 4),
+                Seq.of(1, 2, 5),
+                Seq.of(1, 3, 4),
+                Seq.of(1, 3, 5),
+                Seq.of(1, 4, 5),
+                Seq.of(2, 3, 4),
+                Seq.of(2, 3, 5),
+                Seq.of(2, 4, 5),
+                Seq.of(3, 4, 5)));
+        assertEquals(actual, resultSet);
+
+    }
 }
