@@ -111,20 +111,20 @@ public class SeqTest {
     public void testForEachCons() {
         final MutableSeq<String> seq = Seqs.newMutableSeq("a", "b", "c", "d");
         MutableSeq<Seq<String>> result = Seqs.newMutableSeq();
-        seq.forEachCons(2, result::append);
+        seq.forEachCons(2, result::appendInPlace);
         assertArrayEquals(new Object[]{Seqs.newMutableSeq("a", "b"), Seqs.newMutableSeq("b", "c"), Seqs.newMutableSeq("c", "d")}, result.toArray());
         result.clear();
-        seq.forEachCons(3, result::append);
+        seq.forEachCons(3, result::appendInPlace);
         assertArrayEquals(new Object[]{Seqs.newMutableSeq("a", "b", "c"), Seqs.newMutableSeq("b", "c", "d")}, result.toArray());
         result.clear();
-        seq.forEachCons(4, result::append);
+        seq.forEachCons(4, result::appendInPlace);
         assertArrayEquals(new Object[]{Seqs.newMutableSeq("a", "b", "c", "d")}, result.toArray());
         result.clear();
-        seq.forEachCons(5, result::append);
+        seq.forEachCons(5, result::appendInPlace);
         assertArrayEquals(new Object[]{}, result.toArray());
 
         assertThrows(NullPointerException.class, () -> seq.forEachCons(0, null));
-        assertThrows(IllegalArgumentException.class, () -> seq.forEachCons(0, result::append));
+        assertThrows(IllegalArgumentException.class, () -> seq.forEachCons(0, result::appendInPlace));
     }
 
     @Test
@@ -413,19 +413,19 @@ public class SeqTest {
     public void testForEachSlice() {
         final MutableSeq<String> seq = Seqs.newMutableSeq("a", "b", "c", "d");
         MutableSeq<Seq<String>> result = Seqs.newMutableSeq();
-        seq.forEachSlice(2, result::append);
+        seq.forEachSlice(2, result::appendInPlace);
         assertArrayEquals(new Object[]{Seqs.newMutableSeq("a", "b"), Seqs.newMutableSeq("c", "d")}, result.toArray());
         result.clear();
-        seq.forEachSlice(3, result::append);
+        seq.forEachSlice(3, result::appendInPlace);
         assertArrayEquals(new Object[]{Seqs.newMutableSeq("a", "b", "c"), Seqs.newMutableSeq("d")}, result.toArray());
         result.clear();
-        seq.forEachSlice(4, result::append);
+        seq.forEachSlice(4, result::appendInPlace);
         assertArrayEquals(new Object[]{Seqs.newMutableSeq("a", "b", "c", "d")}, result.toArray());
         result.clear();
-        seq.forEachSlice(5, result::append);
+        seq.forEachSlice(5, result::appendInPlace);
         assertArrayEquals(new Object[]{Seqs.newMutableSeq("a", "b", "c", "d")}, result.toArray());
         seq.forEachSlice(1, s -> s.forEach(e -> System.out.println(e)));
-        assertThrows(IllegalArgumentException.class, () -> seq.forEachSlice(0, result::append));
+        assertThrows(IllegalArgumentException.class, () -> seq.forEachSlice(0, result::appendInPlace));
         assertThrows(NullPointerException.class, () -> seq.forEachSlice(0, null));
     }
 
