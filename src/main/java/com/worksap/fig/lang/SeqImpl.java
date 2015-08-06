@@ -42,7 +42,7 @@ class SeqImpl<T> implements MutableSeq<T> {
     public <R> MutableSeq<R> map(Function<T, R> func) {
         Objects.requireNonNull(func);
         MutableSeq<R> result = new SeqImpl<>();
-        this.forEach(i -> result.append(func.apply(i)));
+        this.forEach(i -> result.appendInPlace(func.apply(i)));
         return result;
     }
 
@@ -50,7 +50,7 @@ class SeqImpl<T> implements MutableSeq<T> {
     public <R> MutableSeq<R> map(BiFunction<T, Integer, R> func) {
         Objects.requireNonNull(func);
         MutableSeq<R> result = new SeqImpl<>();
-        this.forEach((s, i) -> result.append(func.apply(s, i)));
+        this.forEach((s, i) -> result.appendInPlace(func.apply(s, i)));
         return result;
     }
 
@@ -58,7 +58,7 @@ class SeqImpl<T> implements MutableSeq<T> {
     public <R> MutableSeq<R> flatMap(Function<T, Seq<R>> func) {
         Objects.requireNonNull(func);
         MutableSeq<R> result = new SeqImpl<>();
-        this.forEach(i -> result.append(func.apply(i)));
+        this.forEach(i -> result.appendInPlace(func.apply(i)));
         return result;
     }
 
@@ -66,7 +66,7 @@ class SeqImpl<T> implements MutableSeq<T> {
     public <R> MutableSeq<R> flatMap(BiFunction<T, Integer, Seq<R>> func) {
         Objects.requireNonNull(func);
         MutableSeq<R> result = new SeqImpl<>();
-        this.forEach((s, i) -> result.append(func.apply(s, i)));
+        this.forEach((s, i) -> result.appendInPlace(func.apply(s, i)));
         return result;
     }
 
@@ -100,7 +100,7 @@ class SeqImpl<T> implements MutableSeq<T> {
         }
         MutableSeq<MutableSeq<T>> result = new SeqImpl<>();
         for (int i = 0; i <= this.size() - n; i++) {
-            result.append(this.subSeq(i, i + n));
+            result.appendInPlace(this.subSeq(i, i + n));
         }
         return result;
     }
@@ -120,7 +120,7 @@ class SeqImpl<T> implements MutableSeq<T> {
     @Override
     public MutableSeq<T> append(T value) {
         List<T> newList = new ArrayList<>(list);
-        list.add(value);
+        newList.add(value);
         return new SeqImpl<>(newList);
     }
 
@@ -132,7 +132,7 @@ class SeqImpl<T> implements MutableSeq<T> {
     @Override
     public MutableSeq<T> append(Collection<? extends T> collection) {
         List<T> newList = new ArrayList<>(list);
-        list.addAll(collection);
+        newList.addAll(collection);
         return new SeqImpl<>(newList);
     }
 
@@ -309,9 +309,9 @@ class SeqImpl<T> implements MutableSeq<T> {
 
 
     private Seq<T> indexToSeq(int[] idxs) {
-        Seq<T> result = new SeqImpl<>();
+        MutableSeq<T> result = new SeqImpl<>();
         for (int i : idxs) {
-            result.append(get(i));
+            result.appendInPlace(get(i));
         }
         return result;
     }
@@ -351,7 +351,7 @@ class SeqImpl<T> implements MutableSeq<T> {
     public MutableSeq<MutableSeq<T>> eachCombination(int n) {
         MutableSeq<MutableSeq<T>> result = new SeqImpl<>();
         forEachCombination(n, s -> {
-            result.append((MutableSeq<T>) s);
+            result.appendInPlace((MutableSeq<T>) s);
         });
         return result;
     }
