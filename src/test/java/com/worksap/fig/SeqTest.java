@@ -45,7 +45,7 @@ public class SeqTest {
     public void testFlatMap() {
         assertArrayEquals(new Integer[]{2, 3, 4, 3, 4, 5, 4, 5, 6}, Seqs.newMutableSeq(1, 2, 3).flatMap(i -> Seqs.newMutableSeq(i + 1, i + 2, i + 3)).toArray());
         assertArrayEquals(new Integer[]{1, 0, 2, 1, 3, 2}, Seqs.newMutableSeq(1, 2, 3).flatMap((i, idx) -> Seqs.newMutableSeq(i, idx)).toArray());
-        Function<Integer, MutableSeq<Integer>> f = null;
+        Function<Integer, Seq<Integer>> f = null;
         assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).flatMap(f));
     }
 
@@ -80,7 +80,7 @@ public class SeqTest {
     public void testShuffle$() {
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 3);
         for (int i = 0; i < 3; i++) {
-            MutableSeq<Integer> shuffled = seq.shuffle$();
+            MutableSeq<Integer> shuffled = seq.shuffleInPlace();
             assertEquals(shuffled.size(), 3);
             assertArrayEquals(shuffled.toArray(), seq.toArray());
         }
@@ -132,42 +132,42 @@ public class SeqTest {
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 3);
         assertArrayEquals(new Integer[]{1, 2, 3}, seq.distinct().toArray());
         assertEquals(Seqs.newMutableSeq(1, 2, 3), seq);
-        assertArrayEquals(new Integer[]{1, 2, 3}, seq.distinct$().toArray());
+        assertArrayEquals(new Integer[]{1, 2, 3}, seq.distinctInPlace().toArray());
         assertEquals(Seqs.newMutableSeq(1, 2, 3), seq);
 
         seq = Seqs.newMutableSeq(1, 2, 3, 2, 3);
         assertArrayEquals(new Integer[]{1, 2, 3}, seq.distinct().toArray());
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 2, 3), seq);
-        assertArrayEquals(new Integer[]{1, 2, 3}, seq.distinct$().toArray());
+        assertArrayEquals(new Integer[]{1, 2, 3}, seq.distinctInPlace().toArray());
         assertEquals(Seqs.newMutableSeq(1, 2, 3), seq);
 
         seq = Seqs.newMutableSeq(3, 2, 1, 2, 3, 4);
         assertArrayEquals(new Integer[]{3, 2, 1, 4}, seq.distinct().toArray());
         assertEquals(Seqs.newMutableSeq(3, 2, 1, 2, 3, 4), seq);
-        assertArrayEquals(new Integer[]{3, 2, 1, 4}, seq.distinct$().toArray());
+        assertArrayEquals(new Integer[]{3, 2, 1, 4}, seq.distinctInPlace().toArray());
         assertEquals(Seqs.newMutableSeq(3, 2, 1, 4), seq);
 
         seq = Seqs.newMutableSeq(1, 1, 1, 1);
         assertEquals(Seqs.newMutableSeq(1), seq.distinct());
         assertEquals(Seqs.newMutableSeq(1, 1, 1, 1), seq);
-        assertEquals(Seqs.newMutableSeq(1), seq.distinct$());
+        assertEquals(Seqs.newMutableSeq(1), seq.distinctInPlace());
         assertEquals(Seqs.newMutableSeq(1), seq);
 
         seq = Seqs.newMutableSeq(null, 1, null, 1, 2);
         assertEquals(Seqs.newMutableSeq(null, 1, 2), seq.distinct());
         assertEquals(Seqs.newMutableSeq(null, 1, null, 1, 2), seq);
-        assertEquals(Seqs.newMutableSeq(null, 1, 2), seq.distinct$());
+        assertEquals(Seqs.newMutableSeq(null, 1, 2), seq.distinctInPlace());
         assertEquals(Seqs.newMutableSeq(null, 1, 2), seq);
 
         seq.clear();
         assertEquals(Seqs.newMutableSeq(), seq.distinct());
         assertEquals(Seqs.newMutableSeq(), seq);
-        assertEquals(Seqs.newMutableSeq(), seq.distinct$());
+        assertEquals(Seqs.newMutableSeq(), seq.distinctInPlace());
         assertEquals(Seqs.newMutableSeq(), seq);
     }
 
     @Test
-    public void testsort() {
+    public void testSort() {
         MutableSeq<Integer> seq = Seqs.newMutableSeq(2, 1, 3);
         assertArrayEquals(new Integer[]{1, 2, 3}, seq.sort((a, b) -> a - b).toArray());
         assertArrayEquals(new Integer[]{3, 2, 1}, seq.sort((a, b) -> b - a).toArray());
@@ -179,13 +179,13 @@ public class SeqTest {
     }
 
     @Test
-    public void testsort$() {
+    public void testSortInPlace() {
         MutableSeq<Integer> seq = Seqs.newMutableSeq(2, 1, 3);
-        assertArrayEquals(new Integer[]{1, 2, 3}, seq.sort$((a, b) -> a - b).toArray());
-        assertArrayEquals(new Integer[]{3, 2, 1}, seq.sort$((a, b) -> b - a).toArray());
+        assertArrayEquals(new Integer[]{1, 2, 3}, seq.sortInPlace((a, b) -> a - b).toArray());
+        assertArrayEquals(new Integer[]{3, 2, 1}, seq.sortInPlace((a, b) -> b - a).toArray());
         assertArrayEquals(new Integer[]{3, 2, 1}, seq.toArray());
-        assertArrayEquals(new Integer[]{1, 2, 3}, seq.sort$(null).toArray());
-        assertEquals(Seqs.newMutableSeq(), Seqs.newMutableSeq().sort$(null));
+        assertArrayEquals(new Integer[]{1, 2, 3}, seq.sortInPlace(null).toArray());
+        assertEquals(Seqs.newMutableSeq(), Seqs.newMutableSeq().sortInPlace(null));
     }
 
     @Test
@@ -301,7 +301,7 @@ public class SeqTest {
         assertEquals(Seqs.newMutableSeq(1, 2), seq1);
 
         MutableSeq<Integer> seq$ = Seqs.newMutableSeq(1, 2, 3);
-        MutableSeq<Integer> seq1$ = seq$.reject$((e, i) -> (e > 1 && i % 2 == 0));
+        MutableSeq<Integer> seq1$ = seq$.rejectInPlace((e, i) -> (e > 1 && i % 2 == 0));
         assertEquals(Seqs.newMutableSeq(1, 2), seq$);
         assertEquals(Seqs.newMutableSeq(1, 2), seq1$);
         assertEquals(seq$, seq1$);
@@ -312,17 +312,17 @@ public class SeqTest {
         assertEquals(Seqs.newMutableSeq(1), seq1);
 
         seq$ = Seqs.newMutableSeq(1, 2, 3);
-        seq1$ = seq$.reject$(e -> e > 1);
+        seq1$ = seq$.rejectInPlace(e -> e > 1);
         assertEquals(Seqs.newMutableSeq(1), seq$);
         assertEquals(Seqs.newMutableSeq(1), seq1$);
         assertEquals(seq$, seq1$);
 
         Predicate<Integer> predicate = null;
         assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).reject(predicate));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).reject$(predicate));
+        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectInPlace(predicate));
         BiPredicate<Integer, Integer> biPredicate = null;
         assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).reject(biPredicate));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).reject$(biPredicate));
+        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectInPlace(biPredicate));
 
     }
 
@@ -365,11 +365,11 @@ public class SeqTest {
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2);
         assertEquals(Seqs.newMutableSeq(1, 2, 1, 2, 1, 2, 1, 2), seq.repeat(4));
         assertEquals(Seqs.newMutableSeq(1, 2), seq);
-        assertEquals(Seqs.newMutableSeq(1, 2), seq.repeat$(1));
-        assertEquals(Seqs.newMutableSeq(1, 2, 1, 2, 1, 2, 1, 2), seq.repeat$(4));
+        assertEquals(Seqs.newMutableSeq(1, 2), seq.repeatInPlace(1));
+        assertEquals(Seqs.newMutableSeq(1, 2, 1, 2, 1, 2, 1, 2), seq.repeatInPlace(4));
         assertEquals(Seqs.newMutableSeq(1, 2, 1, 2, 1, 2, 1, 2), seq);
         assertThrows(IllegalArgumentException.class, () -> seq.repeat(0));
-        assertThrows(IllegalArgumentException.class, () -> seq.repeat$(0));
+        assertThrows(IllegalArgumentException.class, () -> seq.repeatInPlace(0));
     }
 
     @Test
@@ -377,7 +377,7 @@ public class SeqTest {
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, null, 3, 4, 5, null);
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), seq.compact());
         assertEquals(Seqs.newMutableSeq(1, 2, null, 3, 4, 5, null), seq);
-        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), seq.compact$());
+        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), seq.compactInPlace());
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), seq);
     }
 
@@ -462,7 +462,7 @@ public class SeqTest {
         assertEquals(Seqs.newMutableSeq(), Seqs.newMutableSeq().reverse());
         assertEquals(Seqs.newMutableSeq(1), Seqs.newMutableSeq(1).reverse());
 
-        assertEquals(Seqs.newMutableSeq(5, 4, 3, 2, 1), seq.reverse$());
+        assertEquals(Seqs.newMutableSeq(5, 4, 3, 2, 1), seq.reverseInPlace());
         assertEquals(Seqs.newMutableSeq(5, 4, 3, 2, 1), seq);
         assertEquals(Seqs.newMutableSeq(), Seqs.newMutableSeq().reverse());
         assertEquals(Seqs.newMutableSeq(1), Seqs.newMutableSeq(1).reverse());

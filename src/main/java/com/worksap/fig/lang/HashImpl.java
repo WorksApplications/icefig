@@ -17,11 +17,11 @@ class HashImpl<K, V> extends HashMap<K, V> implements Hash<K, V> {
 
     @Override
     public Seq<V> values() {
-        return Seq.of(super.values());
+        return Seqs.newSeq(super.values());
     }
 
     @Override
     public Seq<K> keys() {
-        return Seq.of(keySet());
+        return Seqs.newSeq(keySet());
     }
 }

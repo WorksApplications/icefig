@@ -2,6 +2,7 @@ package com.worksap.fig;
 
 import com.worksap.fig.lang.Hash;
 import com.worksap.fig.lang.Seq;
+import com.worksap.fig.lang.Seqs;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -119,10 +120,10 @@ public class HashTest {
         hash.put(5, 1);
         Seq<Integer> keys = hash.keysOf(2);
         keys.sort(Integer::compare);
-        assertEquals(Seq.of(1, 3), keys);
-        assertEquals(Seq.of(2), hash.keysOf(4));
-        assertEquals(Seq.of(), hash.keysOf(3));
-        assertEquals(Seq.of(4), hash.keysOf(null));
+        assertEquals(Seqs.newSeq(1, 3), keys);
+        assertEquals(Seqs.newSeq(2), hash.keysOf(4));
+        assertEquals(Seqs.newSeq(), hash.keysOf(3));
+        assertEquals(Seqs.newSeq(4), hash.keysOf(null));
     }
 
     @Test
@@ -220,8 +221,8 @@ public class HashTest {
     @Test
     public void testKeysValues() {
         Hash<Integer, Integer> hash = Hash.newHash();
-        assertEquals(Seq.of(), hash.keys());
-        assertEquals(Seq.of(), hash.values());
+        assertEquals(Seqs.newSeq(), hash.keys());
+        assertEquals(Seqs.newSeq(), hash.values());
         hash.set(1, null);
         hash.set(null, 1);
         assertEquals(2, hash.keys().size());
