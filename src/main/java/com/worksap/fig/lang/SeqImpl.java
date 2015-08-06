@@ -143,6 +143,32 @@ class SeqImpl<T> implements MutableSeq<T> {
     }
 
     @Override
+    public MutableSeq<T> appendInPlace(T value) {
+        list.add(value);
+        return this;
+    }
+
+    @Override
+    public MutableSeq<T> appendInPlace(T... values) {
+        for(T t: values) {
+            list.add(t);
+        }
+        return this;
+    }
+
+    @Override
+    public MutableSeq<T> appendInPlace(Collection<? extends T> collection) {
+        list.addAll(collection);
+        return this;
+    }
+
+    @Override
+    public MutableSeq<T> appendInPlace(Seq<? extends T> seq) {
+        list.addAll(seq.toArrayList());
+        return this;
+    }
+
+    @Override
     public MutableSeq<T> prepend(T value) {
         List<T> newList = new ArrayList<>();
         newList.add(value);
@@ -169,6 +195,29 @@ class SeqImpl<T> implements MutableSeq<T> {
         seq.forEach((Consumer<T>) newList::add);
         newList.addAll(list);
         return new SeqImpl<>(newList);
+    }
+
+    @Override
+    public MutableSeq<T> prependInPlace(T value) {
+        list.add(0, value);
+        return this;
+    }
+
+    @Override
+    public MutableSeq<T> prependInPlace(T... values) {
+        return prependInPlace(Arrays.asList(values));
+    }
+
+    @Override
+    public MutableSeq<T> prependInPlace(Collection<? extends T> collection) {
+        list.addAll(0, collection);
+        return this;
+    }
+
+    @Override
+    public MutableSeq<T> prependInPlace(Seq<? extends T> seq) {
+        list.addAll(0, seq.toArrayList());
+        return this;
     }
 
     @Override

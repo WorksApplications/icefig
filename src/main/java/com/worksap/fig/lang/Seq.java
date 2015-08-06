@@ -429,7 +429,7 @@ public interface Seq<T> {
     /**
      * Returns the number of the specified element.
      *
-     * @param element the element to count
+     * @param element the element to countIf
      * @return the number of the specified element
      */
     default int count(T element) {
@@ -454,7 +454,7 @@ public interface Seq<T> {
      * @return the number of elements which satisfy the condition
      * @throws NullPointerException if condition is null
      */
-    default int count(Predicate<T> condition) {
+    default int countIf(Predicate<T> condition) {
         Objects.requireNonNull(condition);
         int count = 0;
         for (int i = 0; i < size(); i++) {
@@ -467,7 +467,7 @@ public interface Seq<T> {
     /**
      * Returns the number of elements which satisfy the condition.
      * <p>
-     * Similar to {@link #count(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression.
+     * Similar to {@link #countIf(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression.
      * </p>
      *
      * @param condition the condition used to filter elements by passing the element and its index,
@@ -475,7 +475,7 @@ public interface Seq<T> {
      * @return the number of elements which satisfy the condition
      * @throws NullPointerException if condition is null
      */
-    default int count(BiPredicate<T, Integer> condition) {
+    default int countIf(BiPredicate<T, Integer> condition) {
         Objects.requireNonNull(condition);
         int count = 0;
         for (int i = 0; i < size(); i++) {
