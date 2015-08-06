@@ -111,10 +111,14 @@ public interface Seq<T> {
      */
     int size();
 
+    boolean contains(T t);
+
     /**
      * Randomly shuffle the seq, resulting a new seq.
      */
     Seq<T> shuffle();
+
+    ArrayList<T> toArrayList();
 
 
     /**
@@ -170,6 +174,8 @@ public interface Seq<T> {
     }
 
     boolean isEmpty();
+
+    Object[] toArray();
 
     /**
      * Sort the seq by the comparator, resulting a new seq, without changing the original seq.
