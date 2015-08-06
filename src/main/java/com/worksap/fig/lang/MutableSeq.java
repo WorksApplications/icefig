@@ -49,6 +49,16 @@ public interface MutableSeq<T> extends Seq<T> {
     @Override
     MutableSeq<T> append(Seq<? extends T> seq);
 
+
+    MutableSeq<T> appendInPlace(T value);
+
+    @SuppressWarnings({"varargs", "unchecked"})
+    MutableSeq<T> appendInPlace(T... values);
+
+    MutableSeq<T> appendInPlace(Collection<? extends T> collection);
+
+    MutableSeq<T> appendInPlace(Seq<? extends T> seq);
+
     @Override
     MutableSeq<T> prepend(T value);
 
@@ -61,6 +71,15 @@ public interface MutableSeq<T> extends Seq<T> {
 
     @Override
     MutableSeq<T> prepend(Seq<? extends T> seq);
+
+    MutableSeq<T> prependInPlace(T value);
+
+    @SuppressWarnings({"varargs", "unchecked"})
+    MutableSeq<T> prependInPlace(T... values);
+
+    MutableSeq<T> prependInPlace(Collection<? extends T> collection);
+
+    MutableSeq<T> prependInPlace(Seq<? extends T> seq);
 
     @Override
     MutableSeq<T> subSeq(int fromIndex, int toIndex);

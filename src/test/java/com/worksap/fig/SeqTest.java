@@ -257,40 +257,40 @@ public class SeqTest {
 
     @Test
     public void testPushPrepend() {
-        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(1, 2, 3).push(4, 5));
-        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(1, 2, 3).push(Arrays.asList(new Integer[]{4, 5})));
-        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4), Seqs.newMutableSeq(1, 2, 3).push(4));
-        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(3, 4, 5).prepend(1, 2));
+        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(1, 2, 3).appendInPlace(4, 5));
+        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(1, 2, 3).appendInPlace(Arrays.asList(new Integer[]{4, 5})));
+        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4), Seqs.newMutableSeq(1, 2, 3).appendInPlace(4));
+        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(3, 4, 5).prependInPlace(1, 2));
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 3);
-        seq.push(4, 5);
+        seq.appendInPlace(4, 5);
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), seq);
-        seq.prepend(4, 5);
+        seq.prependInPlace(4, 5);
         assertEquals(Seqs.newMutableSeq(4, 5, 1, 2, 3, 4, 5), seq);
         Integer[] ints = null;
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).push(ints));
+        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).appendInPlace(ints));
         Collection<Integer> cols = null;
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).push(cols));
+        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).appendInPlace(cols));
     }
 
     @Test
     public void testConcatPreConcat() {
-        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(1, 2, 3).concat(4, 5));
-        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(1, 2, 3).concat(Arrays.asList(new Integer[]{4, 5})));
-        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4), Seqs.newMutableSeq(1, 2, 3).concat(4));
-        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(3, 4, 5).preConcat(1, 2));
+        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(1, 2, 3).append(4, 5));
+        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(1, 2, 3).append(Arrays.asList(new Integer[]{4, 5})));
+        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4), Seqs.newMutableSeq(1, 2, 3).append(4));
+        assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(3, 4, 5).prepend(1, 2));
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 3);
-        seq.concat(4, 5);
+        seq.append(4, 5);
         assertEquals(Seqs.newMutableSeq(1, 2, 3), seq);
-        seq.preConcat(4, 5);
+        seq.prepend(4, 5);
         assertEquals(Seqs.newMutableSeq(1, 2, 3), seq);
         Integer[] ints = null;
         assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).prepend(ints));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).concat(ints));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).preConcat(ints));
+        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).append(ints));
+        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).prepend(ints));
         Collection<Integer> cols = null;
         assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).prepend(cols));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).concat(cols));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).preConcat(cols));
+        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).append(cols));
+        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).prepend(cols));
     }
 
     @Test
@@ -361,28 +361,6 @@ public class SeqTest {
     }
 
     @Test
-    public void testnewMutableSeq() {
-        assertEquals(Seqs.newMutableSeq(), Seqs.newMutableSeq());
-        MutableSeq<Integer> seq = Seqs.newMutableSeq();
-        seq.add(null);
-        assertEquals(seq, Seqs.newMutableSeq(1));
-        assertEquals(Seqs.newMutableSeq(1), Seqs.newMutableSeq(1, 1));
-        assertEquals(Seqs.newMutableSeq(0, 1, 4, 9), Seqs.newMutableSeq(4, i -> i * i));
-        MutableSeq<MutableSeq<Integer>> seqs = Seqs.newMutableSeq(2, seq);
-        assertEquals(null, seqs.get(1).get(0));
-        seqs.get(0).set(0, 1);
-        assertEquals(new Integer(1), seqs.get(0).get(0));
-        assertEquals(new Integer(1), seqs.get(1).get(0));
-
-        assertEquals(10, Seqs.newMutableSeq(10).size());
-        assertEquals(10, Seqs.newMutableSeq(10, 1).size());
-        assertEquals(10, Seqs.newMutableSeq(10, i -> i + 1).size());
-        Integer ii = null;
-        assertEquals(Seqs.newMutableSeq(null, null), Seqs.newMutableSeq(2, ii));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(10, null));
-    }
-
-    @Test
     public void testRepeat() {
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2);
         assertEquals(Seqs.newMutableSeq(1, 2, 1, 2, 1, 2, 1, 2), seq.repeat(4));
@@ -409,14 +387,14 @@ public class SeqTest {
         assertEquals(3, seq.count(1));
         assertEquals(1, seq.count(2));
         assertEquals(2, seq.count(null));
-        assertEquals(2, seq.count(e -> e == null));
-        assertEquals(3, seq.count(e -> e != null && e > 1));
-        assertEquals(2, seq.count((e, i) -> e != null && e > 1 && i < seq.size() - 1));
+        assertEquals(2, seq.countIf(e -> e == null));
+        assertEquals(3, seq.countIf(e -> e != null && e > 1));
+        assertEquals(2, seq.countIf((e, i) -> e != null && e > 1 && i < seq.size() - 1));
 
         Predicate<Integer> predicate = null;
-        assertThrows(NullPointerException.class, () -> seq.count(predicate));
+        assertThrows(NullPointerException.class, () -> seq.countIf(predicate));
         BiPredicate<Integer, Integer> biPredicate = null;
-        assertThrows(NullPointerException.class, () -> seq.count(biPredicate));
+        assertThrows(NullPointerException.class, () -> seq.countIf(biPredicate));
     }
 
     @Test
@@ -459,7 +437,7 @@ public class SeqTest {
         seq = Seqs.newMutableSeq();
         assertEquals(null, seq.reduce(Integer::sum));
         assertEquals(new Integer(1), seq.reduce(1, Integer::sum));
-        seq.add(1);
+        seq.appendInPlace(1);
         assertEquals(new Integer(2), seq.reduce(1, Integer::sum));
 
         MutableSeq<TestObj> persons = Seqs.newMutableSeq(new TestObj("wang", 26), new TestObj("sun", 30));
