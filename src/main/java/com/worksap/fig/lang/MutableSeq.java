@@ -96,6 +96,10 @@ public interface MutableSeq<T> extends Seq<T> {
     @Override
     MutableSeq<T> filter(BiPredicate<T, Integer> condition);
 
+    MutableSeq<T> filterInPlace(Predicate<T> condition);
+
+    MutableSeq<T> filterInPlace(BiPredicate<T, Integer> condition);
+
     @Override
     MutableSeq<T> repeat(int times);
 

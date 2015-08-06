@@ -425,6 +425,32 @@ class SeqImpl<T> implements MutableSeq<T> {
     }
 
     @Override
+    public MutableSeq<T> filterInPlace(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
+        final Iterator<T> each = list.iterator();
+        while (each.hasNext()) {
+            if (!condition.test(each.next())) {
+                each.remove();
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public MutableSeq<T> filterInPlace(BiPredicate<T, Integer> condition) {
+        Objects.requireNonNull(condition);
+        final Iterator<T> each = list.iterator();
+        int index = 0;
+        while (each.hasNext()) {
+            if (!condition.test(each.next(), index)) {
+                each.remove();
+            }
+            index++;
+        }
+        return this;
+    }
+
+    @Override
     public MutableSeq<T> repeatInPlace(int times) {
         if (times <= 0)
             throw new IllegalArgumentException("times must be a positive number.");

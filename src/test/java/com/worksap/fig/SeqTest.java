@@ -344,6 +344,24 @@ public class SeqTest {
     }
 
     @Test
+    public void testFilterInPlace() {
+        MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 3);
+        MutableSeq<Integer> seq1 = seq.filterInPlace((e, i) -> (e > 1 && i % 2 == 0));
+        assertEquals(Seqs.newMutableSeq(3), seq);
+        assertEquals(Seqs.newMutableSeq(3), seq1);
+
+        final MutableSeq<Integer> seq3 = Seqs.newMutableSeq(1, 2, 3);
+        MutableSeq<Integer> seq2 = seq3.filterInPlace(e -> e > 1);
+        assertEquals(Seqs.newMutableSeq(2, 3), seq3);
+        assertEquals(Seqs.newMutableSeq(2, 3), seq2);
+
+        Predicate<Integer> predicate = null;
+        assertThrows(NullPointerException.class, () -> seq.filter(predicate));
+        BiPredicate<Integer, Integer> biPredicate = null;
+        assertThrows(NullPointerException.class, () -> seq.filter(biPredicate));
+    }
+
+    @Test
     public void testGet() {
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 3, 4, 5, 6);
         assertEquals(new Integer(1), seq.get(0));
