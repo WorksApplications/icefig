@@ -116,4 +116,14 @@ public interface MutableSeq<T> extends Seq<T> {
     MutableSeq<T> clear();
 
     MutableSeq<T> set(int i, T t);
+
+    MutableSeq<T> shuffleInPlace();
+    MutableSeq<T> reverseInPlace();
+    MutableSeq<T> distinctInPlace();
+    MutableSeq<T> repeatInPlace(int times);
+    MutableSeq<T> compactInPlace();
+    MutableSeq<T> sortInPlace(Comparator<? super T> comparator);
+
+    MutableSeq<T> rejectInPlace(Predicate<T> condition);
+    MutableSeq<T> rejectInPlace(BiPredicate<T, Integer> condition);
 }

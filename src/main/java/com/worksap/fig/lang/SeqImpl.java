@@ -1,5 +1,6 @@
 package com.worksap.fig.lang;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.*;
 
@@ -375,5 +376,103 @@ class SeqImpl<T> implements MutableSeq<T> {
     @Override
     public ArrayList<T> toArrayList() {
         return list;
+    }
+
+    @Override
+    public MutableSeq<T> shuffleInPlace(){
+        Collections.shuffle(list);
+        return this;
+    }
+
+    @Override
+    public MutableSeq<T> distinctInPlace() {
+        Collection<T> collection = new LinkedHashSet<>(list);
+        list.clear();
+        list.addAll(collection);
+        return this;
+    }
+
+    @Override
+    public MutableSeq<T> sortInPlace(Comparator<? super T> comparator) {
+        Collections.sort(list, comparator);
+        return this;
+    }
+
+    @Override
+    public MutableSeq<T> rejectInPlace(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
+        final Iterator<T> each = list.iterator();
+        while (each.hasNext()) {
+            if (condition.test(each.next())) {
+                each.remove();
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public MutableSeq<T> rejectInPlace(BiPredicate<T, Integer> condition) {
+        Objects.requireNonNull(condition);
+        final Iterator<T> each = list.iterator();
+        int index = 0;
+        while (each.hasNext()) {
+            if (condition.test(each.next(), index)) {
+                each.remove();
+            }
+            index++;
+        }
+        return this;
+    }
+
+    @Override
+    public MutableSeq<T> repeatInPlace(int times) {
+        if (times <= 0)
+            throw new IllegalArgumentException("times must be a positive number.");
+        else if (times >= 2) {
+            times--;
+            Collection<T> copy = new ArrayList<>(list);
+            while (times > 0) {
+                list.addAll(copy);
+                times--;
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public MutableSeq<T> compactInPlace() {
+        list.removeIf(e -> e == null);
+        return this;
+    }
+
+    @Override
+    public MutableSeq<T> reverseInPlace() {
+        int size = size();
+        for (int i = 0; i < size / 2; i++) {
+            T temp = this.get(i);
+            this.set(i, this.get(size - 1 - i));
+            this.set(size - 1 - i, temp);
+        }
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SeqImpl<?> seq = (SeqImpl<?>) o;
+        return Objects.equals(list, seq.list);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(list);
+    }
+
+    @Override
+    public String toString() {
+        return "SeqImpl{" +
+                "list=" + list +
+                '}';
     }
 }

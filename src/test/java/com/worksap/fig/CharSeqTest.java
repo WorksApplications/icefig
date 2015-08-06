@@ -1,11 +1,14 @@
 package com.worksap.fig;
 
 import com.worksap.fig.lang.CharSeq;
+import com.worksap.fig.lang.MutableSeq;
 import com.worksap.fig.lang.Seq;
+import com.worksap.fig.lang.Seqs;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static com.worksap.fig.Helpers.assertThrows;
 import static org.junit.Assert.*;
@@ -168,8 +171,8 @@ public class CharSeqTest {
                 "吴宫花草埋幽径，晋代衣冠成古丘。\n" +
                 "三山半落青天外，二水中分白鹭洲。\n" +
                 "总为浮云能蔽日，长安不见使人愁。");
-        Seq<CharSeq> result = Seq.of();
-        seq.forEachLine(line -> result.add(line));
+        MutableSeq<CharSeq> result = Seqs.newMutableSeq();
+        seq.forEachLine((Consumer<CharSeq>) result::appendInPlace);
         assertEquals(seq.eachLine(), result);
     }
 
@@ -188,8 +191,8 @@ public class CharSeqTest {
     public void testEachByte() {
         String einstein = "Einstein";
         CharSeq seq = CharSeq.of(einstein);
-        Seq<Byte> bytes = Seq.of();
-        seq.forEachByte(byt -> bytes.add(byt));
+        MutableSeq<Byte> bytes = Seqs.newMutableSeq();
+        seq.forEachByte((Consumer<Byte>) bytes::appendInPlace);
         seq.forEachByte((b, i) -> assertEquals(new Character((char) (b.byteValue())), seq.charAt(i)));
     }
 
@@ -198,8 +201,8 @@ public class CharSeqTest {
         CharSeq cs = CharSeq.of("hello\u0639");
         assertEquals(6, cs.length());
         assertEquals(6, cs.eachCodePoint().size());
-        assertEquals(Seq.of(104, 101, 108, 108, 111, 1593), cs.eachCodePoint());
-        assertEquals(Seq.of(), CharSeq.of("").eachCodePoint());
+        assertEquals(Seqs.newMutableSeq(104, 101, 108, 108, 111, 1593), cs.eachCodePoint());
+        assertEquals(Seqs.newMutableSeq(), CharSeq.of("").eachCodePoint());
         assertThrows(NullPointerException.class, () -> cs.forEachCodePoint(null));
     }
 }
