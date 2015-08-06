@@ -8,13 +8,10 @@ import java.util.function.*;
  */
 class SeqImpl<T> implements MutableSeq<T> {
 
-    private List<T> list;
+    private final ArrayList<T> list;
 
     public SeqImpl() {
-    }
-
-    public SeqImpl(List<T> list) {
-        this.list = list;
+        this.list = new ArrayList<>();
     }
 
     public SeqImpl(Collection<T> collection) {
@@ -35,9 +32,9 @@ class SeqImpl<T> implements MutableSeq<T> {
         if (index >= size || index < -size)
             throw new IndexOutOfBoundsException("Index " + index + ", size " + size + ", should be within [" + (-size) + ", " + size + ")");
         if (index >= 0)
-            return get(index);
+            return list.get(index);
         else
-            return get(size + index);
+            return list.get(size + index);
     }
 
     @Override
@@ -81,6 +78,11 @@ class SeqImpl<T> implements MutableSeq<T> {
     @Override
     public int size() {
         return list.size();
+    }
+
+    @Override
+    public Object[] toArray() {
+        return list.toArray();
     }
 
     @Override
@@ -243,7 +245,7 @@ class SeqImpl<T> implements MutableSeq<T> {
     }
 
     @Override
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return list.isEmpty();
     }
 
@@ -302,5 +304,27 @@ class SeqImpl<T> implements MutableSeq<T> {
             result.append((MutableSeq<T>) s);
         });
         return result;
+    }
+
+    @Override
+    public MutableSeq<T> clear() {
+        list.clear();
+        return this;
+    }
+
+    @Override
+    public boolean contains(T t){
+        return list.contains(t);
+    }
+
+    @Override
+    public MutableSeq<T> set(int i, T t) {
+        list.set(i, t);
+        return this;
+    }
+
+    @Override
+    public ArrayList<T> toArrayList() {
+        return list;
     }
 }

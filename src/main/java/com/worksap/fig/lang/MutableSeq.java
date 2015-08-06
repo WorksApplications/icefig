@@ -93,4 +93,8 @@ public interface MutableSeq<T> extends Seq<T> {
 
     @Override
     MutableSeq<MutableSeq<T>> eachCombination(int n);
+
+    MutableSeq<T> clear();
+
+    MutableSeq<T> set(int i, T t);
 }
