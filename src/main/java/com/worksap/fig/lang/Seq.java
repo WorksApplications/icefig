@@ -6,33 +6,21 @@ import java.util.function.*;
 /**
  * Elegant supplement for List in JDK
  */
-public interface Seq<T> extends List<T> {
-
-
+public interface Seq<T> {
     /**
      * Transform each element of the seq into another value using the same function, resulting a new seq without changing the original one.
      *
      * @return The new seq after transformation.
      * @throws NullPointerException if func is null
      */
-    default <R> Seq<R> map(Function<T, R> func) {
-        Objects.requireNonNull(func);
-        Seq<R> result = new SeqImpl<>();
-        this.forEach(i -> result.add(func.apply(i)));
-        return result;
-    }
+    <R> Seq<R> map(Function<T, R> func);
 
     /**
      * Similar to {@link #map(Function)}, with additional parameter "index" as the second parameter of the lambda expression.
      *
      * @throws NullPointerException if func is null
      */
-    default <R> Seq<R> map(BiFunction<T, Integer, R> func) {
-        Objects.requireNonNull(func);
-        Seq<R> result = new SeqImpl<>();
-        this.forEach((s, i) -> result.add(func.apply(s, i)));
-        return result;
-    }
+    <R> Seq<R> map(BiFunction<T, Integer, R> func);
 
     /**
      * Transform each element into a seq, and concat all seq together into a new seq.
@@ -40,24 +28,14 @@ public interface Seq<T> extends List<T> {
      * @return The new seq after transformation.
      * @throws NullPointerException if func is null
      */
-    default <R> Seq<R> flatMap(Function<T, Seq<R>> func) {
-        Objects.requireNonNull(func);
-        Seq<R> result = new SeqImpl<>();
-        this.forEach(i -> result.addAll(func.apply(i)));
-        return result;
-    }
+    <R> Seq<R> flatMap(Function<T, Seq<R>> func);
 
     /**
      * Similar to {@link #flatMap(Function)}, with additional parameter "index" as the second parameter of the lambda expression.
      *
      * @throws NullPointerException if func is null
      */
-    default <R> Seq<R> flatMap(BiFunction<T, Integer, Seq<R>> func) {
-        Objects.requireNonNull(func);
-        Seq<R> result = new SeqImpl<>();
-        this.forEach((s, i) -> result.addAll(func.apply(s, i)));
-        return result;
-    }
+    <R> Seq<R> flatMap(BiFunction<T, Integer, Seq<R>> func);
 
     /**
      * @return The beginning element of the seq.
@@ -66,7 +44,6 @@ public interface Seq<T> extends List<T> {
     default T first() {
         return get(0);
     }
-
 
     /**
      * @return The ending element of the seq.
@@ -127,27 +104,35 @@ public interface Seq<T> extends List<T> {
      * @return A new seq of the selected elements. If the size of seq is lower than n, return all elements.
      * Return empty result if the seq is empty. The order of selected elements may be changed.
      */
-    default Seq<T> sample(int n) {
-        Seq<T> shuffled = shuffle();
-        return shuffled.subSeq(0, Math.min(n, this.size()));
-    }
+    Seq<T> sample(int n);
+
+    /**
+     * Get the number of elements in this seq.
+     */
+    int size();
+
+    boolean contains(T t);
 
     /**
      * Randomly shuffle the seq, resulting a new seq.
      */
-    default Seq<T> shuffle() {
-        Seq<T> copy = new SeqImpl<>(this);
-        Collections.shuffle(copy);
-        return copy;
-    }
+    Seq<T> shuffle();
+
+    ArrayList<T> toArrayList();
+
 
     /**
-     * Randomly shuffle the seq itself.
+     * Similar to {@link #forEach(Consumer)}, with additional parameter "index" as the second parameter of the lambda expression.
+     *
+     * @throws NullPointerException if action is null
      */
-    default Seq<T> shuffle$() {
-        Collections.shuffle(this);
-        return this;
+    default void forEach(Consumer<? super T> action) {
+        Objects.requireNonNull(action);
+        for (int i = 0; i < this.size(); i++) {
+            action.accept(this.get(i));
+        }
     }
+
 
     /**
      * Similar to {@link #forEach(Consumer)}, with additional parameter "index" as the second parameter of the lambda expression.
@@ -170,16 +155,7 @@ public interface Seq<T> extends List<T> {
      *
      * @throws IllegalArgumentException if n <= 0
      */
-    default Seq<Seq<T>> eachCons(int n) {
-        if (n <= 0) {
-            throw new IllegalArgumentException("n should be positive number!");
-        }
-        Seq<Seq<T>> result = new SeqImpl<>();
-        for (int i = 0; i <= this.size() - n; i++) {
-            result.add(this.subSeq(i, i + n));
-        }
-        return result;
-    }
+    Seq<? extends Seq<T>> eachCons(int n);
 
     /**
      * Similar with {@link #eachCons(int)}, but instead of to return the transformed seq, it iterates the transformed seq and do action.
@@ -197,6 +173,10 @@ public interface Seq<T> extends List<T> {
         }
     }
 
+    boolean isEmpty();
+
+    Object[] toArray();
+
     /**
      * Sort the seq by the comparator, resulting a new seq, without changing the original seq.
      *
@@ -205,45 +185,14 @@ public interface Seq<T> extends List<T> {
      *                   ordering</i> should be used.
      * @return A new seq sorted
      */
-    default Seq<T> order(Comparator<? super T> comparator) {
-        Seq<T> copy = new SeqImpl<>(this);
-        Collections.sort(copy, comparator);
-        return copy;
-    }
-
-    /**
-     * Sort the seq itself by the comparator.
-     *
-     * @param comparator the comparator to determine the order of the seq. A
-     *                   {@code null} value indicates that the elements' <i>natural
-     *                   ordering</i> should be used.
-     * @return The seq itself after sorting
-     */
-    default Seq<T> order$(Comparator<? super T> comparator) {
-        Collections.sort(this, comparator);
-        return this;
-    }
+    Seq<T> sort(Comparator<? super T> comparator);
 
     /**
      * Reduce duplicated elements, keeping only the first occurrence, resulting a new seq.
      *
      * @return A new seq reduced
      */
-    default Seq<T> distinct() {
-        return new SeqImpl<>(new LinkedHashSet<>(this));
-    }
-
-    /**
-     * Reduce duplicated elements, keeping only the first occurrence.
-     *
-     * @return The seq itself after reduced
-     */
-    default Seq<T> distinct$() {
-        Collection<T> collection = new LinkedHashSet<>(this);
-        clear();
-        addAll(collection);
-        return this;
-    }
+    Seq<T> distinct();
 
     /**
      * Find the first element which satisfy the condition.
@@ -314,201 +263,94 @@ public interface Seq<T> extends List<T> {
     }
 
     /**
-     * Push values into the seq at the end of it.
+     * Append values to the seq at the end of it, resulting a new seq.
      * <p>
-     * Note: This method <strong>does</strong> change the seq, which is different from {@link #concat(T...)}.
+     * Note: This method does <strong>NOT</strong> change the seq.
      * </p>
      *
-     * @return The seq itself after the change
-     * @throws NullPointerException if values is null
+     * @return A new seq after the change
+     * @throws NullPointerException is values is null
      */
-    @SuppressWarnings({"unchecked", "varargs"})
-    default Seq<T> push(T... values) {
-        Objects.requireNonNull(values);
-        push(Arrays.asList(values));
-        return this;
-    }
+    Seq<T> append(T value);
 
     /**
-     * Push values into the seq at the end of it.
+     * Append values to the seq at the end of it, resulting a new seq.
      * <p>
-     * Note: This method <strong>does</strong> change the seq, which is different from {@link #concat(Collection)}.
-     * </p>
-     *
-     * @return The seq itself after the change
-     * @throws NullPointerException if collection is null
-     */
-    default Seq<T> push(Collection<? extends T> collection) {
-        Objects.requireNonNull(collection);
-        addAll(collection);
-        return this;
-    }
-
-    /**
-     * Prepend values into the seq at the beginning of it. Values keep the order after being merged into the seq.
-     * <p>
-     * Note: This method <strong>does</strong> change the seq, which is different from {@link #preConcat(T...)}.
-     * </p>
-     *
-     * @return The seq itself after the change
-     * @throws NullPointerException if values is null
-     */
-    @SuppressWarnings({"unchecked", "varargs"})
-    default Seq<T> prepend(T... values) {
-        Objects.requireNonNull(values);
-        for (int i = values.length - 1; i >= 0; i--) {
-            add(0, values[i]);
-        }
-        return this;
-    }
-
-    /**
-     * Prepend values into the seq at the beginning of it. Values keep the order after being merged into the seq.
-     * <p>
-     * Note: This method <strong>does</strong> change the seq, which is different from {@link #preConcat(Collection)}.
-     * </p>
-     *
-     * @return The seq itself after the change
-     * @throws NullPointerException is collection is null
-     */
-    @SuppressWarnings({"unchecked", "varargs"})
-    default Seq<T> prepend(Collection<? extends T> collection) {
-        Objects.requireNonNull(collection);
-        T[] array = (T[]) collection.toArray();
-        return prepend(array);
-    }
-
-    /**
-     * Concat values to the seq at the end of it, resulting a new seq.
-     * <p>
-     * Note: This method does <strong>NOT</strong> change the seq, which is different from {@link #push(T...)}.
+     * Note: This method does <strong>NOT</strong> change the seq.
      * </p>
      *
      * @return A new seq after the change
      * @throws NullPointerException is values is null
      */
     @SuppressWarnings({"unchecked", "varargs"})
-    default Seq<T> concat(T... values) {
-        Objects.requireNonNull(values);
-        return concat(Arrays.asList(values));
-    }
+    Seq<T> append(T... values);
 
     /**
-     * Concat values to the seq at the end of it, resulting a new seq.
+     * Append values to the seq at the end of it, resulting a new seq.
      * <p>
-     * Note: This method does <strong>NOT</strong> change the seq, which is different from {@link #push(Collection)}.
+     * Note: This method does <strong>NOT</strong> change the seq.
      * </p>
      *
      * @return A new seq after the change
      * @throws NullPointerException is collection is null
      */
-    default Seq<T> concat(Collection<? extends T> collection) {
-        Objects.requireNonNull(collection);
-        Seq<T> copy = new SeqImpl<>(this);
-        copy.addAll(collection);
-        return copy;
-    }
+    Seq<T> append(Collection<? extends T> collection);
 
     /**
-     * Pre-concat values into the seq at the beginning of it. Values keep the order after being merged into the seq.
+     * Append values to the seq at the end of it, resulting a new seq.
      * <p>
-     * Note: This method does <strong>NOT</strong> change the seq, which is different from {@link #prepend(T...)}.
+     * Note: This method does <strong>NOT</strong> change the seq.
      * </p>
      *
-     * @return The seq itself after the change
+     * @return A new seq after the change
+     * @throws NullPointerException is collection is null
+     */
+    Seq<T> append(Seq<? extends T> seq);
+
+    /**
+     * Prepend values into the seq at the beginning of it. Values keep the parameter order after being prepended.
+     * <p>
+     * Note: This method does <strong>NOT</strong> change the seq.
+     * </p>
+     *
+     * @return A new seq after the change
+     * @throws NullPointerException is values is null
+     */
+    Seq<T> prepend(T values);
+
+    /**
+     * Prepend values into the seq at the beginning of it. Values keep the parameter order after being prepended.
+     * <p>
+     * Note: This method does <strong>NOT</strong> change the seq.
+     * </p>
+     *
+     * @return A new seq after the change
      * @throws NullPointerException is values is null
      */
     @SuppressWarnings({"unchecked", "varargs"})
-    default Seq<T> preConcat(T... values) {
-        Objects.requireNonNull(values);
-        return preConcat(Arrays.asList(values));
-    }
+    Seq<T> prepend(T... values);
 
     /**
-     * Pre-concat values into the seq at the beginning of it. Values keep the order after being merged into the seq.
+     * Prepend values into the seq at the beginning of it. Values keep the order after being merged into the seq.
      * <p>
-     * Note: This method does <strong>NOT</strong> change the seq, which is different from {@link #preConcat(Collection)}.
+     * Note: This method does <strong>NOT</strong> change the seq.
      * </p>
      *
-     * @return The seq itself after the change.
+     * @return A new seq after the change
      * @throws NullPointerException is collection is null
      */
-    default Seq<T> preConcat(Collection<? extends T> collection) {
-        Objects.requireNonNull(collection);
-        Seq<T> copy = new SeqImpl<>(collection);
-        copy.addAll(this);
-        return copy;
-    }
+    Seq<T> prepend(Collection<? extends T> collection);
 
     /**
-     * Create a new seq from values.
+     * Prepend values into the seq at the beginning of it. Values keep the order after being merged into the seq.
+     * <p>
+     * Note: This method does <strong>NOT</strong> change the seq.
+     * </p>
      *
-     * @throws NullPointerException if values is null
+     * @return A new seq after the change
+     * @throws NullPointerException is collection is null
      */
-    @SafeVarargs
-    static <T> Seq<T> of(T... values) {
-        Objects.requireNonNull(values);
-        Collection<T> col = Arrays.asList(values);
-        return new SeqImpl<>(col);
-    }
-
-    /**
-     * Create a new seq from collection.
-     *
-     * @throws NullPointerException if values is null
-     */
-    static <T> Seq<T> of(Collection<? extends T> values) {
-        Objects.requireNonNull(values);
-        return new SeqImpl<>(values);
-    }
-
-    /**
-     * Constructs an empty seq.
-     *
-     * @return an empty seq
-     */
-    static <T> Seq<T> newSeq() {
-        return new SeqImpl<>();
-    }
-
-    /**
-     * Constructs a seq of the specified size. Each element in the seq is null.
-     *
-     * @param size the initial size of the seq
-     * @return the new seq
-     */
-    static <T> Seq<T> newSeq(int size) {
-        return new SeqImpl<>(size);
-    }
-
-    /**
-     * Constructs a seq of the specified size. Each element in the seq is defaultValue.
-     *
-     * @param size         the initial size of the seq
-     * @param defaultValue the value of each element in the seq
-     * @return the new seq
-     */
-    static <T> Seq<T> newSeq(int size, T defaultValue) {
-        return new SeqImpl<>(size, defaultValue);
-    }
-
-    /**
-     * Constructs a seq of the specified size.
-     * Each element in this seq is created by passing the element’s index to the given {@link Function} and storing the return value.
-     *
-     * @param size the initial size of the seq
-     * @param func the {@link Function} used to create elements, accepting the element's index and returning a value to be stored into the seq.
-     * @return the new seq
-     * @throws NullPointerException if func is null
-     */
-    static <T> Seq<T> newSeq(int size, Function<Integer, T> func) {
-        Objects.requireNonNull(func);
-        Seq<T> seq = new SeqImpl<>(size);
-        for (int i = 0; i < size; i++) {
-            seq.set(i, func.apply(i));
-        }
-        return seq;
-    }
+    Seq<T> prepend(Seq<? extends T> seq);
 
     /**
      * Create a new seq which is the sub seq of the current one.
@@ -520,9 +362,7 @@ public interface Seq<T> extends List<T> {
      * @throws IllegalArgumentException  if the endpoint indices are out of order
      *                                   {@code (fromIndex > toIndex)}
      */
-    default Seq<T> subSeq(int fromIndex, int toIndex) {
-        return new SeqImpl<>(this.subList(fromIndex, toIndex));
-    }
+    Seq<T> subSeq(int fromIndex, int toIndex);
 
     /**
      * Removes elements which satisfy the condition, resulting a new seq without changing the original one.
@@ -532,34 +372,7 @@ public interface Seq<T> extends List<T> {
      * @return the new seq without elements which satisfy the condition
      * @throws NullPointerException if condition is null
      */
-    default Seq<T> reject(Predicate<T> condition) {
-        Objects.requireNonNull(condition);
-        Seq<T> copy = new SeqImpl<>();
-        this.forEach(e -> {
-            if (!condition.test(e))
-                copy.add(e);
-        });
-        return copy;
-    }
-
-    /**
-     * Removes elements which satisfy the condition on the seq itself.
-     *
-     * @param condition the condition used to filter elements by passing the element,
-     *                  returns true if the element satisfies the condition, otherwise returns false.
-     * @return the seq itself after removing elements which satisfy the condition
-     * @throws NullPointerException if condition is null
-     */
-    default Seq<T> reject$(Predicate<T> condition) {
-        Objects.requireNonNull(condition);
-        final Iterator<T> each = iterator();
-        while (each.hasNext()) {
-            if (condition.test(each.next())) {
-                each.remove();
-            }
-        }
-        return this;
-    }
+    Seq<T> reject(Predicate<T> condition);
 
     /**
      * Removes elements which satisfy the condition, resulting a new seq without changing the original one.
@@ -572,39 +385,7 @@ public interface Seq<T> extends List<T> {
      * @return the new seq without elements which satisfy the condition
      * @throws NullPointerException if condition is null
      */
-    default Seq<T> reject(BiPredicate<T, Integer> condition) {
-        Objects.requireNonNull(condition);
-        Seq<T> copy = new SeqImpl<>();
-        this.forEach((e, i) -> {
-            if (!condition.test(e, i))
-                copy.add(e);
-        });
-        return copy;
-    }
-
-    /**
-     * Removes elements which satisfy the condition on the seq itself.
-     * <p>
-     * Similar to {@link #reject$(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression
-     * </p>
-     *
-     * @param condition the condition used to filter elements by passing the element and its index,
-     *                  returns true if the element satisfies the condition, otherwise returns false.
-     * @return the seq itself after removing elements which satisfy the condition
-     * @throws NullPointerException if condition is null
-     */
-    default Seq<T> reject$(BiPredicate<T, Integer> condition) {
-        Objects.requireNonNull(condition);
-        final Iterator<T> each = iterator();
-        int index = 0;
-        while (each.hasNext()) {
-            if (condition.test(each.next(), index)) {
-                each.remove();
-            }
-            index++;
-        }
-        return this;
-    }
+    Seq<T> reject(BiPredicate<T, Integer> condition);
 
     /**
      * Gets elements which satisfy the condition, resulting a new seq without changing the original one.
@@ -614,15 +395,7 @@ public interface Seq<T> extends List<T> {
      * @return the new seq containing only the elements satisfying the condition
      * @throws NullPointerException if condition is null
      */
-    default Seq<T> filter(Predicate<T> condition) {
-        Objects.requireNonNull(condition);
-        Seq<T> copy = new SeqImpl<>();
-        this.forEach(e -> {
-            if (condition.test(e))
-                copy.add(e);
-        });
-        return copy;
-    }
+    Seq<T> filter(Predicate<T> condition);
 
     /**
      * Gets elements which satisfy the condition, resulting a new seq without changing the original one.
@@ -635,15 +408,7 @@ public interface Seq<T> extends List<T> {
      * @return the new seq containing only the elements satisfying the condition
      * @throws NullPointerException if condition is null
      */
-    default Seq<T> filter(BiPredicate<T, Integer> condition) {
-        Objects.requireNonNull(condition);
-        Seq<T> copy = new SeqImpl<>();
-        this.forEach((e, i) -> {
-            if (condition.test(e, i))
-                copy.add(e);
-        });
-        return copy;
-    }
+    Seq<T> filter(BiPredicate<T, Integer> condition);
 
     /**
      * Returns a new seq built by concatenating the <tt>times</tt> copies of this seq.
@@ -652,61 +417,19 @@ public interface Seq<T> extends List<T> {
      * @return the new seq
      * @throws IllegalArgumentException if <tt>times &lt;= 0</tt>
      */
-    default Seq<T> repeat(int times) {
-        if (times <= 0)
-            throw new IllegalArgumentException("times must be a positive number.");
-        Seq<T> result = new SeqImpl<>();
-        while (times > 0) {
-            result.addAll(this);
-            times--;
-        }
-        return result;
-    }
-
-    /**
-     * Returns the seq itself by concatenating the <tt>times</tt> copies of self.
-     *
-     * @param times times to repeat
-     * @return the seq itself after the change
-     * @throws IllegalArgumentException if <tt>times &lt;= 0</tt>
-     */
-    default Seq<T> repeat$(int times) {
-        if (times <= 0)
-            throw new IllegalArgumentException("times must be a positive number.");
-        else if (times >= 2) {
-            times--;
-            Seq<T> copy = Seq.of(this);
-            while (times > 0) {
-                this.addAll(copy);
-                times--;
-            }
-        }
-        return this;
-    }
+    Seq<T> repeat(int times);
 
     /**
      * Returns a copy of the seq itself with all null elements removed.
      *
      * @return the new seq with all null elements removed
      */
-    default Seq<T> compact() {
-        return this.filter(e -> e != null);
-    }
-
-    /**
-     * Returns the seq itself with all null elements removed.
-     *
-     * @return the seq itself with all null elements removed
-     */
-    default Seq<T> compact$() {
-        removeIf(e -> e == null);
-        return this;
-    }
+    Seq<T> compact();
 
     /**
      * Returns the number of the specified element.
      *
-     * @param element the element to count
+     * @param element the element to countIf
      * @return the number of the specified element
      */
     default int count(T element) {
@@ -764,6 +487,16 @@ public interface Seq<T> extends List<T> {
 
     /**
      * Returns the element at index. A negative index counts from the end of self.
+     *
+     * @param index index of the element to return
+     * @return the element at the specified position in this seq
+     * @throws IndexOutOfBoundsException if the index is out of range
+     *                                   (<tt>index &gt;= size() || index &lt; -size()</tt>)
+     */
+    T get(int index);
+
+    /**
+     * Returns the element at index. A negative index counts from the end of self.
      * If the index is out of range(<tt>index &lt; -size() || index &gt;= size()</tt>), a default value is returned.
      * <p>
      * Similar to {@link #get(int)}. The difference between these two functions is how to solve the situation of illegal index.<br/>
@@ -783,16 +516,6 @@ public interface Seq<T> extends List<T> {
     }
 
     /**
-     * Returns the element at index. A negative index counts from the end of self.
-     *
-     * @param index index of the element to return
-     * @return the element at the specified position in this seq
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (<tt>index &gt;= size() || index &lt; -size()</tt>)
-     */
-    T get(int index);
-
-    /**
      * Slices this seq to construct some slices in the original order,
      * each of slice contains <tt>n</tt> elements(only the last slice can contain less than <tt>n</tt> elements).
      *
@@ -800,16 +523,7 @@ public interface Seq<T> extends List<T> {
      * @return the collection of these slices
      * @throws IllegalArgumentException if <tt>n &lt;= 0</tt>
      */
-    default Seq<Seq<T>> eachSlice(int n) {
-        if (n <= 0)
-            throw new IllegalArgumentException("n should be a positive number.");
-        Seq<Seq<T>> result = new SeqImpl<>();
-        int size = this.size();
-        for (int i = 0; i < size; i += n) {
-            result.add(this.subSeq(i, i + n > size ? size : i + n));
-        }
-        return result;
-    }
+    Seq<? extends Seq<T>> eachSlice(int n);
 
     /**
      * Slices the seq to construct some slices and take action on each slice.
@@ -881,28 +595,7 @@ public interface Seq<T> extends List<T> {
      *
      * @return the new seq with elements in reverse order
      */
-    default Seq<T> reverse() {
-        Seq<T> result = new SeqImpl<>();
-        for (int i = size() - 1; i >= 0; i--)
-            result.add(this.get(i));
-        return result;
-    }
-
-    /**
-     * Reverses the elements of this seq itself.
-     *
-     * @return the seq itself with elements in reverse order
-     */
-    default Seq<T> reverse$() {
-        int size = size();
-        for (int i = 0; i < size / 2; i++) {
-            T temp = this.get(i);
-            this.set(i, this.get(size - 1 - i));
-            this.set(size - 1 - i, temp);
-        }
-        return this;
-    }
-
+    Seq<T> reverse();
 
     /**
      * Similar with {@link #eachCombination(int)}, but instead of to return the seq, it iterates the seq and do action.
@@ -916,5 +609,5 @@ public interface Seq<T> extends List<T> {
      * This method uses the index as the identity of each element, thus it may return a combination with duplicated elements inside.
      * If you want to avoid this, use {@link #distinct()} before calling this method.
      */
-    Seq<Seq<T>> eachCombination(int n);
+    Seq<? extends Seq<T>> eachCombination(int n);
 }

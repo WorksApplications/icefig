@@ -1,14 +1,12 @@
 package com.worksap.fig.lang;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 
 /**
  * Elegant supplement for Map in JDK
  */
-public interface Hash<K, V> extends Map<K, V> {
+public interface Hash<K, V> {
     /**
      * Check whether this hash contains any key-value pair that satisfies the condition.
      *
@@ -17,24 +15,32 @@ public interface Hash<K, V> extends Map<K, V> {
      * @return whether this hash contains any key-value pair that satisfies the condition
      * @throws NullPointerException if condition is null
      */
-    default boolean containsAny(BiPredicate<K, V> condition) {
-        Objects.requireNonNull(condition);
-        for (Entry<K, V> entry : entrySet()) {
-            if (condition.test(entry.getKey(), entry.getValue())) {
-                return true;
-            }
-        }
-        return false;
-    }
+    boolean containsAny(BiPredicate<K, V> condition);
 
     /**
-     * Returns a {@link Seq} view of the mappings contained in this hash.
+     * Returns <tt>true</tt> if this hash contains a mapping for the specified
+     * key. More formally, returns <tt>true</tt> if and only if
+     * this hash contains a mapping for a key <tt>k</tt> such that
+     * <tt>(key==null ? k==null : key.equals(k))</tt>.  (There can be
+     * at most one such mapping.)
      *
-     * @return a seq view of the mappings contained in this hash
+     * @param key key whose presence in this hash is to be tested
+     * @return <tt>true</tt> if this hash contains a mapping for the specified
+     *         key
+     * @throws ClassCastException if the key is of an inappropriate type for
+     *         this map
+     * @throws NullPointerException if the specified key is null and this map
+     *         does not permit null keys
      */
-    default Seq<Entry<K, V>> entrySeq() {
-        return Seq.of(entrySet());
-    }
+    boolean containsKey(K key);
+
+    boolean containsValue(V value);
+
+    boolean isEmpty();
+
+    int size();
+
+    V get(K k);
 
     /**
      * Returns a {@link Seq} view of the values contained in this hash.
@@ -51,36 +57,15 @@ public interface Hash<K, V> extends Map<K, V> {
     Seq<K> keys();
 
     /**
-     * Returns a new hash created by using hash’s values as keys, and the keys as values.
-     * If there are duplicated values, the last key is kept.
-     * Since it is hash map, the order of keys is decided by hash table.
+     * Returns a {@link Seq} view of the mappings contained in this hash.
      *
-     * @return an inverted hash
+     * @return a seq view of the mappings contained in this hash
      */
-    default Hash<V, K> invert() {
-        Hash<V, K> result = newHash();
-        forEach((k, v) -> result.put(v, k));
-        return result;
-    }
+    Seq<Map.Entry<K, V>> entrySeq();
 
-    /**
-     * Return a new hash with the key-value pairs of the original Hash which don't satisfy the condition.
-     *
-     * @param condition the condition used to filter key-value pairs by passing the key and value of the pair,
-     *                  returns true if the key-value pair satisfies the condition, otherwise returns false.
-     * @return a new hash with key-value pairs which don't satisfy the condition
-     * @throws NullPointerException if condition is null
-     */
-    default Hash<K, V> reject(BiPredicate<K, V> condition) {
-        Objects.requireNonNull(condition);
-        Hash<K, V> result = newHash();
-        forEach((k, v) -> {
-            if (!condition.test(k, v)) {
-                result.put(k, v);
-            }
-        });
-        return result;
-    }
+    Hash<K, V> put(K k, V v);
+
+    Hash<K, V> putIfAbsent(K k, V v);
 
     /**
      * Return a new hash with the key-value pairs of the original Hash which satisfy the condition.
@@ -90,99 +75,26 @@ public interface Hash<K, V> extends Map<K, V> {
      * @return a new with only key-value pairs which satisfy the condition
      * @throws NullPointerException if condition is null
      */
-    default Hash<K, V> filter(BiPredicate<K, V> condition) {
-        Objects.requireNonNull(condition);
-        Hash<K, V> result = newHash();
-        forEach((k, v) -> {
-            if (condition.test(k, v)) {
-                result.put(k, v);
-            }
-        });
-        return result;
-    }
-
-    default Hash<K, V> set(K key, V value) {
-        put(key, value);
-        return this;
-    }
+    Hash<K, V> filter(BiPredicate<K, V> condition);
 
     /**
-     * Constructs an empty hash
-     * @return an empty hash
-     */
-    static <K, V> Hash<K, V> newHash() {
-        return new HashImpl<>();
-    }
-
-    /**
-     * Creates a new hash from {@link Map}
-     * @throws NullPointerException if map is null
-     */
-    static <K, V> Hash<K, V> of(Map<? extends K, ? extends V> map) {
-        Objects.requireNonNull(map);
-        return new HashImpl<>(map);
-    }
-
-    /**
-     * Removes all key-value pairs which satisfy the condition on the hash itself.
+     * Return a new hash with the key-value pairs of the original Hash which don't satisfy the condition.
      *
      * @param condition the condition used to filter key-value pairs by passing the key and value of the pair,
      *                  returns true if the key-value pair satisfies the condition, otherwise returns false.
-     * @return this hash itself with all key-value pairs which don't satisfy the condition
+     * @return a new hash with key-value pairs which don't satisfy the condition
      * @throws NullPointerException if condition is null
      */
-    default Hash<K, V> reject$(BiPredicate<K, V> condition) {
-        Objects.requireNonNull(condition);
-        Seq<K> toBeRemoved = Seq.newSeq();
-        this.forEach((k, v) -> {
-            if (condition.test(k, v)) {
-                toBeRemoved.add(k);
-            }
-        });
-        if (!toBeRemoved.isEmpty()) {
-            toBeRemoved.forEach((Consumer<K>) this::remove);
-        }
-        return this;
-    }
+    Hash<K, V> reject(BiPredicate<K, V> condition);
 
     /**
-     * Keep only the key-value pairs of this Hash which satisfy the condition.
+     * Returns a new hash created by using hash’s values as keys, and the keys as values.
+     * If there are duplicated values, the last key is kept.
+     * Since it is hash map, the order of keys is decided by hash table.
      *
-     * @param condition the condition used to filter key-value pairs by passing the key and value of the pair,
-     *                  returns true if the key-value pair satisfies the condition, otherwise returns false.
-     * @return this hash itself with only key-value pairs which satisfy the condition
-     * @throws NullPointerException if condition is null
+     * @return an inverted hash
      */
-    default Hash<K, V> filter$(BiPredicate<K, V> condition) {
-        Objects.requireNonNull(condition);
-        Seq<K> toBeRemoved = Seq.newSeq();
-        this.forEach((k, v) -> {
-            if (!condition.test(k, v)) {
-                toBeRemoved.add(k);
-            }
-        });
-        if (!toBeRemoved.isEmpty()) {
-            toBeRemoved.forEach((Consumer<K>) this::remove);
-        }
-        return this;
-    }
-
-    /**
-     * Returns the keys of the given value.
-     *
-     * @param value the value
-     * @return the collection of keys whose value is the given value
-     */
-    default Seq<K> keysOf(V value) {
-        Seq<K> result = Seq.newSeq();
-        this.forEach((k, v) -> {
-            if (value == null && v == null)
-                result.add(k);
-            else if (value != null && v != null && v.equals(value))
-                result.add(k);
-        });
-        return result;
-    }
+    Hash<V, K> invert();
 
     /**
      * Returns a new hash containing the mappings of the specified hash and this hash itself.
@@ -191,26 +103,31 @@ public interface Hash<K, V> extends Map<K, V> {
      * @param another the specified hash to be merged
      * @return the new hash containing all the mappings of the specified hash and this hash itself
      */
-    default Hash<K, V> merge(Hash<? extends K, ? extends V> another) {
-        Hash<K, V> result = Hash.of(this);
-        if (another != null)
-            result.putAll(another);
-        return result;
-    }
+    Hash<K, V> merge(Hash<? extends K, ? extends V> another);
 
     /**
-     * Copies all of the mappings from the specified hash to this hash.
-     * The value for entries with duplicate keys will be that of the specified hash.
-     * <p>
-     *     Similar to {@link #merge(Hash)}, the difference is that this function takes effect on this hash itself.
-     * </p>
+     * Removes the mapping for a key from this map if it is present
+     * (optional operation). More formally, if this hash contains a mapping
+     * from key <tt>k</tt> to value <tt>v</tt> such that
+     * <code>(key==null ?  k==null : key.equals(k))</code>, that mapping
+     * is removed. (The map can contain at most one such mapping.)
      *
-     * @param another the specified hash to be merged
-     * @return the hash itself containing all the mappings of the specified hash
+     * @param key key whose mapping is to be removed from the map
+     * @return a new hash after the key is removed
+     * @throws UnsupportedOperationException if the <tt>remove</tt> operation
+     *         is not supported by this hash
+     * @throws ClassCastException if the key is of an inappropriate type for
+     *         this hash
+     * @throws NullPointerException if the specified key is null and this
+     *         hash does not permit null keys
      */
-    default Hash<K, V> merge$(Hash<? extends K, ? extends V> another) {
-        if (another != null)
-            this.putAll(another);
-        return this;
-    }
+    Hash<K, V> remove(K key);
+
+    /**
+     * Returns a Seq of keys of the given value.
+     *
+     * @param value the value
+     * @return the collection of keys whose value is the given value
+     */
+    Seq<K> keysOf(V value);
 }

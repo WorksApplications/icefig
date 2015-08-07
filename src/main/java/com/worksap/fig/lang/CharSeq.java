@@ -153,7 +153,7 @@ public class CharSeq {
      * @return
      */
     public Seq<CharSeq> split(String regex) {
-        return Seq.of(str.split(regex)).map(CharSeq::new);
+        return Seqs.newSeq(str.split(regex)).map(CharSeq::new);
     }
 
     /**
@@ -279,9 +279,9 @@ public class CharSeq {
     public Seq<CharSeq> scan(String regex) {
         Pattern pat = Pattern.compile(regex);
         Matcher m = pat.matcher(str);
-        Seq<CharSeq> charSeq = Seq.of();
+        MutableSeq<CharSeq> charSeq = Seqs.newMutableSeq();
         while (m.find()) {
-            charSeq.add(CharSeq.of(m.group()));
+            charSeq.appendInPlace(CharSeq.of(m.group()));
         }
         return charSeq;
     }
@@ -481,11 +481,11 @@ public class CharSeq {
     public Seq<CharSeq> partition(String regex) {
         Matcher m = Pattern.compile(regex).matcher(str);
         if (m.find()) {
-            return Seq.of(CharSeq.of(str.substring(0, m.start())),
+            return Seqs.newSeq(CharSeq.of(str.substring(0, m.start())),
                     CharSeq.of(m.group()),
                     CharSeq.of(str.substring(m.end())));
         } else {
-            return Seq.of(CharSeq.of(""), CharSeq.of(""), CharSeq.of(str));
+            return Seqs.newSeq(CharSeq.of(""), CharSeq.of(""), CharSeq.of(str));
         }
     }
 
@@ -511,12 +511,12 @@ public class CharSeq {
             end = m.end();
         }
         if (match != null) {
-            return Seq.of(CharSeq.of(str.substring(0, start)),
+            return Seqs.newSeq(CharSeq.of(str.substring(0, start)),
                     CharSeq.of(match),
                     CharSeq.of(str.substring(end))
             );
         }
-        return Seq.of(CharSeq.of(""), CharSeq.of(""), CharSeq.of(str));
+        return Seqs.newSeq(CharSeq.of(""), CharSeq.of(""), CharSeq.of(str));
     }
 
     /**
@@ -530,7 +530,7 @@ public class CharSeq {
         for (int i = 0; i < characters.length; i++) {
             characters[i] = chars[i];
         }
-        return Seq.of(characters);
+        return Seqs.newSeq(characters);
     }
 
     /**
@@ -545,7 +545,7 @@ public class CharSeq {
         for (int i = 0; i < bytes.length; i++) {
             bytes[i] = rawBytes[i];
         }
-        return Seq.of(bytes);
+        return Seqs.newSeq(bytes);
     }
 
     /**
@@ -553,10 +553,10 @@ public class CharSeq {
      * @return the collection of ths Unicode of each character
      */
     public Seq<Integer> eachCodePoint() {
-        Seq<Integer> codePoints = Seq.newSeq();
+        MutableSeq<Integer> codePoints = Seqs.newMutableSeq();
         char[] chars = str.toCharArray();
         for (int i = 0; i < chars.length; i++) {
-            codePoints.add((int)chars[i]);
+            codePoints.appendInPlace((int) chars[i]);
         }
         return codePoints;
     }
