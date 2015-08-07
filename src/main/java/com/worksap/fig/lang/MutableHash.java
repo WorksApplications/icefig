@@ -31,15 +31,40 @@ public interface MutableHash<K, V> extends Hash<K, V> {
     @Override
     Seq<K> keysOf(V v);
 
+    /**
+     * In-place method of {@link #put(K, V)}
+     */
     MutableHash<K, V> putInPlace(K k, V v);
 
+    /**
+     * In-place method of {@link #putIfAbsent(K, V)}
+     */
     MutableHash<K, V> putIfAbsentInPlace(K k, V v);
 
+    /**
+     * In-place method of {@link #remove(K)}
+     */
     MutableHash<K, V> removeInPlace(K k);
 
+    /**
+     * In-place method of {@link #filter(BiPredicate)}
+     */
     MutableHash<K, V> filterInPlace(BiPredicate<K, V> condition);
 
+    /**
+     * In-place method of {@link #reject(BiPredicate)}
+     */
     MutableHash<K, V> rejectInPlace(BiPredicate<K, V> condition);
 
+    /**
+     * In-place method of {@link #merge(Hash)}
+     */
     MutableHash<K, V> mergeInPlace(Hash<? extends K, ? extends V> another);
+
+    /**
+     * Remove all the key-value pair at this hash.
+     *
+     * @return the hash itself after clear
+     */
+    MutableHash<K, V> clear();
 }

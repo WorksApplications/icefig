@@ -39,6 +39,8 @@ public class HashTest {
         hash.removeInPlace("23");
         assertEquals(hash.size(), 2);
         assertNull(hash.get("23"));
+        assertEquals(0, hash.clear().size());
+        assertEquals(Hashes.newMutableHash(), hash);
 
         Hash<String, String> hash1 = Hashes.<String, String>newHash().put("3", "Chris Paul").put("30", "Stephen Curry");
         assertEquals(2, hash1.size());
