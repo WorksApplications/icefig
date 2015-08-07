@@ -122,6 +122,8 @@ public class CharSeqTest {
         CharSeq seq2 = CharSeq.of("hello");
         assertArrayEquals(new CharSeq[]{CharSeq.of("he"), CharSeq.of("l"), CharSeq.of("lo")},
                 seq2.partition("l").toArray());
+        assertArrayEquals(new CharSeq[]{CharSeq.of("hel"), CharSeq.of("l"), CharSeq.of("o")},
+                seq2.rPartition("l").toArray());
         assertArrayEquals(new CharSeq[]{CharSeq.of(""), CharSeq.of(""), CharSeq.of("hello")},
                 seq2.rPartition("no").toArray());
     }

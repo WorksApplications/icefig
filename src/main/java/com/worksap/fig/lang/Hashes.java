@@ -6,6 +6,10 @@ import java.util.Map;
  * Created by lijunxiao on 8/6/15.
  */
 public class Hashes {
+    private Hashes() {
+
+    }
+
     public static <K, V> Hash<K, V> newHash() {
         return new HashImpl<>();
     }
