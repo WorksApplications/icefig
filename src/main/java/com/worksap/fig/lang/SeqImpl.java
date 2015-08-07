@@ -179,6 +179,7 @@ class SeqImpl<T> implements MutableSeq<T> {
 
     @Override
     public MutableSeq<T> prepend(T... values) {
+        Objects.requireNonNull(values);
         return prepend(Arrays.asList(values));
     }
 
@@ -334,7 +335,7 @@ class SeqImpl<T> implements MutableSeq<T> {
         action.accept(indexToSeq(comb));
 
         while (comb[0] < size() - n) {
-            for (int i = 0; i < n; i++) {
+            for (int i = 0;;i++) {
                 if (i == n - 1 || comb[i + 1] - comb[i] > 1) { // find the first selected element that the next element of it is not selected
                     comb[i]++; // make the next element selected instead
                     // set all selected elements before i, to the beginning elements
@@ -471,8 +472,6 @@ class SeqImpl<T> implements MutableSeq<T> {
 
     @Override
     public String toString() {
-        return "SeqImpl{" +
-                "list=" + list +
-                '}';
+        return list.toString();
     }
 }

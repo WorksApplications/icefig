@@ -20,6 +20,11 @@ public class SeqTest {
     public void testConstruction() {
         Integer[] ints = new Integer[]{1, 2, 3};
         assertEquals(3, Seqs.newMutableSeq(ints).size());
+        Collection<Integer> collection = new ArrayList<>();
+        collection.add(1);
+        collection.add(2);
+        assertEquals(2, Seqs.newSeq(collection).size());
+
         assertArrayEquals(new Integer[]{1, 2, 3}, Seqs.newMutableSeq(1, 2, 3).toArray());
         assertArrayEquals(new Integer[]{2}, Seqs.newMutableSeq(2).toArray());
         List<Integer> list = new ArrayList<>();
@@ -30,6 +35,20 @@ public class SeqTest {
         assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(values));
         Collection<Integer> cols = null;
         assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(cols));
+
+
+        // for 100% coverage
+        new Seqs();
+    }
+
+    @Test
+    public void testEquals() {
+        Integer[] ints = new Integer[]{1, 2, 3};
+        assertFalse(Seqs.newMutableSeq(ints).equals(null));
+        assertFalse(Seqs.newMutableSeq(ints).equals(new ArrayList<>()));
+        assertTrue(Seqs.newMutableSeq(ints).equals(Seqs.newMutableSeq(1, 2, 3)));
+
+        assertEquals(Arrays.asList(ints).toString(), Seqs.newMutableSeq(ints).toString());
     }
 
     @Test
@@ -60,6 +79,7 @@ public class SeqTest {
     @Test
     public void testSample() {
         assertNull(Seqs.newMutableSeq().sample());
+        assertEquals((Integer) 1, Seqs.newMutableSeq(1).sample());
         assertEquals(0, Seqs.newMutableSeq().sample(1).size());
         assertEquals(2, Seqs.newMutableSeq(1, 2, 3).sample(2).size());
         assertEquals(3, Seqs.newMutableSeq(1, 2, 3).sample(3).size());
@@ -256,11 +276,13 @@ public class SeqTest {
     }
 
     @Test
-    public void testPushPrepend() {
+    public void testAppendPrependInPlace() {
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(1, 2, 3).appendInPlace(4, 5));
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(1, 2, 3).appendInPlace(Arrays.asList(new Integer[]{4, 5})));
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4), Seqs.newMutableSeq(1, 2, 3).appendInPlace(4));
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(3, 4, 5).prependInPlace(1, 2));
+        assertEquals(Seqs.newMutableSeq(1, 3, 4, 5), Seqs.newMutableSeq(3, 4, 5).prependInPlace(1));
+        assertEquals(Seqs.newMutableSeq(2, 3, 4, 5), Seqs.newMutableSeq(3, 4, 5).prependInPlace(Seqs.newMutableSeq(2)));
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 3);
         seq.appendInPlace(4, 5);
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), seq);
@@ -273,11 +295,18 @@ public class SeqTest {
     }
 
     @Test
-    public void testConcatPreConcat() {
+    public void testIsEmpty() {
+        assertTrue(Seqs.newSeq().isEmpty());
+        assertFalse(Seqs.newSeq(1, 2, 3).isEmpty());
+    }
+
+    @Test
+    public void testAppendPrepend() {
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(1, 2, 3).append(4, 5));
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(1, 2, 3).append(Arrays.asList(new Integer[]{4, 5})));
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4), Seqs.newMutableSeq(1, 2, 3).append(4));
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(3, 4, 5).prepend(1, 2));
+        assertEquals(Seqs.newMutableSeq(1, 3, 4, 5), Seqs.newMutableSeq(3, 4, 5).prepend(1));
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 3);
         seq.append(4, 5);
         assertEquals(Seqs.newMutableSeq(1, 2, 3), seq);
@@ -291,6 +320,10 @@ public class SeqTest {
         assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).prepend(cols));
         assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).append(cols));
         assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).prepend(cols));
+
+        seq = Seqs.newMutableSeq(1, 2, 3);
+        assertEquals(Seqs.newMutableSeq(1, 2, 3, 1, 2, 3), seq.append(seq));
+        assertEquals(Seqs.newMutableSeq(3, 2, 1, 1, 2, 3), seq.prepend(seq.reverse()));
     }
 
     @Test
@@ -481,9 +514,10 @@ public class SeqTest {
     @Test
     public void testCombination() {
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 3, 4, 5);
+        assertEquals(0, seq.eachCombination(6).size());
         assertThrows(IllegalArgumentException.class, () -> seq.eachCombination(0));
         assertThrows(IllegalArgumentException.class, () -> seq.eachCombination(-1));
-        assertTrue(seq.eachCombination(5).size() == 1);
+        assertEquals(1, seq.eachCombination(5).size());
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), seq.eachCombination(5).first());
         Set<MutableSeq<Integer>> resultSet = new HashSet<>(seq.eachCombination(3).toArrayList());
         Set<MutableSeq<Integer>> actual = new HashSet<>(Seqs.newMutableSeq(Seqs.newMutableSeq(1, 2, 3),
@@ -497,6 +531,5 @@ public class SeqTest {
                 Seqs.newMutableSeq(2, 4, 5),
                 Seqs.newMutableSeq(3, 4, 5)).toArrayList());
         assertEquals(actual, resultSet);
-
     }
 }
