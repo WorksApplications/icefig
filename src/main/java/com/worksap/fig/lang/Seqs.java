@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 /**
- * Created by liuyang on 8/6/15.
+ * Factory class for construct Seq and MutableSeq
  */
 public class Seqs {
 
