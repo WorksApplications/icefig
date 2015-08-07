@@ -1,4 +1,4 @@
-# Fig [![Build Status](https://travis-ci.org/wapatesh/fig.svg?branch=master)](https://travis-ci.org/wapatesh/fig) [![Documentation](https://readthedocs.org/projects/svg-pottery/badge/?version=latest)](http://www.javadoc.io/doc/com.worksap/fig)
+# Fig [![Build Status](https://travis-ci.org/wapatesh/fig.svg?branch=master)](https://travis-ci.org/wapatesh/fig) [![Documentation](https://readthedocs.org/projects/svg-pottery/badge/?version=latest)](http://www.javadoc.io/doc/com.worksap/fig)[![codecov.io](http://codecov.io/github/wapatesh/fig/coverage.svg?branch=master)](http://codecov.io/github/wapatesh/fig?branch=master)
 
 Java elegant supplement
 
