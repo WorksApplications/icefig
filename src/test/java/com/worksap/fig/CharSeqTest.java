@@ -122,8 +122,8 @@ public class CharSeqTest {
         CharSeq seq2 = CharSeq.of("hello");
         assertArrayEquals(new CharSeq[]{CharSeq.of("he"), CharSeq.of("l"), CharSeq.of("lo")},
                 seq2.partition("l").toArray());
-        assertArrayEquals(new CharSeq[]{CharSeq.of("hel"), CharSeq.of("l"), CharSeq.of("o")},
-                seq2.rPartition("l").toArray());
+        assertArrayEquals(new CharSeq[]{CharSeq.of(""), CharSeq.of(""), CharSeq.of("hello")},
+                seq2.rPartition("no").toArray());
     }
 
     @Test
@@ -171,9 +171,20 @@ public class CharSeqTest {
                 "吴宫花草埋幽径，晋代衣冠成古丘。\n" +
                 "三山半落青天外，二水中分白鹭洲。\n" +
                 "总为浮云能蔽日，长安不见使人愁。");
+        CharSeq seq2 = CharSeq.of("凤凰台上凤凰游，凤去台空江自流。\r\n" +
+                "三山半落青天外，二水中分白鹭洲。\n");
+
         MutableSeq<CharSeq> result = Seqs.newMutableSeq();
         seq.forEachLine((Consumer<CharSeq>) result::appendInPlace);
         assertEquals(seq.eachLine(), result);
+
+        MutableSeq<CharSeq> result2 = Seqs.newMutableSeq();
+        seq.forEachLine((c, i) -> {
+            if (i % 2 == 0) {
+                result2.appendInPlace(c);
+            }
+        });
+        assertEquals(seq2.eachLine(), result2);
     }
 
     @Test
@@ -199,10 +210,22 @@ public class CharSeqTest {
     @Test
     public void testEachCodePoint() {
         CharSeq cs = CharSeq.of("hello\u0639");
+        MutableSeq<Integer> codePoints = Seqs.newMutableSeq();
+        cs.forEachCodePoint(codePoints::appendInPlace);
+
         assertEquals(6, cs.length());
         assertEquals(6, cs.eachCodePoint().size());
-        assertEquals(Seqs.newMutableSeq(104, 101, 108, 108, 111, 1593), cs.eachCodePoint());
+        assertEquals(Seqs.newMutableSeq(104, 101, 108, 108, 111, 1593), codePoints);
         assertEquals(Seqs.newMutableSeq(), CharSeq.of("").eachCodePoint());
         assertThrows(NullPointerException.class, () -> cs.forEachCodePoint(null));
+    }
+
+    @Test
+    public void testEquals() {
+        CharSeq cs = CharSeq.of("Hello World!");
+        assertFalse(cs.equals(null));
+        assertFalse(cs.equals("Hello World!"));
+        assertTrue(cs.equals(CharSeq.of("Hello World!")));
+        assertFalse(cs.equals(CharSeq.of("Hello!")));
     }
 }

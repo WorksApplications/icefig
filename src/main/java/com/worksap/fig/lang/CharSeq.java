@@ -569,11 +569,9 @@ public class CharSeq {
      * @param consumer the action to be taken on the Unicode of each character
      * @throws NullPointerException if consumer is null
      */
-    public void forEachCodePoint(Consumer<Integer> consumer) {
+    public CharSeq forEachCodePoint(Consumer<Integer> consumer) {
         Objects.requireNonNull(consumer);
-        char[] chars = str.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            consumer.accept((int) chars[i]);
-        }
+        eachCodePoint().forEach(consumer);
+        return this;
     }
 }

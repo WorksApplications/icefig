@@ -3,6 +3,7 @@ package com.worksap.fig;
 import com.worksap.fig.lang.*;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 import static com.worksap.fig.Helpers.assertThrows;
@@ -49,7 +50,7 @@ public class HashTest {
 
     @Test
     public void testContainsAny() {
-        MutableHash<Integer, Integer> hash = Hashes.newMutableHash();
+        MutableHash<Integer, Integer> hash = Hashes.newMutableHash(new HashMap<>());
         hash.putInPlace(1, 2).putInPlace(2, 4).putInPlace(5, 1);
 
         assertTrue(hash.containsAny((k, v) -> k + v == 3));
@@ -61,7 +62,7 @@ public class HashTest {
     @Test
     public void testInvert() {
         Hash<String, String> hash =
-                Hashes.<String, String>newHash().put("en", "British English").put("ja", "Japanese").
+                Hashes.<String, String>newHash(new HashMap<>()).put("en", "British English").put("ja", "Japanese").
                         put("zh", "Chinese").put("zh-CN", "Chinese");
 
         Hash<String, String> invertedHash = hash.invert();
@@ -219,5 +220,15 @@ public class HashTest {
         assertTrue(hash.containsValue(null));
         assertFalse(hash.containsValue(2));
         assertFalse(hash.containsKey(2));
+    }
+
+    @Test
+    public void testEquals() {
+        Hash<Integer, Integer> hash = Hashes.<Integer, Integer>newHash().put(1, 2).put(3, 4);
+        Hash<Integer, Integer> hash2 = hash;
+        Hash<Integer, Integer> hash3 = Hashes.<Integer, Integer>newHash().put(1, 2).put(3, 4);
+        assertTrue(hash.equals(hash2));
+        assertFalse(hash.equals(null));
+        assertTrue(hash.equals(hash3));
     }
 }
