@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.function.BiPredicate;
 
 /**
- * Created by lijunxiao on 8/6/15.
+ * Elegant supplement for Map in JDK
  */
 public interface Hash<K, V> {
     /**
@@ -104,7 +104,6 @@ public interface Hash<K, V> {
      * @return the new hash containing all the mappings of the specified hash and this hash itself
      */
     Hash<K, V> merge(Hash<? extends K, ? extends V> another);
-
 
     /**
      * Removes the mapping for a key from this map if it is present

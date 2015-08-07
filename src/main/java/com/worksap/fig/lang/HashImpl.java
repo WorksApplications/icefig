@@ -9,7 +9,7 @@ import java.util.function.BiPredicate;
 /**
  * Created by lijunxiao on 8/6/15.
  */
-public class HashImpl<K, V> implements MutableHash<K, V> {
+class HashImpl<K, V> implements MutableHash<K, V> {
     private Map<K, V> hash;
 
     protected HashImpl() {
@@ -43,6 +43,17 @@ public class HashImpl<K, V> implements MutableHash<K, V> {
     @Override
     public boolean isEmpty() {
         return hash.isEmpty();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (o instanceof HashImpl) {
+            HashImpl<K, V> h = (HashImpl<K, V>)o;
+            return hash.equals(h.hash);
+        }
+        return false;
     }
 
     @Override
@@ -102,7 +113,7 @@ public class HashImpl<K, V> implements MutableHash<K, V> {
         Objects.requireNonNull(condition);
         Map<K, V> newHash = new HashMap<>();
 
-        this.hash.forEach((k, v) -> {
+        hash.forEach((k, v) -> {
             if (!condition.test(k, v)) {
                 newHash.put(k, v);
             }
@@ -114,7 +125,7 @@ public class HashImpl<K, V> implements MutableHash<K, V> {
     public MutableHash<V, K> invert() {
         Map<V, K> newHash = new HashMap<>();
 
-        this.hash.forEach((k, v) -> newHash.put(v, k));
+        hash.forEach((k, v) -> newHash.put(v, k));
         return new HashImpl<>(newHash);
     }
 
@@ -131,12 +142,14 @@ public class HashImpl<K, V> implements MutableHash<K, V> {
 
     @Override
     public MutableHash<K, V> remove(K k) {
-        hash.remove(k);
-        return this;
+        Map<K, V> newHash = new HashMap<>(hash);
+        newHash.remove(k);
+        return new HashImpl<>(newHash);
     }
 
     @Override
     public MutableHash<K, V> filterInPlace(BiPredicate<K, V> condition) {
+        Objects.requireNonNull(condition);
         final Iterator<Map.Entry<K, V>> each = hash.entrySet().iterator();
         while (each.hasNext()) {
             Map.Entry<K, V> nextEntry = each.next();
@@ -149,6 +162,7 @@ public class HashImpl<K, V> implements MutableHash<K, V> {
 
     @Override
     public MutableHash<K, V> rejectInPlace(BiPredicate<K, V> condition) {
+        Objects.requireNonNull(condition);
         final Iterator<Map.Entry<K, V>> each = hash.entrySet().iterator();
         while (each.hasNext()) {
             Map.Entry<K, V> nextEntry = each.next();
@@ -189,12 +203,12 @@ public class HashImpl<K, V> implements MutableHash<K, V> {
 
     @Override
     public Seq<K> keysOf(V value) {
-        Seq<K> result = Seqs.newMutableSeq();
+        MutableSeq<K> result = Seqs.newMutableSeq();
         hash.forEach((k, v) -> {
             if (value == null && v == null)
-                result.append(k);
+                result.appendInPlace(k);
             else if (value != null && v != null && v.equals(value))
-                result.append(k);
+                result.appendInPlace(k);
         });
         return result;
     }

@@ -3,7 +3,8 @@ package com.worksap.fig.lang;
 import java.util.function.BiPredicate;
 
 /**
- * Created by lijunxiao on 8/6/15.
+ * An interface extending {@link com.worksap.fig.lang.Hash} (which is immutable), with additional in-place methods to change the hash itself.
+ * Those methods are generally named xxxInPlace
  */
 public interface MutableHash<K, V> extends Hash<K, V> {
     @Override
