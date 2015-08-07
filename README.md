@@ -28,7 +28,7 @@ seq.map(a -> a+ 1).distinct().reverse().join()
 
 Elegant alternative to Map: **Hash**
 ```java
-Hash<Integer, Integer> hash = Hashes.<Integer, Integer>newHash().set(1, 2).set(2, 3).set(3, 3);
+Hash<Integer, Integer> hash = Hashes.<Integer, Integer>newHash().put(1, 2).put(2, 3).put(3, 3);
 hash.containsAny((k, v) -> k+v == 5 ); //true
 hash.keysOf(3); // [2, 3]
 ```
