@@ -47,7 +47,7 @@ str.partition("d e").map(CharSeq::trim);  //["a b c", "d e", "f g"]
 <dependency>
     <groupId>com.worksap</groupId>
     <artifactId>fig</artifactId>
-    <version>0.2.0</version>
+    <version>[latest version]</version>
 </dependency>
 ```
 
