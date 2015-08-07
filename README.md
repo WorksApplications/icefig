@@ -11,9 +11,9 @@ Borrowered from Ruby basic library, Fig intends to supply the missing.
 
 Elegant alternative to List: **Seq**
 ```java
-Seq<Integer> seq = Seq.of(1,2,3);
+Seq<Integer> seq = Seqs.newSeq(1,2,3);
 seq.shuffle(); // copy to a new seq and shuffle it
-seq.shuffle$(); // shuffle the original seq
+seq.shuffleInPlace(); // shuffle the original seq
 seq.forEach((value, idx) -> { // with index
     // (1, 0)  (2, 1)  (3, 2)
 });
@@ -49,7 +49,7 @@ str.partition("d e").map(CharSeq::trim);  //["a b c", "d e", "f g"]
 <dependency>
     <groupId>com.worksap</groupId>
     <artifactId>fig</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.2</version>
 </dependency>
 ```
 
@@ -80,7 +80,7 @@ Fig has no external runtime dependency except JDK 8.
 
 ### Conventions
 
-Fig uses conventions on method names similar with Ruby. If there is a pair of methods `name, name$`, method ends with `$` means calling this method will change the object itself, while calling the other won't.
+Fig uses conventions on method names similar with Ruby. If there is a pair of methods `name, nameInPlace`, method ends with `InPlace` means calling this method will change the object itself, while calling the other won't.
 
 
 ## License
