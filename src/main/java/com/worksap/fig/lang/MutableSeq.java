@@ -181,6 +181,16 @@ public interface MutableSeq<T> extends Seq<T> {
      */
     MutableSeq<T> sortInPlace(Comparator<? super T> comparator);
 
+
+    /**
+     * In-place method of {@link #filter(Predicate)}
+     */
+    MutableSeq<T> filterInPlace(Predicate<T> condition);
+
+    /**
+     * In-place method of {@link #filter(BiPredicate)}
+     */
+    MutableSeq<T> filterInPlace(BiPredicate<T, Integer> condition);
     /**
      * In-place method of {@link #reject(Predicate)}
      */

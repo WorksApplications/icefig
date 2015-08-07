@@ -366,14 +366,28 @@ public class SeqTest {
         assertEquals(Seqs.newMutableSeq(1, 2, 3), seq);
         assertEquals(Seqs.newMutableSeq(3), seq1);
 
+        MutableSeq<Integer> seq2 = Seqs.newMutableSeq(1, 2, 3);
+        MutableSeq<Integer> seq3 = seq2.filterInPlace((e, i) -> (e > 1 && i % 2 == 0));
+        assertEquals(Seqs.newMutableSeq(3), seq2);
+        assertEquals(Seqs.newMutableSeq(3), seq3);
+        assertEquals(seq2, seq3);
+
+        seq2 = Seqs.newMutableSeq(1, 2, 3);
+        seq3 = seq2.filterInPlace(e -> e > 1);
+        assertEquals(Seqs.newMutableSeq(2, 3), seq2);
+        assertEquals(Seqs.newMutableSeq(2, 3), seq3);
+        assertEquals(seq2, seq3);
+
         MutableSeq<Integer> seq1$ = seq.filter(e -> e > 1);
         assertEquals(Seqs.newMutableSeq(1, 2, 3), seq);
         assertEquals(Seqs.newMutableSeq(2, 3), seq1$);
 
         Predicate<Integer> predicate = null;
         assertThrows(NullPointerException.class, () -> seq.filter(predicate));
+        assertThrows(NullPointerException.class, () -> seq.filterInPlace(predicate));
         BiPredicate<Integer, Integer> biPredicate = null;
         assertThrows(NullPointerException.class, () -> seq.filter(biPredicate));
+        assertThrows(NullPointerException.class, () -> seq.filterInPlace(biPredicate));
     }
 
     @Test
