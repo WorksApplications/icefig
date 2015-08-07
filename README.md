@@ -67,6 +67,9 @@ Stream has several characteristics:
 
 Thus, Stream may not be able to support operations related with the size of it, nor operations involving multiple or even random elements.
 
+Basically, the vast majority operations on List, Map, String don't need a Stream. Stream brings great merits on big data processing, but when we're not facing performance problem (operating a list of about 10x elements), it is an over kill. 
+Yet Stream brings the 2 additional steps "Stream()" and "collect()", which is sometimes annoying to write.
+
 Fig targets on "small data" operations within application logic, to provide simple & beautiful code writing about String, List, Map operation & transformation.
 
 ### No utilities
@@ -76,6 +79,15 @@ In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for 
 ### Zero runtime dependency
 
 Fig has no external runtime dependency except JDK 8.
+
+### Mutable & default interfaces
+
+Fig firstly aggregates all operations which do not change the state into a default interface(e.x. Seq, Hash).
+On the other hand, there are interfaces named "mutableXXX" extending the default ones with additional in-place operations, which are commonly named `xxxInPlace`.
+
+If you don't want the ability to change the object, you can use the default interface to let compiler check it for you. And it is the recommended way.
+
+Note that the default interface doesn't mean immutability of the object it is on, it only ensures "if outside only uses this interface on the object, the object will not be changed".
 
 ### Conventions
 
