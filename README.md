@@ -13,7 +13,6 @@ Elegant alternative to List: **Seq**
 ```java
 Seq<Integer> seq = Seqs.newSeq(1,2,3);
 seq.shuffle(); // copy to a new seq and shuffle it
-seq.shuffleInPlace(); // shuffle the original seq
 seq.forEach((value, idx) -> { // with index
     // (1, 0)  (2, 1)  (3, 2)
 });
