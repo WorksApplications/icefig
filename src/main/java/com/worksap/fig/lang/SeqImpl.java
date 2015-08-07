@@ -179,6 +179,7 @@ class SeqImpl<T> implements MutableSeq<T> {
 
     @Override
     public MutableSeq<T> prepend(T... values) {
+        Objects.requireNonNull(values);
         return prepend(Arrays.asList(values));
     }
 
@@ -471,8 +472,6 @@ class SeqImpl<T> implements MutableSeq<T> {
 
     @Override
     public String toString() {
-        return "SeqImpl{" +
-                "list=" + list +
-                '}';
+        return list.toString();
     }
 }
