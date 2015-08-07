@@ -49,16 +49,6 @@ public interface MutableSeq<T> extends Seq<T> {
     @Override
     MutableSeq<T> append(Seq<? extends T> seq);
 
-
-    MutableSeq<T> appendInPlace(T value);
-
-    @SuppressWarnings({"varargs", "unchecked"})
-    MutableSeq<T> appendInPlace(T... values);
-
-    MutableSeq<T> appendInPlace(Collection<? extends T> collection);
-
-    MutableSeq<T> appendInPlace(Seq<? extends T> seq);
-
     @Override
     MutableSeq<T> prepend(T value);
 
@@ -71,15 +61,6 @@ public interface MutableSeq<T> extends Seq<T> {
 
     @Override
     MutableSeq<T> prepend(Seq<? extends T> seq);
-
-    MutableSeq<T> prependInPlace(T value);
-
-    @SuppressWarnings({"varargs", "unchecked"})
-    MutableSeq<T> prependInPlace(T... values);
-
-    MutableSeq<T> prependInPlace(Collection<? extends T> collection);
-
-    MutableSeq<T> prependInPlace(Seq<? extends T> seq);
 
     @Override
     MutableSeq<T> subSeq(int fromIndex, int toIndex);
@@ -113,17 +94,100 @@ public interface MutableSeq<T> extends Seq<T> {
     @Override
     MutableSeq<MutableSeq<T>> eachCombination(int n);
 
+    /**
+     * In-place method of {@link #append(Object)}
+     */
+    MutableSeq<T> appendInPlace(T value);
+
+    /**
+     * In-place method of {@link #append(T...)}
+     */
+    @SuppressWarnings({"varargs", "unchecked"})
+    MutableSeq<T> appendInPlace(T... values);
+
+    /**
+     * In-place method of {@link #append(Collection)}
+     */
+    MutableSeq<T> appendInPlace(Collection<? extends T> collection);
+
+    /**
+     * In-place method of {@link #append(Seq)}
+     */
+    MutableSeq<T> appendInPlace(Seq<? extends T> seq);
+
+    /**
+     * In-place method of {@link #prepend(Object)}
+     */
+    MutableSeq<T> prependInPlace(T value);
+
+    /**
+     * In-place method of {@link #prepend(T...)}
+     */
+    @SuppressWarnings({"varargs", "unchecked"})
+    MutableSeq<T> prependInPlace(T... values);
+
+    /**
+     * In-place method of {@link #prepend(Collection)}
+     */
+    MutableSeq<T> prependInPlace(Collection<? extends T> collection);
+
+    /**
+     * In-place method of {@link #prepend(Seq)}
+     */
+    MutableSeq<T> prependInPlace(Seq<? extends T> seq);
+
+
+    /**
+     * Remove all elements in the seq.
+     *
+     * @return The seq itself after changed.
+     */
     MutableSeq<T> clear();
 
+    /**
+     * Update the element at the index.
+     *
+     * @return The seq itself after changed.
+     */
     MutableSeq<T> set(int i, T t);
 
+    /**
+     * In-place method of {@link #shuffle()}
+     */
     MutableSeq<T> shuffleInPlace();
+
+    /**
+     * In-place method of {@link #reverse()}
+     */
     MutableSeq<T> reverseInPlace();
+
+    /**
+     * In-place method of {@link #distinct()}
+     */
     MutableSeq<T> distinctInPlace();
+
+    /**
+     * In-place method of {@link #repeat(int)}
+     */
     MutableSeq<T> repeatInPlace(int times);
+
+    /**
+     * In-place method of {@link #compact()}
+     */
     MutableSeq<T> compactInPlace();
+
+    /**
+     * In-place method of {@link #sort(Comparator)}
+     */
     MutableSeq<T> sortInPlace(Comparator<? super T> comparator);
 
+    /**
+     * In-place method of {@link #reject(Predicate)}
+     */
     MutableSeq<T> rejectInPlace(Predicate<T> condition);
+
+    /**
+     * In-place method of {@link #reject(BiPredicate)}
+     */
     MutableSeq<T> rejectInPlace(BiPredicate<T, Integer> condition);
 }
