@@ -184,6 +184,12 @@ class HashImpl<K, V> implements MutableHash<K, V> {
     }
 
     @Override
+    public MutableHash<K, V> clear() {
+        hash.clear();
+        return this;
+    }
+
+    @Override
     public MutableHash<K, V> putInPlace(K k, V v) {
         hash.put(k, v);
         return this;

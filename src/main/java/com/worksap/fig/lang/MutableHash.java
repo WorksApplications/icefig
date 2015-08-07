@@ -60,4 +60,11 @@ public interface MutableHash<K, V> extends Hash<K, V> {
      * In-place method of {@link #merge(Hash)}
      */
     MutableHash<K, V> mergeInPlace(Hash<? extends K, ? extends V> another);
+
+    /**
+     * Remove all the key-value pair at this hash.
+     *
+     * @return the hash itself after clear
+     */
+    MutableHash<K, V> clear();
 }
