@@ -79,7 +79,7 @@ public class SeqTest {
     @Test
     public void testSample() {
         assertNull(Seqs.newMutableSeq().sample());
-        assertEquals((Integer)1, Seqs.newMutableSeq(1).sample());
+        assertEquals((Integer) 1, Seqs.newMutableSeq(1).sample());
         assertEquals(0, Seqs.newMutableSeq().sample(1).size());
         assertEquals(2, Seqs.newMutableSeq(1, 2, 3).sample(2).size());
         assertEquals(3, Seqs.newMutableSeq(1, 2, 3).sample(3).size());
@@ -282,6 +282,7 @@ public class SeqTest {
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4), Seqs.newMutableSeq(1, 2, 3).appendInPlace(4));
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), Seqs.newMutableSeq(3, 4, 5).prependInPlace(1, 2));
         assertEquals(Seqs.newMutableSeq(1, 3, 4, 5), Seqs.newMutableSeq(3, 4, 5).prependInPlace(1));
+        assertEquals(Seqs.newMutableSeq(2, 3, 4, 5), Seqs.newMutableSeq(3, 4, 5).prependInPlace(Seqs.newMutableSeq(2)));
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 3);
         seq.appendInPlace(4, 5);
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), seq);
