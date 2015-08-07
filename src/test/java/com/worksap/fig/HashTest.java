@@ -3,6 +3,8 @@ package com.worksap.fig;
 import com.worksap.fig.lang.*;
 import org.junit.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -230,5 +232,14 @@ public class HashTest {
         assertTrue(hash.equals(hash2));
         assertFalse(hash.equals(null));
         assertTrue(hash.equals(hash3));
+    }
+
+    @Test
+    public void testPrivateConstructor() throws Exception {
+        Constructor constructor = Hashes.class.getDeclaredConstructor();
+        assertTrue("Constructor is not private", Modifier.isPrivate(constructor.getModifiers()));
+
+        constructor.setAccessible(true);
+        constructor.newInstance();
     }
 }

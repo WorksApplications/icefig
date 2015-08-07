@@ -2,7 +2,6 @@ package com.worksap.fig;
 
 import com.worksap.fig.lang.CharSeq;
 import com.worksap.fig.lang.MutableSeq;
-import com.worksap.fig.lang.Seq;
 import com.worksap.fig.lang.Seqs;
 import org.junit.Test;
 

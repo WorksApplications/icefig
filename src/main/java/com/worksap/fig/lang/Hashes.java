@@ -3,7 +3,7 @@ package com.worksap.fig.lang;
 import java.util.Map;
 
 /**
- * Created by lijunxiao on 8/6/15.
+ * Factory class for construct Hash and MutableHash
  */
 public class Hashes {
     private Hashes() {
