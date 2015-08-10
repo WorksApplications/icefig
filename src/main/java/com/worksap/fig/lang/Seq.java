@@ -610,4 +610,18 @@ public interface Seq<T> {
      * If you want to avoid this, use {@link #distinct()} before calling this method.
      */
     Seq<? extends Seq<T>> eachCombination(int n);
+
+
+    /**
+     * Check whether any element of the seq satisfies the condition
+     */
+    default boolean containsAny(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
+        for (int i = 0; i < size(); i++) {
+            if(condition.test(get(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -107,6 +107,13 @@ public class SeqTest {
     }
 
     @Test
+    public void testContainsAny() {
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).containsAny(null));
+        assertTrue(Seqs.newSeq(1, 2, 3).containsAny(i -> i > 2));
+        assertFalse(Seqs.newSeq(1, 2, 3).containsAny(i -> i > 3));
+    }
+
+    @Test
     public void testForEachWithIndex() {
         final MutableSeq<String> seq = Seqs.newMutableSeq("a", "b", "c");
         seq.forEach((item, index) -> {
