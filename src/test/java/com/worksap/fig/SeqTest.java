@@ -124,6 +124,24 @@ public class SeqTest {
     }
 
     @Test
+    public void testContainSubSeq() {
+        assertTrue(Seqs.newSeq('B', 'B', 'C', ' ', 'A', 'B', 'C', 'D', 'A', 'B', ' ', 'A', 'B', 'C', 'D', 'A', 'B', 'C', 'D', 'A', 'B', 'D', 'E')
+                .containsSubSeq(Seqs.newSeq('A', 'B', 'C', 'D', 'A', 'B', 'D')));
+        assertFalse(Seqs.newSeq('B', 'B', 'C', ' ', 'A', 'B', 'C', 'D', 'A', 'B', ' ', 'A', 'B', 'C', 'D', 'A', 'B', 'C', 'D', 'A', 'B', 'D', 'E')
+                .containsSubSeq(Seqs.newSeq('A', 'B', 'C', 'D', 'A', 'B', 'A')));
+        assertFalse(Seqs.newSeq('A')
+                .containsSubSeq(Seqs.newSeq('B')));
+        assertFalse(Seqs.newSeq()
+                .containsSubSeq(Seqs.newSeq('B')));
+        assertTrue(Seqs.newSeq('A')
+                .containsSubSeq(Seqs.newSeq()));
+        assertTrue(Seqs.newSeq('A', 'B', 'C')
+                .containsSubSeq(Seqs.newSeq('A', 'B', 'C')));
+
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq('A', 'B', 'C').containsSubSeq(null));
+    }
+
+    @Test
     public void testForEachWithIndex() {
         final MutableSeq<String> seq = Seqs.newMutableSeq("a", "b", "c");
         seq.forEach((item, index) -> {

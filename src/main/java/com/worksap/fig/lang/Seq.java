@@ -614,11 +614,13 @@ public interface Seq<T> {
 
     /**
      * Check whether any element of the seq satisfies the condition
+     *
+     * @throws NullPointerException if condition is null
      */
     default boolean containsAny(Predicate<T> condition) {
         Objects.requireNonNull(condition);
         for (int i = 0; i < size(); i++) {
-            if(condition.test(get(i))) {
+            if (condition.test(get(i))) {
                 return true;
             }
         }
@@ -627,11 +629,13 @@ public interface Seq<T> {
 
     /**
      * Check whether any element of the seq satisfies the condition
+     *
+     * @throws NullPointerException if condition is null
      */
     default boolean containsAny(BiPredicate<T, Integer> condition) {
         Objects.requireNonNull(condition);
         for (int i = 0; i < size(); i++) {
-            if(condition.test(get(i), i)) {
+            if (condition.test(get(i), i)) {
                 return true;
             }
         }
@@ -655,4 +659,46 @@ public interface Seq<T> {
      * or -1 if there is no such index.
      */
     int lastIndexOf(T t);
+
+    /**
+     * Check whether this seq contains the sub seq.
+     */
+    default boolean containsSubSeq(Seq<T> seq) {
+        Objects.requireNonNull(seq);
+
+        if (seq.isEmpty()) {
+            return true;
+        }
+
+        if (size() < seq.size()) {
+            return false;
+        }
+
+        //Sunday algorithm
+
+        Map<T, Integer> lastIndex = new HashMap<>();
+        seq.forEach(lastIndex::put);
+
+        int startI = 0, size = size(), len = seq.size();
+        while (size - startI >= len) {
+            for (int i = 0; i < len; i++) {
+                if (!get(startI + i).equals(seq.get(i))) {
+                    if (startI + len >= size) {
+                        return false;
+                    }
+                    T next = get(startI + len);
+                    Integer last = lastIndex.get(next);
+                    if (last == null) {
+                        startI += len + 1;
+                    } else {
+                        startI += len - last;
+                    }
+                    break;
+                } else if (i == len - 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
