@@ -107,6 +107,13 @@ public class SeqTest {
     }
 
     @Test
+    public void testIndexOf() {
+        assertEquals(1, Seqs.newSeq(1, 2, 2, 3).indexOf(2));
+        assertEquals(2, Seqs.newSeq(1, 2, 2, 3).lastIndexOf(2));
+        assertEquals(-1, Seqs.newSeq(1, 2, 2, 3).indexOf(4));
+    }
+
+    @Test
     public void testContainsAny() {
         assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).containsAny((Predicate<Integer>) null));
         assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).containsAny((BiPredicate<Integer, Integer>) null));
