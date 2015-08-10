@@ -624,4 +624,17 @@ public interface Seq<T> {
         }
         return false;
     }
+
+    /**
+     * Check whether any element of the seq satisfies the condition
+     */
+    default boolean containsAny(BiPredicate<T, Integer> condition) {
+        Objects.requireNonNull(condition);
+        for (int i = 0; i < size(); i++) {
+            if(condition.test(get(i), i)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

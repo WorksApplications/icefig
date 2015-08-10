@@ -108,8 +108,11 @@ public class SeqTest {
 
     @Test
     public void testContainsAny() {
-        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).containsAny(null));
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).containsAny((Predicate<Integer>) null));
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).containsAny((BiPredicate<Integer, Integer>) null));
         assertTrue(Seqs.newSeq(1, 2, 3).containsAny(i -> i > 2));
+        assertTrue(Seqs.newSeq(1, 2, 3).containsAny((e, i) -> e + i == 3));
+        assertFalse(Seqs.newSeq(1, 2, 3).containsAny((e, i) -> e + i == 4));
         assertFalse(Seqs.newSeq(1, 2, 3).containsAny(i -> i > 3));
     }
 
