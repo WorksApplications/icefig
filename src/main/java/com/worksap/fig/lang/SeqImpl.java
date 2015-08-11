@@ -151,7 +151,7 @@ class SeqImpl<T> implements MutableSeq<T> {
 
     @Override
     public MutableSeq<T> appendInPlace(T... values) {
-        for(T t: values) {
+        for (T t : values) {
             list.add(t);
         }
         return this;
@@ -335,7 +335,7 @@ class SeqImpl<T> implements MutableSeq<T> {
         action.accept(indexToSeq(comb));
 
         while (comb[0] < size() - n) {
-            for (int i = 0;;i++) {
+            for (int i = 0; ; i++) {
                 if (i == n - 1 || comb[i + 1] - comb[i] > 1) { // find the first selected element that the next element of it is not selected
                     comb[i]++; // make the next element selected instead
                     // set all selected elements before i, to the beginning elements
@@ -364,7 +364,7 @@ class SeqImpl<T> implements MutableSeq<T> {
     }
 
     @Override
-    public boolean contains(T t){
+    public boolean contains(T t) {
         return list.contains(t);
     }
 
@@ -380,7 +380,7 @@ class SeqImpl<T> implements MutableSeq<T> {
     }
 
     @Override
-    public MutableSeq<T> shuffleInPlace(){
+    public MutableSeq<T> shuffleInPlace() {
         Collections.shuffle(list);
         return this;
     }
@@ -509,5 +509,36 @@ class SeqImpl<T> implements MutableSeq<T> {
     @Override
     public int lastIndexOf(T t) {
         return list.lastIndexOf(t);
+    }
+
+    @Override
+    public Seq<T> intersect(Seq<T> seq) {
+        Objects.requireNonNull(seq);
+        if(seq.isEmpty()){
+            return new SeqImpl<>();
+        }
+
+        HashMap<T, Integer> map = new HashMap<>(seq.size());
+        seq.forEach(t -> {
+            Integer count = map.get(t);
+            if (count != null) {
+                map.put(t, count + 1);
+            } else {
+                map.put(t, 1);
+            }
+        });
+        SeqImpl<T> result = new SeqImpl<>();
+        forEach(t -> {
+            Integer count = map.get(t);
+            if (count != null) {
+                result.appendInPlace(t);
+                if (count == 1) {
+                    map.remove(t);
+                } else {
+                    map.put(t, count - 1);
+                }
+            }
+        });
+        return result;
     }
 }

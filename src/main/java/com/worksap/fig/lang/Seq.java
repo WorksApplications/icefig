@@ -782,4 +782,11 @@ public interface Seq<T> {
         }
         return -1;
     }
+
+    /**
+     * Computes the multiset intersection between this seq and another seq.
+     *
+     * @return A new sequence which contains all elements of this sequence which also appear in that. If an element value x appears n times in that, then the first n occurrences of x will be retained in the result, but any following occurrences will be omitted.
+     */
+    Seq<T> intersect(Seq<T> seq);
 }
