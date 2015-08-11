@@ -155,6 +155,13 @@ public class SeqTest {
     }
 
     @Test
+    public void testIntersect() {
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1).intersect(null));
+        assertEquals(Seqs.newSeq(), Seqs.newSeq(1, 2, 3).intersect(Seqs.newSeq()));
+        assertEquals(Seqs.newSeq(3, 6, 2, 3), Seqs.newSeq(3, 6, 2, 4, 3, 6, 2).intersect(Seqs.newSeq(6, 2, 3, 3, 8, 3)));
+    }
+
+    @Test
     public void testForEachWithIndex() {
         final MutableSeq<String> seq = Seqs.newMutableSeq("a", "b", "c");
         seq.forEach((item, index) -> {
