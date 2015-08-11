@@ -717,7 +717,7 @@ public interface Seq<T> {
 
         int startI = 0, size = size(), len = seq.size();
         while (size - startI >= len) {
-            for (int i = 0; i < len; i++) {
+            for (int i = 0; ; i++) {
                 if (!get(startI + i).equals(seq.get(i))) {
                     if (startI + len >= size) {
                         return -1;
@@ -762,7 +762,7 @@ public interface Seq<T> {
 
         int size = size(), endI = size - 1, len = seq.size();
         while (endI >= len - 1) {
-            for (int i = 0; i < len; i++) {
+            for (int i = 0; ; i++) {
                 if (!get(endI - i).equals(seq.get(len - 1 - i))) {
                     if (endI - len < 0) {
                         return -1;

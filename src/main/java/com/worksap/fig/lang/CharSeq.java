@@ -645,7 +645,7 @@ public class CharSeq {
 
         int startI = 0, size = length(), len = seq.length();
         while (size - startI >= len) {
-            for (int i = 0; i < len; i++) {
+            for (int i = 0; ; i++) {
                 if (!charAt(startI + i).equals(seq.charAt(i))) {
                     if (startI + len >= size) {
                         return -1;
@@ -692,7 +692,7 @@ public class CharSeq {
 
         int size = length(), endI = size - 1, len = seq.length();
         while (endI >= len - 1) {
-            for (int i = 0; i < len; i++) {
+            for (int i = 0; ; i++) {
                 if (!charAt(endI - i).equals(seq.charAt(len - 1 - i))) {
                     if (endI - len < 0) {
                         return -1;
