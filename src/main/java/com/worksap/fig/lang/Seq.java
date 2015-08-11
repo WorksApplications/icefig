@@ -786,7 +786,20 @@ public interface Seq<T> {
     /**
      * Computes the multiset intersection between this seq and another seq.
      *
-     * @return A new sequence which contains all elements of this sequence which also appear in that. If an element value x appears n times in that, then the first n occurrences of x will be retained in the result, but any following occurrences will be omitted.
+     * @return A new seq which contains all elements of this seq which also appear in that, keeping the order of this seq.
+     * If an element value x appears n times in that, then the first n occurrences of x will be retained in the result, but any following occurrences will be omitted.
+     *
+     * @throws NullPointerException if the parameter seq is null
      */
     Seq<T> intersect(Seq<T> seq);
+
+    /**
+     * Computes the multiset difference between this seq and another seq.
+     *
+     * @return A new seq which contains all elements of this seq except some of occurrences of elements that also appear in that, keeping the order of this seq.
+     * If an element value x appears n times in that, then the first n occurrences of x will not form part of the result, but any following occurrences will.
+     *
+     * @throws NullPointerException if the parameter seq is null
+     */
+    Seq<T> difference(Seq<T> seq);
 }
