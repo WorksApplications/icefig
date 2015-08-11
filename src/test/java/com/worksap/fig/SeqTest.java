@@ -135,6 +135,10 @@ public class SeqTest {
                 .containsSubSeq(Seqs.newSeq('B')));
         assertTrue(Seqs.newSeq('A')
                 .containsSubSeq(Seqs.newSeq()));
+        assertEquals(-1, Seqs.newSeq().lastIndexOfSubSeq(Seqs.newSeq('A')));
+        assertEquals(-1, Seqs.newSeq('A', 'B').lastIndexOfSubSeq(Seqs.newSeq('C', 'B')));
+        assertEquals(-1, Seqs.newSeq('A', 'A', 'B').lastIndexOfSubSeq(Seqs.newSeq('C', 'B')));
+        assertEquals(0, Seqs.newSeq('A').lastIndexOfSubSeq(Seqs.newSeq()));
         assertTrue(Seqs.newSeq('A', 'B', 'C')
                 .containsSubSeq(Seqs.newSeq('A', 'B', 'C')));
 

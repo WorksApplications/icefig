@@ -244,6 +244,10 @@ public class CharSeqTest {
                 .containsSubSeq("B"));
         assertFalse(CharSeq.of("")
                 .containsSubSeq("B"));
+        assertEquals(-1, CharSeq.of("").lastIndexOfSubSeq(CharSeq.of("A")));
+        assertEquals(-1, CharSeq.of("AB").lastIndexOfSubSeq("CB"));
+        assertEquals(-1, CharSeq.of("AAB").lastIndexOfSubSeq("CB"));
+        assertEquals(0, CharSeq.of("A").lastIndexOfSubSeq(CharSeq.of("")));
         assertTrue(CharSeq.of("A")
                 .containsSubSeq(CharSeq.of("")));
         assertTrue(CharSeq.of("ABC")
