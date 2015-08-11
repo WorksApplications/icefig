@@ -500,4 +500,14 @@ class SeqImpl<T> implements MutableSeq<T> {
     public String toString() {
         return list.toString();
     }
+
+    @Override
+    public int indexOf(T t) {
+        return list.indexOf(t);
+    }
+
+    @Override
+    public int lastIndexOf(T t) {
+        return list.lastIndexOf(t);
+    }
 }

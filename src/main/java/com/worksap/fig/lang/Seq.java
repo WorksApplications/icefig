@@ -122,7 +122,7 @@ public interface Seq<T> {
 
 
     /**
-     * Similar to {@link #forEach(Consumer)}, with additional parameter "index" as the second parameter of the lambda expression.
+     * Iterate each element of the seq.
      *
      * @throws NullPointerException if action is null
      */
@@ -132,7 +132,6 @@ public interface Seq<T> {
             action.accept(this.get(i));
         }
     }
-
 
     /**
      * Similar to {@link #forEach(Consumer)}, with additional parameter "index" as the second parameter of the lambda expression.
@@ -145,6 +144,31 @@ public interface Seq<T> {
             action.accept(this.get(i), i);
         }
     }
+
+    /**
+     * Iterate each element of the seq from the end to the beginning.
+     *
+     * @throws NullPointerException if action is null
+     */
+    default void forEachReverse(Consumer<? super T> action) {
+        Objects.requireNonNull(action);
+        for (int i = size() - 1; i >= 0; i--) {
+            action.accept(this.get(i));
+        }
+    }
+
+    /**
+     * Similar to {@link #forEachReverse(Consumer)}, with additional parameter "index" as the second parameter of the lambda expression.
+     *
+     * @throws NullPointerException if action is null
+     */
+    default void forEachReverse(BiConsumer<? super T, Integer> action) {
+        Objects.requireNonNull(action);
+        for (int i = size() - 1; i >= 0; i--) {
+            action.accept(this.get(i), i);
+        }
+    }
+
 
     /**
      * Transform the seq, to a seq of each continuous n elements starting from each element.
@@ -614,11 +638,13 @@ public interface Seq<T> {
 
     /**
      * Check whether any element of the seq satisfies the condition
+     *
+     * @throws NullPointerException if condition is null
      */
     default boolean containsAny(Predicate<T> condition) {
         Objects.requireNonNull(condition);
         for (int i = 0; i < size(); i++) {
-            if(condition.test(get(i))) {
+            if (condition.test(get(i))) {
                 return true;
             }
         }
@@ -627,14 +653,133 @@ public interface Seq<T> {
 
     /**
      * Check whether any element of the seq satisfies the condition
+     *
+     * @throws NullPointerException if condition is null
      */
     default boolean containsAny(BiPredicate<T, Integer> condition) {
         Objects.requireNonNull(condition);
         for (int i = 0; i < size(); i++) {
-            if(condition.test(get(i), i)) {
+            if (condition.test(get(i), i)) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Returns the index of the first occurrence of the specified element
+     * in this list, or -1 if this list does not contain the element.
+     * More formally, returns the lowest index <tt>i</tt> such that
+     * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>,
+     * or -1 if there is no such index.
+     */
+    int indexOf(T t);
+
+    /**
+     * Returns the index of the last occurrence of the specified element
+     * in this list, or -1 if this list does not contain the element.
+     * More formally, returns the highest index <tt>i</tt> such that
+     * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>,
+     * or -1 if there is no such index.
+     */
+    int lastIndexOf(T t);
+
+    /**
+     * Check whether this seq contains the sub seq, if the given seq is empty, always return true.
+     *
+     * @throws NullPointerException if seq is null
+     */
+    default boolean containsSubSeq(Seq<T> seq) {
+        return indexOfSubSeq(seq) != -1;
+    }
+
+    /**
+     * Return the first index of the given sub seq, or -1 if the given seq is not a sub seq.
+     * If the given seq is empty, always return 0.
+     *
+     * @throws NullPointerException if seq is null
+     */
+    default int indexOfSubSeq(Seq<T> seq) {
+        Objects.requireNonNull(seq);
+
+        if (seq.isEmpty()) {
+            return 0;
+        }
+
+        if (size() < seq.size()) {
+            return -1;
+        }
+
+        //Sunday algorithm
+
+        Map<T, Integer> lastIndex = new HashMap<>();
+        seq.forEach(lastIndex::put);
+
+        int startI = 0, size = size(), len = seq.size();
+        while (size - startI >= len) {
+            for (int i = 0; i < len; i++) {
+                if (!get(startI + i).equals(seq.get(i))) {
+                    if (startI + len >= size) {
+                        return -1;
+                    }
+                    T next = get(startI + len);
+                    Integer last = lastIndex.get(next);
+                    if (last == null) {
+                        startI += len + 1;
+                    } else {
+                        startI += len - last;
+                    }
+                    break;
+                } else if (i == len - 1) {
+                    return startI;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Return the last index of the given sub seq, or -1 if the given seq is not a sub seq.
+     * If the given seq is empty, always return 0.
+     *
+     * @throws NullPointerException if seq is null
+     */
+    default int lastIndexOfSubSeq(Seq<T> seq) {
+        Objects.requireNonNull(seq);
+
+        if (seq.isEmpty()) {
+            return 0;
+        }
+
+        if (size() < seq.size()) {
+            return -1;
+        }
+
+        //Sunday algorithm
+
+        Map<T, Integer> lastIndex = new HashMap<>();
+        seq.forEachReverse(lastIndex::put);
+
+        int size = size(), endI = size - 1, len = seq.size();
+        while (endI >= len - 1) {
+            for (int i = 0; i < len; i++) {
+                if (!get(endI - i).equals(seq.get(len - 1 - i))) {
+                    if (endI - len < 0) {
+                        return -1;
+                    }
+                    T next = get(endI - len);
+                    Integer last = lastIndex.get(next);
+                    if (last == null) {
+                        endI -= len + 1;
+                    } else {
+                        endI -= last + 1;
+                    }
+                    break;
+                } else if (i == len - 1) {
+                    return endI - len + 1;
+                }
+            }
+        }
+        return -1;
     }
 }

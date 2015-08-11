@@ -107,6 +107,13 @@ public class SeqTest {
     }
 
     @Test
+    public void testIndexOf() {
+        assertEquals(1, Seqs.newSeq(1, 2, 2, 3).indexOf(2));
+        assertEquals(2, Seqs.newSeq(1, 2, 2, 3).lastIndexOf(2));
+        assertEquals(-1, Seqs.newSeq(1, 2, 2, 3).indexOf(4));
+    }
+
+    @Test
     public void testContainsAny() {
         assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).containsAny((Predicate<Integer>) null));
         assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).containsAny((BiPredicate<Integer, Integer>) null));
@@ -114,6 +121,37 @@ public class SeqTest {
         assertTrue(Seqs.newSeq(1, 2, 3).containsAny((e, i) -> e + i == 3));
         assertFalse(Seqs.newSeq(1, 2, 3).containsAny((e, i) -> e + i == 4));
         assertFalse(Seqs.newSeq(1, 2, 3).containsAny(i -> i > 3));
+    }
+
+    @Test
+    public void testContainSubSeq() {
+        assertTrue(Seqs.newSeq('B', 'B', 'C', ' ', 'A', 'B', 'C', 'D', 'A', 'B', ' ', 'A', 'B', 'C', 'D', 'A', 'B', 'C', 'D', 'A', 'B', 'D', 'E')
+                .containsSubSeq(Seqs.newSeq('A', 'B', 'C', 'D', 'A', 'B', 'D')));
+        assertFalse(Seqs.newSeq('B', 'B', 'C', ' ', 'A', 'B', 'C', 'D', 'A', 'B', ' ', 'A', 'B', 'C', 'D', 'A', 'B', 'C', 'D', 'A', 'B', 'D', 'E')
+                .containsSubSeq(Seqs.newSeq('A', 'B', 'C', 'D', 'A', 'B', 'A')));
+        assertFalse(Seqs.newSeq('A')
+                .containsSubSeq(Seqs.newSeq('B')));
+        assertFalse(Seqs.newSeq()
+                .containsSubSeq(Seqs.newSeq('B')));
+        assertTrue(Seqs.newSeq('A')
+                .containsSubSeq(Seqs.newSeq()));
+        assertTrue(Seqs.newSeq('A', 'B', 'C')
+                .containsSubSeq(Seqs.newSeq('A', 'B', 'C')));
+
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq('A', 'B', 'C').containsSubSeq(null));
+
+        assertEquals(15, Seqs.newSeq('B', 'B', 'C', ' ', 'A', 'B', 'C', 'D', 'A', 'B', ' ', 'A', 'B', 'C', 'D', 'A', 'B', 'C', 'D', 'A', 'B', 'D', 'E')
+                .indexOfSubSeq(Seqs.newSeq('A', 'B', 'C', 'D', 'A', 'B', 'D')));
+        assertEquals(15, Seqs.newSeq('B', 'B', 'C', ' ', 'A', 'B', 'C', 'D', 'A', 'B', ' ', 'A', 'B', 'C', 'D', 'A', 'B', 'C', 'D', 'A', 'B', 'D', 'E')
+                .lastIndexOfSubSeq(Seqs.newSeq('A', 'B', 'C', 'D', 'A', 'B', 'D')));
+
+        assertEquals(1, Seqs.newSeq(3, 1, 2, 1, 2, 1, 2, 3)
+                .indexOfSubSeq(Seqs.newSeq(1, 2, 1, 2)));
+        assertEquals(3, Seqs.newSeq(3, 1, 2, 1, 2, 1, 2, 3)
+                .lastIndexOfSubSeq(Seqs.newSeq(1, 2, 1, 2)));
+
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq('A', 'B', 'C').indexOfSubSeq(null));
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq('A', 'B', 'C').lastIndexOfSubSeq(null));
     }
 
     @Test
@@ -125,6 +163,21 @@ public class SeqTest {
         seq.forEach(item -> assertTrue(seq.contains(item)));
         BiConsumer<String, Integer> f = null;
         assertThrows(NullPointerException.class, () -> seq.forEach(f));
+    }
+
+    @Test
+    public void testForEachReverse() {
+        MutableSeq<Integer> result = Seqs.newMutableSeq();
+        Seqs.newMutableSeq(1, 2, 3, 4, 5).forEachReverse(i -> {
+            result.appendInPlace(i);
+        });
+        assertEquals(Seqs.newSeq(5, 4, 3, 2, 1), result);
+
+        MutableSeq<Integer> result2 = Seqs.newMutableSeq();
+        Seqs.newMutableSeq(1, 2, 3, 4, 5).forEachReverse((e, i) -> {
+            result2.appendInPlace(e + i);
+        });
+        assertEquals(Seqs.newSeq(9, 7, 5, 3, 1), result2);
     }
 
     @Test
