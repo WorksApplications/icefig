@@ -1,5 +1,7 @@
 package com.worksap.fig.lang;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -21,7 +23,7 @@ public class CharSeq {
      * The substring begins at the specified {@code beginIndex} and
      * extends to the character at index {@code endIndex - 1}.
      * Thus the length of the substring is {@code endIndex-beginIndex}.
-     *
+     * <p>
      * <p>
      * Examples:
      * <blockquote><pre>
@@ -30,9 +32,9 @@ public class CharSeq {
      * </pre></blockquote>
      * </p>
      *
-     * @param   fromIndex   the beginning index, inclusive.
-     * @param   toIndex     the ending index, exclusive.
-     * @return  CharSeq with the specified substring.
+     * @param fromIndex the beginning index, inclusive.
+     * @param toIndex   the ending index, exclusive.
+     * @return CharSeq with the specified substring.
      */
     public CharSeq subSeq(int fromIndex, int toIndex) {
         return new CharSeq(str.substring(fromIndex, toIndex));
@@ -42,7 +44,7 @@ public class CharSeq {
      * Returns a CharSeq that contains a substring of this CharSeq's string.
      * The substring begins at the specified {@code beginIndex} and
      * extends to the end of this string.
-     *
+     * <p>
      * <p>
      * Examples:
      * <blockquote><pre>
@@ -51,8 +53,8 @@ public class CharSeq {
      * </pre></blockquote>
      * </p>
      *
-     * @param   fromIndex   the beginning index, inclusive.
-     * @return  CharSeq with the specified substring.
+     * @param fromIndex the beginning index, inclusive.
+     * @return CharSeq with the specified substring.
      */
     public CharSeq subSeq(int fromIndex) {
         return this.subSeq(fromIndex, str.length());
@@ -61,37 +63,40 @@ public class CharSeq {
     /**
      * Append string of the given CharSeq to this CharSeq
      *
-     * @param   another   the given CharSeq
-     * @return  appended result
+     * @param another the given CharSeq
+     * @return appended result
      */
-    public CharSeq concat(CharSeq another){
+    public CharSeq concat(CharSeq another) {
         return new CharSeq(str + another.str);
     }
 
     /**
      * Append the given string to this CharSeq
-     * @param   another   the given string
-     * @return  appended result
+     *
+     * @param another the given string
+     * @return appended result
      */
-    public CharSeq concat(String another){
+    public CharSeq concat(String another) {
         return new CharSeq(str + another);
     }
 
     /**
      * Prepend string of the given CharSeq to this CharSeq
-     * @param   another   the given string
-     * @return  prepended result
+     *
+     * @param another the given string
+     * @return prepended result
      */
-    public CharSeq prepend(CharSeq another){
+    public CharSeq prepend(CharSeq another) {
         return new CharSeq(another.str + str);
     }
 
     /**
      * Prepend the given string to this CharSeq
-     * @param   another   the given string
-     * @return  prepended result
+     *
+     * @param another the given string
+     * @return prepended result
      */
-    public CharSeq prepend(String another){
+    public CharSeq prepend(String another) {
         return new CharSeq(another + str);
     }
 
@@ -100,9 +105,9 @@ public class CharSeq {
      * The length is equal to the number of Unicode
      * code units in the string.
      *
-     * @return  the length
+     * @return the length
      */
-    public int length(){
+    public int length() {
         return str.length();
     }
 
@@ -112,7 +117,7 @@ public class CharSeq {
      * @return {@code true} if {@link #length()} is {@code 0}, otherwise
      * {@code false}
      */
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return str.isEmpty();
     }
 
@@ -120,7 +125,7 @@ public class CharSeq {
      * Returns a copy of CharSeq with the string's first character
      * converted to uppercase and the remainder to lowercase.
      *
-     * @return  CharSeq with capitalized string
+     * @return CharSeq with capitalized string
      */
     public CharSeq capitalize() {
         return isEmpty() ? this : this.subSeq(0, 1).toUpperCase().concat(this.subSeq(1).toLowerCase());
@@ -179,7 +184,7 @@ public class CharSeq {
     /**
      * Return a new CharSeq with the characters from
      * this CharSeq in reverse order.
-     *
+     * <p>
      * <p>
      * Examples:
      * <blockquote><pre>
@@ -187,7 +192,7 @@ public class CharSeq {
      * </pre></blockquote>
      * </p>
      *
-     * @return  A new Seq
+     * @return A new Seq
      */
     public CharSeq reverse() {
         return CharSeq.of(new StringBuilder(str).reverse().toString());
@@ -195,7 +200,7 @@ public class CharSeq {
 
     /**
      * Return a new CharSeq with all characters' cases toggled.
-     *
+     * <p>
      * <p>
      * Examples:
      * <blockquote><pre>
@@ -203,7 +208,7 @@ public class CharSeq {
      * </pre></blockquote>
      * </p>
      *
-     * @return  A new CharSeq
+     * @return A new CharSeq
      */
     public CharSeq swapcase() {
         char[] chars = str.toCharArray();
@@ -223,8 +228,8 @@ public class CharSeq {
     /**
      * Tests whether this CharSeq ends with the specified suffix
      *
-     * @param   suffix   suffix
-     * @return  A boolean
+     * @param suffix suffix
+     * @return A boolean
      */
     public boolean endsWith(CharSeq suffix) {
         return this.endsWith(suffix.str);
@@ -233,8 +238,8 @@ public class CharSeq {
     /**
      * Tests whether this CharSeq ends with the specified suffix
      *
-     * @param   suffix   suffix
-     * @return  A boolean
+     * @param suffix suffix
+     * @return A boolean
      */
     public boolean endsWith(String suffix) {
         return str.endsWith(suffix);
@@ -243,8 +248,8 @@ public class CharSeq {
     /**
      * Tests whether this CharSeq starts with the specified prefix
      *
-     * @param   prefix   prefix
-     * @return  A boolean
+     * @param prefix prefix
+     * @return A boolean
      */
     public boolean startsWith(CharSeq prefix) {
         return str.startsWith(prefix.str);
@@ -252,8 +257,9 @@ public class CharSeq {
 
     /**
      * Return the Character at the index i of this CharSeq
-     * @param   i the index
-     * @return  The specified Character
+     *
+     * @param i the index
+     * @return The specified Character
      */
     public Character charAt(int i) {
         return str.charAt(i);
@@ -273,8 +279,8 @@ public class CharSeq {
      * Scan through this CharSeq iteratively, generate a Seq of CharSeq
      * with all the matching subStrings.
      *
-     * @param   regex The regular expression
-     * @return  A Seq of CharSeq
+     * @param regex The regular expression
+     * @return A Seq of CharSeq
      */
     public Seq<CharSeq> scan(String regex) {
         Pattern pat = Pattern.compile(regex);
@@ -290,7 +296,7 @@ public class CharSeq {
      * Performs the given action for each character of the CharSeq.
      *
      * @param action Consumer with single parameter of Character
-     * @return  Self
+     * @return Self
      */
     public CharSeq forEachChar(Consumer<Character> action) {
         Objects.requireNonNull(action);
@@ -303,7 +309,7 @@ public class CharSeq {
      * with additional parameter "index" as the second parameter.
      *
      * @param action BiConsumer with parameters of Character and the index
-     * @return  Self
+     * @return Self
      */
     public CharSeq forEachChar(BiConsumer<Character, Integer> action) {
         Objects.requireNonNull(action);
@@ -315,7 +321,7 @@ public class CharSeq {
      * Performs the given action for each byte of the CharSeq.
      *
      * @param action Consumer with single parameter of Byte
-     * @return  Self
+     * @return Self
      */
     public CharSeq forEachByte(Consumer<Byte> action) {
         Objects.requireNonNull(action);
@@ -328,7 +334,7 @@ public class CharSeq {
      * with additional parameter "index" as the second parameter.
      *
      * @param action BiConsumer with parameters of Byte and the index
-     * @return  Self
+     * @return Self
      */
     public CharSeq forEachByte(BiConsumer<Byte, Integer> action) {
         Objects.requireNonNull(action);
@@ -340,7 +346,7 @@ public class CharSeq {
      * Performs the given action for each line of the CharSeq.
      *
      * @param action Consumer with single parameter of CharSeq
-     * @return  Self
+     * @return Self
      */
     public CharSeq forEachLine(Consumer<CharSeq> action) {
         Objects.requireNonNull(action);
@@ -354,7 +360,7 @@ public class CharSeq {
      * with additional parameter "index" as the second parameter.
      *
      * @param action BiConsumer with parameters of CharSeq and the index
-     * @return  Self
+     * @return Self
      */
     public CharSeq forEachLine(BiConsumer<CharSeq, Integer> action) {
         Objects.requireNonNull(action);
@@ -387,9 +393,9 @@ public class CharSeq {
      * Return a new CharSeq by replacing the first substring of this CharSeq
      * that matches the given regular expression with the given CharSeq replacement.
      *
-     * @param regex         The regular expression
-     * @param replacement   The replacement CharSeq
-     * @return  A new CharSeq
+     * @param regex       The regular expression
+     * @param replacement The replacement CharSeq
+     * @return A new CharSeq
      */
     public CharSeq replaceFirst(String regex, CharSeq replacement) {
         return this.replaceFirst(regex, replacement.str);
@@ -399,9 +405,9 @@ public class CharSeq {
      * Return a new CharSeq by replacing the first substring of this CharSeq
      * that matches the given regular expression with the given String replacement.
      *
-     * @param regex         The regular expression
-     * @param replacement   The replacement String
-     * @return  A new CharSeq
+     * @param regex       The regular expression
+     * @param replacement The replacement String
+     * @return A new CharSeq
      */
     public CharSeq replaceFirst(String regex, String replacement) {
         return CharSeq.of(str.replaceFirst(regex, replacement));
@@ -412,9 +418,9 @@ public class CharSeq {
      * CharSeq that matches the given regular expression with
      * the given CharSeq replacement.
      *
-     * @param regex         The regular expression
-     * @param replacement   The replacement CharSeq
-     * @return  A new CharSeq
+     * @param regex       The regular expression
+     * @param replacement The replacement CharSeq
+     * @return A new CharSeq
      */
     public CharSeq replaceAll(String regex, CharSeq replacement) {
         return this.replaceAll(regex, replacement.str);
@@ -425,9 +431,9 @@ public class CharSeq {
      * CharSeq that matches the given regular expression with
      * the given String replacement.
      *
-     * @param regex         The regular expression
-     * @param replacement   The replacement String
-     * @return  A new CharSeq
+     * @param regex       The regular expression
+     * @param replacement The replacement String
+     * @return A new CharSeq
      */
     public CharSeq replaceAll(String regex, String replacement) {
         return CharSeq.of(str.replaceAll(regex, replacement));
@@ -445,12 +451,12 @@ public class CharSeq {
 
     /**
      * Compares two CharSeqs lexicographically.
-
-     * @return  the value {@code 0} if the argument CharSeq is equal to
-     *          this CharSeq; a value less than {@code 0} if this CharSeq
-     *          is lexicographically less than the CharSeq argument; and a
-     *          value greater than {@code 0} if this CharSeq is
-     *          lexicographically greater than the CharSeq argument.
+     *
+     * @return the value {@code 0} if the argument CharSeq is equal to
+     * this CharSeq; a value less than {@code 0} if this CharSeq
+     * is lexicographically less than the CharSeq argument; and a
+     * value greater than {@code 0} if this CharSeq is
+     * lexicographically greater than the CharSeq argument.
      */
     public int compareTo(CharSeq another) {
         return str.compareTo(another.str);
@@ -459,9 +465,9 @@ public class CharSeq {
     /**
      * Compares two CharSeqs lexicographically ignore case differences.
      *
-     * @return  a negative integer, zero, or a positive integer as the
-     *          specified String is greater than, equal to, or less
-     *          than this String, ignoring case considerations.
+     * @return a negative integer, zero, or a positive integer as the
+     * specified String is greater than, equal to, or less
+     * than this String, ignoring case considerations.
      */
     public int compareToIgnoreCase(CharSeq another) {
         return str.compareToIgnoreCase(another.str);
@@ -471,7 +477,7 @@ public class CharSeq {
      * Searches pattern (regex) in the CharSeq and returns
      * a Seq of CharSeq consists of the part before it,
      * the first match, and the part after it.
-     *
+     * <p>
      * If no such match is found in this CharSeq, return a Seq
      * of CharSeq consists two empty CharSeqs and the CharSeq itself.
      *
@@ -493,7 +499,7 @@ public class CharSeq {
      * Searches pattern (regex) in the CharSeq and returns
      * a Seq of CharSeq consists of the part before it,
      * the last match, and the part after it.
-     *
+     * <p>
      * If no such match is found in this CharSeq, return a Seq
      * of CharSeq consists of two empty CharSeqs and the CharSeq itself.
      *
@@ -522,7 +528,7 @@ public class CharSeq {
     /**
      * Converts this CharSeq to a new Character Seq.
      *
-     * @return  A Seq of Character
+     * @return A Seq of Character
      */
     public Seq<Character> eachChar() {
         char[] chars = str.toCharArray();
@@ -537,7 +543,7 @@ public class CharSeq {
      * Encodes this {@code CharSeq} into a sequence of bytes using the
      * platform's default charset, storing the result into a new Byte Seq.
      *
-     * @return  A Seq of Byte
+     * @return A Seq of Byte
      */
     public Seq<Byte> eachByte() {
         byte[] rawBytes = str.getBytes();
@@ -550,6 +556,7 @@ public class CharSeq {
 
     /**
      * Returns the collection of the Unicode of each character in this {@code CharSeq}.
+     *
      * @return the collection of ths Unicode of each character
      */
     public Seq<Integer> eachCodePoint() {
@@ -564,8 +571,9 @@ public class CharSeq {
     /**
      * Takes action on the Unicode of each character in this {@code CharSeq}.
      * <p>
-     *     Similar to {@link #eachCodePoint()}, but instead of returning the Unicode collection, it iterates the collection and takes action.
+     * Similar to {@link #eachCodePoint()}, but instead of returning the Unicode collection, it iterates the collection and takes action.
      * </p>
+     *
      * @param consumer the action to be taken on the Unicode of each character
      * @throws NullPointerException if consumer is null
      */
@@ -573,5 +581,135 @@ public class CharSeq {
         Objects.requireNonNull(consumer);
         eachCodePoint().forEach(consumer);
         return this;
+    }
+
+    /**
+     * Check whether this CharSeq contains the sub seq, if the given seq is empty, always return true.
+     *
+     * @throws NullPointerException if seq is null
+     */
+    public boolean containsSubSeq(String seq) {
+        return indexOfSubSeq(seq) != -1;
+    }
+
+    /**
+     * Return the first index of the given sub seq, or -1 if the given seq is not a sub seq.
+     * If the given seq is empty, always return 0.
+     *
+     * @throws NullPointerException if seq is null
+     */
+    public int indexOfSubSeq(String seq) {
+        return indexOfSubSeq(CharSeq.of(seq));
+    }
+
+    /**
+     * Return the last index of the given sub seq, or -1 if the given seq is not a sub seq.
+     * If the given seq is empty, always return 0.
+     *
+     * @throws NullPointerException if seq is null
+     */
+    public int lastIndexOfSubSeq(String seq) {
+        return lastIndexOfSubSeq(CharSeq.of(seq));
+    }
+
+    /**
+     * Check whether this CharSeq contains the sub seq, if the given seq is empty, always return true.
+     *
+     * @throws NullPointerException if seq is null
+     */
+    public boolean containsSubSeq(CharSeq seq) {
+        return indexOfSubSeq(seq) != -1;
+    }
+
+    /**
+     * Return the first index of the given sub seq, or -1 if the given seq is not a sub seq.
+     * If the given seq is empty, always return 0.
+     *
+     * @throws NullPointerException if seq is null
+     */
+    public int indexOfSubSeq(CharSeq seq) {
+        Objects.requireNonNull(seq);
+
+        if (seq.isEmpty()) {
+            return 0;
+        }
+
+        if (length() < seq.length()) {
+            return -1;
+        }
+
+        //Sunday algorithm
+
+        Map<Character, Integer> lastIndex = new HashMap<>();
+        seq.forEachChar(lastIndex::put);
+
+        int startI = 0, size = length(), len = seq.length();
+        while (size - startI >= len) {
+            for (int i = 0; i < len; i++) {
+                if (!charAt(startI + i).equals(seq.charAt(i))) {
+                    if (startI + len >= size) {
+                        return -1;
+                    }
+                    Character next = charAt(startI + len);
+                    Integer last = lastIndex.get(next);
+                    if (last == null) {
+                        startI += len + 1;
+                    } else {
+                        startI += len - last;
+                    }
+                    break;
+                } else if (i == len - 1) {
+                    return startI;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Return the last index of the given sub seq, or -1 if the given seq is not a sub seq.
+     * If the given seq is empty, always return 0.
+     *
+     * @throws NullPointerException if seq is null
+     */
+    public int lastIndexOfSubSeq(CharSeq seq) {
+        Objects.requireNonNull(seq);
+
+        if (seq.isEmpty()) {
+            return 0;
+        }
+
+        if (length() < seq.length()) {
+            return -1;
+        }
+
+        //Sunday algorithm
+
+        Map<Character, Integer> lastIndex = new HashMap<>();
+        for (int i = seq.length() - 1; i >= 0; i--) {
+            lastIndex.put(seq.charAt(i), i);
+        }
+
+        int size = length(), endI = size - 1, len = seq.length();
+        while (endI >= len - 1) {
+            for (int i = 0; i < len; i++) {
+                if (!charAt(endI - i).equals(seq.charAt(len - 1 - i))) {
+                    if (endI - len < 0) {
+                        return -1;
+                    }
+                    Character next = charAt(endI - len);
+                    Integer last = lastIndex.get(next);
+                    if (last == null) {
+                        endI -= len + 1;
+                    } else {
+                        endI -= last + 1;
+                    }
+                    break;
+                } else if (i == len - 1) {
+                    return endI - len + 1;
+                }
+            }
+        }
+        return -1;
     }
 }

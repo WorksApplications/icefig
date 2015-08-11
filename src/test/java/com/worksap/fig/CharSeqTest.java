@@ -229,4 +229,42 @@ public class CharSeqTest {
         assertTrue(cs.equals(CharSeq.of("Hello World!")));
         assertFalse(cs.equals(CharSeq.of("Hello!")));
     }
+
+    @Test
+    public void testContainSubSeq() {
+        assertTrue(CharSeq.of("BBC ABCDAB ABCDABCDABDE")
+                .containsSubSeq("ABCDABD"));
+        assertTrue(CharSeq.of("BBC ABCDAB ABCDABCDABDE")
+                .containsSubSeq(CharSeq.of("ABCDABD")));
+        assertFalse(CharSeq.of("BBC ABCDAB ABCDABCDABDE")
+                .containsSubSeq("ABCDABA"));
+        assertFalse(CharSeq.of("BBC ABCDAB ABCDABCDABDE")
+                .containsSubSeq(CharSeq.of("ABCDABA")));
+        assertFalse(CharSeq.of("A")
+                .containsSubSeq("B"));
+        assertFalse(CharSeq.of("")
+                .containsSubSeq("B"));
+        assertTrue(CharSeq.of("A")
+                .containsSubSeq(CharSeq.of("")));
+        assertTrue(CharSeq.of("ABC")
+                .containsSubSeq("ABC"));
+
+        assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").containsSubSeq((String) null));
+        assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").containsSubSeq((CharSeq) null));
+
+        assertEquals(15, CharSeq.of("BBC ABCDAB ABCDABCDABDE")
+                .indexOfSubSeq("ABCDABD"));
+        assertEquals(15, CharSeq.of("BBC ABCDAB ABCDABCDABDE")
+                .lastIndexOfSubSeq("ABCDABD"));
+
+        assertEquals(1, CharSeq.of("31212123")
+                .indexOfSubSeq("1212"));
+        assertEquals(3, CharSeq.of("31212123")
+                .lastIndexOfSubSeq("1212"));
+
+        assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").indexOfSubSeq((String) null));
+        assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").lastIndexOfSubSeq((String) null));
+        assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").indexOfSubSeq((CharSeq) null));
+        assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").lastIndexOfSubSeq((CharSeq) null));
+    }
 }
