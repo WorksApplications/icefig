@@ -514,7 +514,7 @@ class SeqImpl<T> implements MutableSeq<T> {
     @Override
     public Seq<T> intersect(Seq<T> seq) {
         Objects.requireNonNull(seq);
-        if(seq.isEmpty()){
+        if (seq.isEmpty()) {
             return new SeqImpl<>();
         }
 
@@ -537,6 +537,38 @@ class SeqImpl<T> implements MutableSeq<T> {
                 } else {
                     map.put(t, count - 1);
                 }
+            }
+        });
+        return result;
+    }
+
+    @Override
+    public Seq<T> difference(Seq<T> seq) {
+        Objects.requireNonNull(seq);
+        if (seq.isEmpty()) {
+            return new SeqImpl<>(list);
+        }
+
+        HashMap<T, Integer> map = new HashMap<>(seq.size());
+        seq.forEach(t -> {
+            Integer count = map.get(t);
+            if (count != null) {
+                map.put(t, count + 1);
+            } else {
+                map.put(t, 1);
+            }
+        });
+        SeqImpl<T> result = new SeqImpl<>();
+        forEach(t -> {
+            Integer count = map.get(t);
+            if (count != null) {
+                if (count == 1) {
+                    map.remove(t);
+                } else {
+                    map.put(t, count - 1);
+                }
+            } else {
+                result.appendInPlace(t);
             }
         });
         return result;

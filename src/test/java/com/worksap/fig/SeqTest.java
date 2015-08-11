@@ -166,6 +166,14 @@ public class SeqTest {
     }
 
     @Test
+    public void testDifference() {
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1).difference(null));
+        assertEquals(Seqs.newSeq(1, 2, 3), Seqs.newSeq(1, 2, 3).difference(Seqs.newSeq()));
+        assertEquals(Seqs.newSeq(), Seqs.newSeq(3, 6, 2, 4, 3, 6, 2).difference(Seqs.newSeq(3, 6, 2, 4, 3, 6, 2)));
+        assertEquals(Seqs.newSeq(4, 3, 6, 2), Seqs.newSeq(3, 6, 2, 4, 3, 6, 2).difference(Seqs.newSeq(3, 6, 2, 7)));
+    }
+
+    @Test
     public void testForEachWithIndex() {
         final MutableSeq<String> seq = Seqs.newMutableSeq("a", "b", "c");
         seq.forEach((item, index) -> {
