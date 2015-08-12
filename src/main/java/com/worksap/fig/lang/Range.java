@@ -19,85 +19,179 @@ package com.worksap.fig.lang;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ *
+ * Range is an element generator on the basis of start point,
+ * end point and next element function.
+ */
 public class Range<C extends Comparable<C>> {
-    private C lower;
-    private C upper;
-    private boolean upperInclusive;
+    private C from;
+    private C to;
+    private boolean toIncluded;
     private Function<C, C> next;
+    private BiFunction<C, Integer, C> biNext;
 
-    public Range(C lower) {
-        this.from(lower);
+    /**
+     * @param from The start point.
+     * @throws NullPointerException if from is null.
+     */
+    public Range(C from) {
+        this.from(from);
     }
 
-    public Range(C lower, C upper, Function<C, C> next) {
-        this.from(lower);
-        this.to(upper);
+    /**
+     * @param from The start point.
+     * @param to The end point. It is included in the range.
+     * @param next The next element generator.
+     * @throws NullPointerException if from, to or next is null.
+     */
+    public Range(C from, C to, Function<C, C> next) {
+        this.from(from);
+        this.to(to);
         this.next(next);
     }
 
-    public Range<C> from(C lower) {
-        Objects.requireNonNull(lower);
-        this.lower = lower;
+    /**
+     * Set start point
+     * @param from The start point.
+     * @return Current range object.
+     * @throws NullPointerException if from is null.
+     */
+    public Range<C> from(C from) {
+        Objects.requireNonNull(from);
+        this.from = from;
         return this;
     }
 
-    public Range<C> to(C upper) {
-        Objects.requireNonNull(upper);
-        this.upper = upper;
-        upperInclusive = true;
+    /**
+     * Set end point. The end point is included in this range.
+     * @param to The end point.
+     * @return Current range object.
+     * @throws NullPointerException if to is null.
+     */
+    public Range<C> to(C to) {
+        Objects.requireNonNull(to);
+        this.to = to;
+        toIncluded = true;
         return this;
     }
 
-    public Range<C> until(C upper) {
-        Objects.requireNonNull(upper);
-        this.upper = upper;
-        upperInclusive = false;
+    /**
+     * Set end point. The end point is excluded in this range.
+     * @param to The end point.
+     * @return Current range object.
+     * @throws NullPointerException if to is null.
+     */
+    public Range<C> until(C to) {
+        Objects.requireNonNull(to);
+        this.to = to;
+        toIncluded = false;
         return this;
     }
 
+    /**
+     * Set next element generator.
+     * @param next The next element generator
+     * @return Current range object.
+     * @throws NullPointerException if next is null.
+     */
     public Range<C> next(Function<C, C> next) {
         Objects.requireNonNull(next);
         this.next = next;
         return this;
     }
 
-    public C getLower() {
-        return lower;
+    /**
+     * Set next element generator.
+     * @param next The next element generator
+     * @return Current range object.
+     * @throws NullPointerException if next is null.
+     */
+    public Range<C> next(BiFunction<C, Integer, C> next) {
+        Objects.requireNonNull(next);
+        this.biNext = next;
+        return this;
     }
 
-    public C getUpper() {
-        return upper;
+    /**
+     * @return The start point
+     */
+    public C getFrom() {
+        return from;
     }
 
-    public boolean isUpperInclusive() {
-        return upperInclusive;
+    /**
+     * @return The end point
+     */
+    public C getTo() {
+        return to;
+    }
+
+    /**
+     * @return Whether the end point is included in this range.
+     */
+    public boolean isToIncluded() {
+        return toIncluded;
+    }
+
+    /**
+     * Iterate each element of the range.
+     *
+     * @throws NullPointerException if action, this.from, this.to or this.next is null.
+     */
+    public void forEach(Consumer<? super C> action) {
+        forEach((e, i) -> action.accept(e));
+    }
+
+    /**
+     * Similar to {@link #forEach(Consumer)}, with additional parameter "index" as the second parameter of the lambda expression.
+     *
+     * @throws NullPointerException if action is null
+     */
+    public void forEach(BiConsumer<? super C, Integer> action) {
+        Objects.requireNonNull(action);
+        Objects.requireNonNull(from);
+        Objects.requireNonNull(to);
+
+        if (Objects.isNull(next) && Objects.isNull(biNext)) {
+            Objects.requireNonNull(next);
+        }
+
+        /* orientation = 0 means to is equal to from;
+         * orientation > 0 means to is greater than from;
+         * otherwise to is less than from.
+         */
+        int orientation = from.compareTo(to);
+        int i = 0;
+        C current = from;
+        int cmp = current.compareTo(to);
+        while (cmp * orientation > 0 || toIncluded && cmp == 0) {
+            action.accept(current, i);
+            if (Objects.nonNull(next)) {
+                current = next.apply(current);
+            } else {
+                current = biNext.apply(current, i);
+            }
+            Objects.requireNonNull(current);
+            cmp = current.compareTo(to);
+            ++i;
+        }
     }
 
     public Seq<C> toSeq() {
-        Objects.requireNonNull(lower);
-        Objects.requireNonNull(upper);
-        Objects.requireNonNull(next);
-
-        int dir = lower.compareTo(upper);
-        if (dir == 0) {
-            return upperInclusive ? Seqs.newSeq(lower) : Seqs.newSeq();
-        }
-
         List<C> list = new ArrayList<>();
-        C current = lower;
-        while (true) {
-            int cmp = current.compareTo(upper);
-            if (upperInclusive && dir * cmp < 0
-                    || !upperInclusive && dir * cmp <= 0) {
-                break;
-            }
-            list.add(current);
-            current = next.apply(current);
-            Objects.requireNonNull(current);
-        }
+        forEach(e -> list.add(e));
+        return Seqs.newSeq(list);
+    }
 
+    public MutableSeq<C> toMutableSeq() {
+        List<C> list = new ArrayList<>();
+        forEach(e -> list.add(e));
         return Seqs.newMutableSeq(list);
     }
 }
