@@ -641,7 +641,7 @@ public interface Seq<T> {
      *
      * @throws NullPointerException if condition is null
      */
-    default boolean containsAny(Predicate<T> condition) {
+    default boolean any(Predicate<T> condition) {
         Objects.requireNonNull(condition);
         for (int i = 0; i < size(); i++) {
             if (condition.test(get(i))) {
@@ -656,7 +656,7 @@ public interface Seq<T> {
      *
      * @throws NullPointerException if condition is null
      */
-    default boolean containsAny(BiPredicate<T, Integer> condition) {
+    default boolean any(BiPredicate<T, Integer> condition) {
         Objects.requireNonNull(condition);
         for (int i = 0; i < size(); i++) {
             if (condition.test(get(i), i)) {
@@ -808,7 +808,7 @@ public interface Seq<T> {
      *
      * @throws NullPointerException if condition is null
      */
-    default boolean containsAll(Predicate<T> condition) {
+    default boolean all(Predicate<T> condition) {
         Objects.requireNonNull(condition);
         for (int i = 0; i < size(); i++) {
             if (!condition.test(get(i))) {
@@ -823,7 +823,7 @@ public interface Seq<T> {
      *
      * @throws NullPointerException if condition is null
      */
-    default boolean containsAll(BiPredicate<T, Integer> condition) {
+    default boolean all(BiPredicate<T, Integer> condition) {
         Objects.requireNonNull(condition);
         for (int i = 0; i < size(); i++) {
             if (!condition.test(get(i), i)) {
@@ -838,7 +838,7 @@ public interface Seq<T> {
      *
      * @throws NullPointerException if condition is null
      */
-    default boolean containsNone(Predicate<T> condition) {
+    default boolean none(Predicate<T> condition) {
         Objects.requireNonNull(condition);
         for (int i = 0; i < size(); i++) {
             if (condition.test(get(i))) {
@@ -853,7 +853,7 @@ public interface Seq<T> {
      *
      * @throws NullPointerException if condition is null
      */
-    default boolean containsNone(BiPredicate<T, Integer> condition) {
+    default boolean none(BiPredicate<T, Integer> condition) {
         Objects.requireNonNull(condition);
         for (int i = 0; i < size(); i++) {
             if (condition.test(get(i), i)) {
