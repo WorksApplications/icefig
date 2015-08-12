@@ -188,14 +188,14 @@ public class Range<C extends Comparable<C>> {
     }
 
     public Seq<C> toSeq() {
-        List<C> list = new ArrayList<>();
-        forEach(e -> list.add(e));
-        return Seqs.newSeq(list);
+        MutableSeq<C> seq = Seqs.newMutableSeq();
+        forEach((Consumer<C>) seq::appendInPlace);
+        return seq;
     }
 
     public MutableSeq<C> toMutableSeq() {
-        List<C> list = new ArrayList<>();
-        forEach(e -> list.add(e));
-        return Seqs.newMutableSeq(list);
+        MutableSeq<C> seq = Seqs.newMutableSeq();
+        forEach((Consumer<C>) seq::appendInPlace);
+        return seq;
     }
 }
