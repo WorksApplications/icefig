@@ -97,6 +97,10 @@ public class RangeTest {
         assertThat(list, equalTo(Arrays.asList(1, 2, 6, 24, 120, 720)));
 
         list.clear();
+        new Range<>(1).to(5).next(i -> i + 1).next((c, i) -> c * (i + 2)).forEach(e -> list.add(e));
+        assertThat(list, equalTo(Arrays.asList(1, 2, 3, 4, 5)));
+
+        list.clear();
         assertThrows(NullPointerException.class, () -> new Range<>(1).to(10).forEach(e -> list.add(e)));
     }
 

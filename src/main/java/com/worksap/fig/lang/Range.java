@@ -25,7 +25,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- *
  * Range is an element generator on the basis of start point,
  * end point and next element function.
  */
@@ -46,7 +45,7 @@ public class Range<C extends Comparable<C>> {
 
     /**
      * @param from The start point.
-     * @param to The end point. It is included in the range.
+     * @param to   The end point. It is included in the range.
      * @param next The next element generator.
      * @throws NullPointerException if from, to or next is null.
      */
@@ -58,6 +57,7 @@ public class Range<C extends Comparable<C>> {
 
     /**
      * Set start point
+     *
      * @param from The start point.
      * @return Current range object.
      * @throws NullPointerException if from is null.
@@ -70,6 +70,7 @@ public class Range<C extends Comparable<C>> {
 
     /**
      * Set end point. The end point is included in this range.
+     *
      * @param to The end point.
      * @return Current range object.
      * @throws NullPointerException if to is null.
@@ -83,6 +84,7 @@ public class Range<C extends Comparable<C>> {
 
     /**
      * Set end point. The end point is excluded in this range.
+     *
      * @param to The end point.
      * @return Current range object.
      * @throws NullPointerException if to is null.
@@ -96,6 +98,7 @@ public class Range<C extends Comparable<C>> {
 
     /**
      * Set next element generator.
+     *
      * @param next The next element generator
      * @return Current range object.
      * @throws NullPointerException if next is null.
@@ -108,6 +111,7 @@ public class Range<C extends Comparable<C>> {
 
     /**
      * Set next element generator.
+     *
      * @param next The next element generator
      * @return Current range object.
      * @throws NullPointerException if next is null.
@@ -158,7 +162,7 @@ public class Range<C extends Comparable<C>> {
         Objects.requireNonNull(from);
         Objects.requireNonNull(to);
 
-        if (Objects.isNull(next) && Objects.isNull(biNext)) {
+        if (Objects.isNull(biNext)) {
             Objects.requireNonNull(next);
         }
 
