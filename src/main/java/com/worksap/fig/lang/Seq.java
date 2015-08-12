@@ -802,4 +802,64 @@ public interface Seq<T> {
      * @throws NullPointerException if the parameter seq is null
      */
     Seq<T> difference(Seq<T> seq);
+
+    /**
+     * Check whether all elements of the seq satisfy the condition
+     *
+     * @throws NullPointerException if condition is null
+     */
+    default boolean containsAll(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
+        for (int i = 0; i < size(); i++) {
+            if (!condition.test(get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Check whether all elements of the seq satisfy the condition
+     *
+     * @throws NullPointerException if condition is null
+     */
+    default boolean containsAll(BiPredicate<T, Integer> condition) {
+        Objects.requireNonNull(condition);
+        for (int i = 0; i < size(); i++) {
+            if (!condition.test(get(i), i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Check whether no element of the seq satisfies the condition
+     *
+     * @throws NullPointerException if condition is null
+     */
+    default boolean containsNone(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
+        for (int i = 0; i < size(); i++) {
+            if (condition.test(get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Check whether no element of the seq satisfies the condition
+     *
+     * @throws NullPointerException if condition is null
+     */
+    default boolean containsNone(BiPredicate<T, Integer> condition) {
+        Objects.requireNonNull(condition);
+        for (int i = 0; i < size(); i++) {
+            if (condition.test(get(i), i)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

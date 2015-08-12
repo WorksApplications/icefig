@@ -124,6 +124,26 @@ public class SeqTest {
     }
 
     @Test
+    public void testContainsAll() {
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).containsAll((Predicate<Integer>) null));
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).containsAll((BiPredicate<Integer, Integer>) null));
+        assertTrue(Seqs.newSeq(1, 2, 3).containsAll(i -> i > 0));
+        assertTrue(Seqs.newSeq(3, 2, 1).containsAll((e, i) -> e + i == 3));
+        assertFalse(Seqs.newSeq(1, 2, 3).containsAll((e, i) -> e + i == 3));
+        assertFalse(Seqs.newSeq(1, 2, 3).containsAll(i -> i > 1));
+    }
+
+    @Test
+    public void testContainsNone() {
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).containsNone((Predicate<Integer>) null));
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).containsNone((BiPredicate<Integer, Integer>) null));
+        assertTrue(Seqs.newSeq(1, 2, 3).containsNone(i -> i > 3));
+        assertTrue(Seqs.newSeq(1, 2, 3).containsNone((e, i) -> e + i == 4));
+        assertFalse(Seqs.newSeq(1, 2, 3).containsNone((e, i) -> e + i == 3));
+        assertFalse(Seqs.newSeq(1, 2, 3).containsNone(i -> i > 1));
+    }
+
+    @Test
     public void testContainSubSeq() {
         assertTrue(Seqs.newSeq('B', 'B', 'C', ' ', 'A', 'B', 'C', 'D', 'A', 'B', ' ', 'A', 'B', 'C', 'D', 'A', 'B', 'C', 'D', 'A', 'B', 'D', 'E')
                 .containsSubSeq(Seqs.newSeq('A', 'B', 'C', 'D', 'A', 'B', 'D')));
