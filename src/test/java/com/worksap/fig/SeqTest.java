@@ -447,10 +447,18 @@ public class SeqTest {
     public void testRejectWhile() {
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 1);
         assertThat(seq.rejectWhile(e -> e < 2), is(equalTo(Seqs.newMutableSeq(2, 1))));
+        assertThat(seq.rejectWhile(e -> e < 1), is(equalTo(Seqs.newMutableSeq(1, 2, 1))));
+        assertThat(seq.rejectWhile(e -> e > 0), is(equalTo(Seqs.newMutableSeq())));
         assertThat(seq.rejectWhile((e, i) -> e < 2), is(equalTo(Seqs.newMutableSeq(2, 1))));
+        assertThat(seq.rejectWhile((e, i) -> e < 1), is(equalTo(Seqs.newMutableSeq(1, 2, 1))));
+        assertThat(seq.rejectWhile((e, i) -> e > 0), is(equalTo(Seqs.newMutableSeq())));
 
         assertThat(Seqs.newMutableSeq(1, 2, 1).rejectWhileInPlace(e -> e < 2), is(equalTo(Seqs.newMutableSeq(2, 1))));
+        assertThat(Seqs.newMutableSeq(1, 2, 1).rejectWhileInPlace(e -> e < 1), is(equalTo(Seqs.newMutableSeq(1, 2, 1))));
+        assertThat(Seqs.newMutableSeq(1, 2, 1).rejectWhileInPlace(e -> e > 0), is(equalTo(Seqs.newMutableSeq())));
         assertThat(Seqs.newMutableSeq(1, 2, 1).rejectWhileInPlace((e, i) -> e < 2), is(equalTo(Seqs.newMutableSeq(2, 1))));
+        assertThat(Seqs.newMutableSeq(1, 2, 1).rejectWhileInPlace((e, i) -> e < 1), is(equalTo(Seqs.newMutableSeq(1, 2, 1))));
+        assertThat(Seqs.newMutableSeq(1, 2, 1).rejectWhileInPlace((e, i) -> e > 0), is(equalTo(Seqs.newMutableSeq())));
 
         assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectWhile((Predicate<Integer>) null));
         assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectWhileInPlace((Predicate<Integer>) null));
@@ -493,10 +501,18 @@ public class SeqTest {
     public void testFilterWhile() {
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 1);
         assertThat(seq.filterWhile(e -> e < 2), is(equalTo(Seqs.newMutableSeq(1))));
+        assertThat(seq.filterWhile(e -> e < 1), is(equalTo(Seqs.newMutableSeq())));
+        assertThat(seq.filterWhile(e -> e > 0), is(equalTo(Seqs.newMutableSeq(1, 2, 1))));
         assertThat(seq.filterWhile((e, i) -> e < 2), is(equalTo(Seqs.newMutableSeq(1))));
+        assertThat(seq.filterWhile((e, i) -> e < 1), is(equalTo(Seqs.newMutableSeq())));
+        assertThat(seq.filterWhile((e, i) -> e > 0), is(equalTo(Seqs.newMutableSeq(1, 2, 1))));
 
         assertThat(Seqs.newMutableSeq(1, 2, 1).filterWhileInPlace(e -> e < 2), is(equalTo(Seqs.newMutableSeq(1))));
+        assertThat(Seqs.newMutableSeq(1, 2, 1).filterWhileInPlace(e -> e < 1), is(equalTo(Seqs.newMutableSeq())));
+        assertThat(Seqs.newMutableSeq(1, 2, 1).filterWhileInPlace(e -> e > 0), is(equalTo(Seqs.newMutableSeq(1, 2, 1))));
         assertThat(Seqs.newMutableSeq(1, 2, 1).filterWhileInPlace((e, i) -> e < 2), is(equalTo(Seqs.newMutableSeq(1))));
+        assertThat(Seqs.newMutableSeq(1, 2, 1).filterWhileInPlace((e, i) -> e < 1), is(equalTo(Seqs.newMutableSeq())));
+        assertThat(Seqs.newMutableSeq(1, 2, 1).filterWhileInPlace((e, i) -> e > 0), is(equalTo(Seqs.newMutableSeq(1, 2, 1))));
 
         assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).filterWhile((Predicate<Integer>) null));
         assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).filterWhileInPlace((Predicate<Integer>) null));
