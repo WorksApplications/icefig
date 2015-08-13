@@ -8,6 +8,8 @@ import org.junit.Test;
 import java.util.*;
 import java.util.function.*;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static com.worksap.fig.Helpers.*;
 
@@ -442,6 +444,21 @@ public class SeqTest {
     }
 
     @Test
+    public void testRejectWhile() {
+        MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 1);
+        assertThat(seq.rejectWhile(e -> e < 2), is(equalTo(Seqs.newMutableSeq(2, 1))));
+        assertThat(seq.rejectWhile((e, i) -> e < 2), is(equalTo(Seqs.newMutableSeq(2, 1))));
+
+        assertThat(Seqs.newMutableSeq(1, 2, 1).rejectWhileInPlace(e -> e < 2), is(equalTo(Seqs.newMutableSeq(2, 1))));
+        assertThat(Seqs.newMutableSeq(1, 2, 1).rejectWhileInPlace((e, i) -> e < 2), is(equalTo(Seqs.newMutableSeq(2, 1))));
+
+        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectWhile((Predicate<Integer>) null));
+        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectWhileInPlace((Predicate<Integer>) null));
+        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectWhile((BiPredicate<Integer, Integer>) null));
+        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectWhileInPlace((BiPredicate<Integer, Integer>) null));
+    }
+
+    @Test
     public void testFilter() {
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 3);
         MutableSeq<Integer> seq1 = seq.filter((e, i) -> (e > 1 && i % 2 == 0));
@@ -470,6 +487,21 @@ public class SeqTest {
         BiPredicate<Integer, Integer> biPredicate = null;
         assertThrows(NullPointerException.class, () -> seq.filter(biPredicate));
         assertThrows(NullPointerException.class, () -> seq.filterInPlace(biPredicate));
+    }
+
+    @Test
+    public void testFilterWhile() {
+        MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 1);
+        assertThat(seq.filterWhile(e -> e < 2), is(equalTo(Seqs.newMutableSeq(1))));
+        assertThat(seq.filterWhile((e, i) -> e < 2), is(equalTo(Seqs.newMutableSeq(1))));
+
+        assertThat(Seqs.newMutableSeq(1, 2, 1).filterWhileInPlace(e -> e < 2), is(equalTo(Seqs.newMutableSeq(1))));
+        assertThat(Seqs.newMutableSeq(1, 2, 1).filterWhileInPlace((e, i) -> e < 2), is(equalTo(Seqs.newMutableSeq(1))));
+
+        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).filterWhile((Predicate<Integer>) null));
+        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).filterWhileInPlace((Predicate<Integer>) null));
+        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).filterWhile((BiPredicate<Integer, Integer>) null));
+        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).filterWhileInPlace((BiPredicate<Integer, Integer>) null));
     }
 
     @Test
