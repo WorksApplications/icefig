@@ -1,5 +1,7 @@
 # Fig [![Build Status](https://travis-ci.org/wapatesh/fig.svg?branch=master)](https://travis-ci.org/wapatesh/fig) [![Documentation](https://readthedocs.org/projects/svg-pottery/badge/?version=latest)](http://www.javadoc.io/doc/com.worksap/fig) [![codecov.io](http://codecov.io/github/wapatesh/fig/coverage.svg?branch=master)](http://codecov.io/github/wapatesh/fig?branch=master)
 
+[![Join the chat at https://gitter.im/wapatesh/fig](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/wapatesh/fig?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Java elegant supplement
 
 Java 8 delivered lambda expressions, but without the enhancement of basic libraries like List, Map, String, which makes
