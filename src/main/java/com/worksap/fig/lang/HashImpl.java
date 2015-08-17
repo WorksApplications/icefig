@@ -213,6 +213,18 @@ class HashImpl<K, V> implements MutableHash<K, V> {
     }
 
     @Override
+    public MutableHash<K, V> replaceInPlace(K k, V v) {
+        hash.replace(k, v);
+        return this;
+    }
+
+    @Override
+    public MutableHash<K, V> replaceInPlace(K k, V oldValue, V newValue) {
+        hash.replace(k, oldValue, newValue);
+        return this;
+    }
+
+    @Override
     public MutableHash<K, V> putInPlace(K k, V v) {
         hash.put(k, v);
         return this;
@@ -246,5 +258,19 @@ class HashImpl<K, V> implements MutableHash<K, V> {
                 result.appendInPlace(k);
         });
         return result;
+    }
+
+    @Override
+    public MutableHash<K, V> replace(K k, V v) {
+        Map<K, V> newHash = new HashMap<>(hash);
+        newHash.replace(k, v);
+        return new HashImpl<>(newHash);
+    }
+
+    @Override
+    public MutableHash<K, V> replace(K k, V oldValue, V newValue) {
+        Map<K, V> newHash = new HashMap<>(hash);
+        newHash.replace(k, oldValue, newValue);
+        return new HashImpl<>(newHash);
     }
 }

@@ -50,6 +50,13 @@ public interface MutableHash<K, V> extends Hash<K, V> {
     @Override
     Seq<K> keysOf(V v);
 
+    @Override
+    MutableHash<K, V> replace(K k, V v);
+
+    @Override
+    MutableHash<K, V> replace(K k, V oldValue, V newValue);
+
+
     /**
      * In-place method of {@link #put(K, V)}
      */
@@ -91,4 +98,13 @@ public interface MutableHash<K, V> extends Hash<K, V> {
      * @return the hash itself after clear
      */
     MutableHash<K, V> clear();
+
+    /**
+     * In-place method of {@link #replace(K, V)}
+     */
+    MutableHash<K, V> replaceInPlace(K k, V v);
+    /**
+     * In-place method of {@link #replace(K, V, V)}
+     */
+    MutableHash<K, V> replaceInPlace(K k, V oldValue, V newValue);
 }

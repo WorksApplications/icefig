@@ -162,4 +162,41 @@ public interface Hash<K, V> {
      * @return the collection of keys whose value is the given value
      */
     Seq<K> keysOf(V value);
+
+    /**
+     * Replaces the entry for the specified key only if it is
+     * currently mapped to some value.
+     *
+     * @param key key with which the specified value is associated
+     * @param value value to be associated with the specified key
+     * @return a new hash after the entry is replaced
+     * @throws ClassCastException if the class of the specified key or value
+     *         prevents it from being stored in this hash
+     * @throws NullPointerException if the specified key or value is null,
+     *         and this hash does not permit null keys or values
+     * @throws IllegalArgumentException if some property of the specified key
+     *         or value prevents it from being stored in this hash
+     */
+    Hash<K, V> replace(K key, V value);
+
+    /**
+     * Replaces the entry for the specified key only if currently
+     * mapped to the specified value.
+     *
+     * @param key key with which the specified value is associated
+     * @param oldValue value expected to be associated with the specified key
+     * @param newValue value to be associated with the specified key
+     * @return a new hash after the entry is replaced
+     * @throws UnsupportedOperationException if the {@code put} operation
+     *         is not supported by this hash
+     * @throws ClassCastException if the class of a specified key or value
+     *         prevents it from being stored in this hash
+     * @throws NullPointerException if a specified key or newValue is null,
+     *         and this hash does not permit null keys or values
+     * @throws NullPointerException if oldValue is null and this hash does not
+     *         permit null values
+     * @throws IllegalArgumentException if some property of a specified key
+     *         or value prevents it from being stored in this hash
+     */
+    Hash<K, V> replace(K key, V oldValue, V newValue);
 }

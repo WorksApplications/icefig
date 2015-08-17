@@ -302,4 +302,58 @@ public class HashTest {
         assertEquals(1, mutableHash.size());
         assertEquals(1, anotherMutableHash.size());
     }
+
+    @Test
+    public void testReplace() {
+        Hash<Integer, Integer> hash = Hashes.<Integer, Integer>newHash().put(1, 2).put(3, 4).put(null, null);
+        Hash<Integer, Integer> another = hash.replace(1, 3);
+        assertEquals(new Integer(2), hash.get(1));
+        assertEquals(new Integer(3), another.get(1));
+
+        another = hash.replace(4, 3);
+        assertNull(hash.get(4));
+        assertNull(another.get(4));
+
+        another = hash.replace(1, 2, 10);
+        assertEquals(new Integer(2), hash.get(1));
+        assertEquals(new Integer(10), another.get(1));
+
+        another = hash.replace(1, 3, 11);
+        assertEquals(new Integer(2), hash.get(1));
+        assertEquals(new Integer(2), another.get(1));
+
+        another = hash.replace(null, 1);
+        assertEquals(null, hash.get(null));
+        assertEquals(new Integer(1), another.get(null));
+
+        another = hash.replace(null, null, 1);
+        assertEquals(null, hash.get(null));
+        assertEquals(new Integer(1), another.get(null));
+
+        MutableHash<Integer, Integer> mutableHash = Hashes.<Integer, Integer>newMutableHash().putInPlace(1, 2).putInPlace(3, 4).putInPlace(null, null);
+        MutableHash<Integer, Integer> anotherMutableHash = mutableHash.replaceInPlace(1, 3);
+        assertEquals(new Integer(3), mutableHash.get(1));
+        assertEquals(new Integer(3), anotherMutableHash.get(1));
+
+        anotherMutableHash = mutableHash.replaceInPlace(4, 3);
+        assertNull(mutableHash.get(4));
+        assertNull(anotherMutableHash.get(4));
+
+        anotherMutableHash = mutableHash.replaceInPlace(1, 3, 10);
+        assertEquals(new Integer(10), mutableHash.get(1));
+        assertEquals(new Integer(10), anotherMutableHash.get(1));
+
+        anotherMutableHash = mutableHash.replaceInPlace(1, 3, 11);
+        assertEquals(new Integer(10), mutableHash.get(1));
+        assertEquals(new Integer(10), anotherMutableHash.get(1));
+
+        anotherMutableHash = mutableHash.replaceInPlace(null, 3);
+        assertEquals(new Integer(3), mutableHash.get(null));
+        assertEquals(new Integer(3), anotherMutableHash.get(null));
+
+        anotherMutableHash = mutableHash.replaceInPlace(null, null, 3);
+        assertEquals(new Integer(3), mutableHash.get(null));
+        assertEquals(new Integer(3), anotherMutableHash.get(null));
+
+    }
 }
