@@ -16,6 +16,7 @@
 
 package com.worksap.fig.lang;
 
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
 /**
@@ -55,6 +56,9 @@ public interface MutableHash<K, V> extends Hash<K, V> {
 
     @Override
     MutableHash<K, V> replace(K k, V oldValue, V newValue);
+
+    @Override
+    MutableHash<K, V> replaceAll(BiFunction<? super K, ? super V, ? extends V> function);
 
 
     /**
@@ -107,4 +111,9 @@ public interface MutableHash<K, V> extends Hash<K, V> {
      * In-place method of {@link #replace(K, V, V)}
      */
     MutableHash<K, V> replaceInPlace(K k, V oldValue, V newValue);
+
+    /**
+     * In-place method of {@link #replaceAll(BiFunction)}
+     */
+    MutableHash<K, V> replaceAllInPlace(BiFunction<? super K, ? super V, ? extends V> function);
 }

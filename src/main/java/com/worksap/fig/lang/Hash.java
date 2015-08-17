@@ -16,7 +16,9 @@
 
 package com.worksap.fig.lang;
 
+import java.util.ConcurrentModificationException;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
 /**
@@ -199,4 +201,30 @@ public interface Hash<K, V> {
      *         or value prevents it from being stored in this hash
      */
     Hash<K, V> replace(K key, V oldValue, V newValue);
+
+    /**
+     * Replaces each entry's value with the result of invoking the given
+     * function on that entry until all entries have been processed or the
+     * function throws an exception.  Exceptions thrown by the function are
+     * relayed to the caller.
+     *
+     * @param function the function to apply to each entry
+     * @return a new hash after all the entries are replaced
+     * @throws UnsupportedOperationException if the {@code set} operation
+     * is not supported by this hash's entry set iterator.
+     * @throws ClassCastException if the class of a replacement value
+     * prevents it from being stored in this hash
+     * @throws NullPointerException if the specified function is null, or the
+     * specified replacement value is null, and this hash does not permit null
+     * values
+     * @throws ClassCastException if a replacement value is of an inappropriate
+     *         type for this hash
+     * @throws NullPointerException if function or a replacement value is null,
+     *         and this hash does not permit null keys or values
+     * @throws IllegalArgumentException if some property of a replacement value
+     *         prevents it from being stored in this hash
+     * @throws ConcurrentModificationException if an entry is found to be
+     * removed during iteration
+     */
+    Hash<K, V> replaceAll(BiFunction<? super K, ? super V, ? extends V> function);
 }

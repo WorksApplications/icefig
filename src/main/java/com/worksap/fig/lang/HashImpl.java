@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
 /**
@@ -225,6 +226,13 @@ class HashImpl<K, V> implements MutableHash<K, V> {
     }
 
     @Override
+    public MutableHash<K, V> replaceAllInPlace(BiFunction<? super K, ? super V, ? extends V> function) {
+        Objects.requireNonNull(function);
+        hash.replaceAll(function);
+        return this;
+    }
+
+    @Override
     public MutableHash<K, V> putInPlace(K k, V v) {
         hash.put(k, v);
         return this;
@@ -271,6 +279,14 @@ class HashImpl<K, V> implements MutableHash<K, V> {
     public MutableHash<K, V> replace(K k, V oldValue, V newValue) {
         Map<K, V> newHash = new HashMap<>(hash);
         newHash.replace(k, oldValue, newValue);
+        return new HashImpl<>(newHash);
+    }
+
+    @Override
+    public MutableHash<K, V> replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+        Objects.requireNonNull(function);
+        Map<K, V> newHash = new HashMap<>(hash);
+        newHash.replaceAll(function);
         return new HashImpl<>(newHash);
     }
 }
