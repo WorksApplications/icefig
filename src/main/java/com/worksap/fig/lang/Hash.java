@@ -140,6 +140,22 @@ public interface Hash<K, V> {
     Hash<K, V> remove(K key);
 
     /**
+     * Removes the entry for the specified key only if it is currently
+     * mapped to the specified value.
+     *
+     * @param key key with which the specified value is associated
+     * @param value value expected to be associated with the specified key
+     * @return a new hash after the entry is removed
+     * @throws UnsupportedOperationException if the {@code remove} operation
+     *         is not supported by this hash
+     * @throws ClassCastException if the key or value is of an inappropriate
+     *         type for this hash
+     * @throws NullPointerException if the specified key or value is null,
+     *         and this map does not permit null keys or values
+     */
+    Hash<K, V> remove(K key, V value);
+
+    /**
      * Returns a Seq of keys of the given value.
      *
      * @param value the value

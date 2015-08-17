@@ -164,6 +164,13 @@ class HashImpl<K, V> implements MutableHash<K, V> {
     }
 
     @Override
+    public MutableHash<K, V> remove(K k, V v) {
+        Map<K, V> newHash = new HashMap<>(hash);
+        newHash.remove(k, v);
+        return new HashImpl<>(newHash);
+    }
+
+    @Override
     public MutableHash<K, V> filterInPlace(BiPredicate<K, V> condition) {
         Objects.requireNonNull(condition);
         final Iterator<Map.Entry<K, V>> each = hash.entrySet().iterator();
@@ -220,6 +227,12 @@ class HashImpl<K, V> implements MutableHash<K, V> {
     @Override
     public MutableHash<K, V> removeInPlace(K k) {
         hash.remove(k);
+        return this;
+    }
+
+    @Override
+    public MutableHash<K, V> removeInPlace(K k, V v) {
+        hash.remove(k, v);
         return this;
     }
 

@@ -45,6 +45,9 @@ public interface MutableHash<K, V> extends Hash<K, V> {
     MutableHash<K, V> remove(K k);
 
     @Override
+    MutableHash<K, V> remove(K k, V v);
+
+    @Override
     Seq<K> keysOf(V v);
 
     /**
@@ -61,6 +64,11 @@ public interface MutableHash<K, V> extends Hash<K, V> {
      * In-place method of {@link #remove(K)}
      */
     MutableHash<K, V> removeInPlace(K k);
+
+    /**
+     * In-place method of {@link #remove(K, V)}
+     */
+    MutableHash<K, V> removeInPlace(K k, V v);
 
     /**
      * In-place method of {@link #filter(BiPredicate)}

@@ -260,4 +260,46 @@ public class HashTest {
         constructor.setAccessible(true);
         constructor.newInstance();
     }
+
+    @Test
+    public void testRemove() {
+        Hash<Integer, Integer> hash = Hashes.<Integer, Integer>newHash().put(1, 2).put(3, 4);
+        assertEquals(2, hash.size());
+
+        Hash<Integer, Integer> another = hash.remove(1);
+        assertEquals(2, hash.size());
+        assertEquals(1, another.size());
+
+        another = hash.remove(1, 3);
+        assertEquals(2, hash.size());
+        assertEquals(2, another.size());
+
+        another = hash.remove(2, 2);
+        assertEquals(2, hash.size());
+        assertEquals(2, another.size());
+
+        another = hash.remove(1, 2);
+        assertEquals(2, hash.size());
+        assertEquals(1, another.size());
+
+        MutableHash<Integer, Integer> mutableHash = Hashes.<Integer, Integer>newMutableHash().putInPlace(1, 2).putInPlace(3, 4);
+        assertEquals(2, mutableHash.size());
+
+        MutableHash<Integer, Integer> anotherMutableHash = mutableHash.removeInPlace(1);
+        assertEquals(1, mutableHash.size());
+        assertEquals(1, anotherMutableHash.size());
+        mutableHash.putInPlace(1, 2);
+
+        anotherMutableHash = mutableHash.removeInPlace(1, 3);
+        assertEquals(2, mutableHash.size());
+        assertEquals(2, anotherMutableHash.size());
+
+        anotherMutableHash = mutableHash.removeInPlace(2, 2);
+        assertEquals(2, mutableHash.size());
+        assertEquals(2, anotherMutableHash.size());
+
+        anotherMutableHash = mutableHash.removeInPlace(1, 2);
+        assertEquals(1, mutableHash.size());
+        assertEquals(1, anotherMutableHash.size());
+    }
 }
