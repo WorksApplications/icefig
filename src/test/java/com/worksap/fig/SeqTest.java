@@ -131,12 +131,32 @@ public class SeqTest {
 
     @Test
     public void testContainsAny() {
-        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).containsAny((Predicate<Integer>) null));
-        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).containsAny((BiPredicate<Integer, Integer>) null));
-        assertTrue(Seqs.newSeq(1, 2, 3).containsAny(i -> i > 2));
-        assertTrue(Seqs.newSeq(1, 2, 3).containsAny((e, i) -> e + i == 3));
-        assertFalse(Seqs.newSeq(1, 2, 3).containsAny((e, i) -> e + i == 4));
-        assertFalse(Seqs.newSeq(1, 2, 3).containsAny(i -> i > 3));
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).any((Predicate<Integer>) null));
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).any((BiPredicate<Integer, Integer>) null));
+        assertTrue(Seqs.newSeq(1, 2, 3).any(i -> i > 2));
+        assertTrue(Seqs.newSeq(1, 2, 3).any((e, i) -> e + i == 3));
+        assertFalse(Seqs.newSeq(1, 2, 3).any((e, i) -> e + i == 4));
+        assertFalse(Seqs.newSeq(1, 2, 3).any(i -> i > 3));
+    }
+
+    @Test
+    public void testContainsAll() {
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).all((Predicate<Integer>) null));
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).all((BiPredicate<Integer, Integer>) null));
+        assertTrue(Seqs.newSeq(1, 2, 3).all(i -> i > 0));
+        assertTrue(Seqs.newSeq(3, 2, 1).all((e, i) -> e + i == 3));
+        assertFalse(Seqs.newSeq(1, 2, 3).all((e, i) -> e + i == 3));
+        assertFalse(Seqs.newSeq(1, 2, 3).all(i -> i > 1));
+    }
+
+    @Test
+    public void testContainsNone() {
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).none((Predicate<Integer>) null));
+        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).none((BiPredicate<Integer, Integer>) null));
+        assertTrue(Seqs.newSeq(1, 2, 3).none(i -> i > 3));
+        assertTrue(Seqs.newSeq(1, 2, 3).none((e, i) -> e + i == 4));
+        assertFalse(Seqs.newSeq(1, 2, 3).none((e, i) -> e + i == 3));
+        assertFalse(Seqs.newSeq(1, 2, 3).none(i -> i > 1));
     }
 
     @Test

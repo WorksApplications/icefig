@@ -657,7 +657,7 @@ public interface Seq<T> {
      *
      * @throws NullPointerException if condition is null
      */
-    default boolean containsAny(Predicate<T> condition) {
+    default boolean any(Predicate<T> condition) {
         Objects.requireNonNull(condition);
         for (int i = 0; i < size(); i++) {
             if (condition.test(get(i))) {
@@ -672,7 +672,7 @@ public interface Seq<T> {
      *
      * @throws NullPointerException if condition is null
      */
-    default boolean containsAny(BiPredicate<T, Integer> condition) {
+    default boolean any(BiPredicate<T, Integer> condition) {
         Objects.requireNonNull(condition);
         for (int i = 0; i < size(); i++) {
             if (condition.test(get(i), i)) {
@@ -818,4 +818,64 @@ public interface Seq<T> {
      * @throws NullPointerException if the parameter seq is null
      */
     Seq<T> difference(Seq<T> seq);
+
+    /**
+     * Check whether all elements of the seq satisfy the condition
+     *
+     * @throws NullPointerException if condition is null
+     */
+    default boolean all(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
+        for (int i = 0; i < size(); i++) {
+            if (!condition.test(get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Check whether all elements of the seq satisfy the condition
+     *
+     * @throws NullPointerException if condition is null
+     */
+    default boolean all(BiPredicate<T, Integer> condition) {
+        Objects.requireNonNull(condition);
+        for (int i = 0; i < size(); i++) {
+            if (!condition.test(get(i), i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Check whether no element of the seq satisfies the condition
+     *
+     * @throws NullPointerException if condition is null
+     */
+    default boolean none(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
+        for (int i = 0; i < size(); i++) {
+            if (condition.test(get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Check whether no element of the seq satisfies the condition
+     *
+     * @throws NullPointerException if condition is null
+     */
+    default boolean none(BiPredicate<T, Integer> condition) {
+        Objects.requireNonNull(condition);
+        for (int i = 0; i < size(); i++) {
+            if (condition.test(get(i), i)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
