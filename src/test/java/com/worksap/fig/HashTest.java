@@ -366,4 +366,18 @@ public class HashTest {
         assertEquals(new Integer(3), anotherMutableHash.get(null));
 
     }
+
+    @Test
+    public void testCount() {
+        Hash<Integer, Integer> hash = Hashes.<Integer, Integer>newHash().put(1, 2).put(2, 2).put(3, 4).put(null, null);
+        assertEquals(1, hash.count(4));
+        assertEquals(2, hash.count(2));
+        assertEquals(0, hash.count(3));
+        assertEquals(1, hash.count(null));
+
+        MutableHash<Integer, Integer> mutableHash = Hashes.<Integer, Integer>newMutableHash().putInPlace(1, 2).putInPlace(2, 2).putInPlace(3, 4);
+        assertEquals(1, mutableHash.count(4));
+        assertEquals(2, mutableHash.count(2));
+        assertEquals(0, mutableHash.count(3));
+    }
 }

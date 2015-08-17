@@ -227,4 +227,11 @@ public interface Hash<K, V> {
      * removed during iteration
      */
     Hash<K, V> replaceAll(BiFunction<? super K, ? super V, ? extends V> function);
+
+    /**
+     * Returns the number of the specified value in this hash.
+     * @param value the value to count
+     * @return the number of the specified value in this hash
+     */
+    int count(V value);
 }

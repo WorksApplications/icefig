@@ -289,4 +289,9 @@ class HashImpl<K, V> implements MutableHash<K, V> {
         newHash.replaceAll(function);
         return new HashImpl<>(newHash);
     }
+
+    @Override
+    public int count(V value) {
+        return this.values().count(value);
+    }
 }
