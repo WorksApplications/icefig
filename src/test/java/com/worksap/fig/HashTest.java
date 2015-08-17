@@ -374,10 +374,12 @@ public class HashTest {
         assertEquals(2, hash.count(2));
         assertEquals(0, hash.count(3));
         assertEquals(1, hash.count(null));
+        assertEquals(2, hash.countIf((k, v) -> k != null && v < 3));
 
         MutableHash<Integer, Integer> mutableHash = Hashes.<Integer, Integer>newMutableHash().putInPlace(1, 2).putInPlace(2, 2).putInPlace(3, 4);
         assertEquals(1, mutableHash.count(4));
         assertEquals(2, mutableHash.count(2));
         assertEquals(0, mutableHash.count(3));
+        assertEquals(2, mutableHash.countIf((k, v) -> v < 3));
     }
 }

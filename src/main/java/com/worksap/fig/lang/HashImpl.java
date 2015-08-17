@@ -294,4 +294,18 @@ class HashImpl<K, V> implements MutableHash<K, V> {
     public int count(V value) {
         return this.values().count(value);
     }
+
+    @Override
+    public int countIf(BiPredicate<K, V> condition) {
+        Objects.requireNonNull(condition);
+        int count = 0;
+        final Iterator<Map.Entry<K, V>> each = hash.entrySet().iterator();
+        while (each.hasNext()) {
+            Map.Entry<K, V> nextEntry = each.next();
+            if (condition.test(nextEntry.getKey(), nextEntry.getValue())) {
+                count++;
+            }
+        }
+        return count;
+    }
 }

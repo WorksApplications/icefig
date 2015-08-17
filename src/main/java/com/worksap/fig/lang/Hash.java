@@ -18,8 +18,10 @@ package com.worksap.fig.lang;
 
 import java.util.ConcurrentModificationException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 /**
  * Elegant supplement for Map in JDK
@@ -234,4 +236,14 @@ public interface Hash<K, V> {
      * @return the number of the specified value in this hash
      */
     int count(V value);
+
+    /**
+     * Returns the number of entries which satisfy the condition.
+     *
+     * @param condition the condition used to filter entries by passing the key and the value,
+     *                  returns true if the entry satisfies the condition, otherwise returns false.
+     * @return the number of entries which satisfy the condition
+     * @throws NullPointerException if condition is null
+     */
+    int countIf(BiPredicate<K, V> condition);
 }
