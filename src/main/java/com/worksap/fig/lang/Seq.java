@@ -850,7 +850,6 @@ public interface Seq<T> {
      *
      * @return A new seq which contains all elements of this seq which also appear in that, keeping the order of this seq.
      * If an element value x appears n times in that, then the first n occurrences of x will be retained in the result, but any following occurrences will be omitted.
-     *
      * @throws NullPointerException if the parameter seq is null
      */
     Seq<T> intersect(Seq<T> seq);
@@ -860,7 +859,6 @@ public interface Seq<T> {
      *
      * @return A new seq which contains all elements of this seq except some of occurrences of elements that also appear in that, keeping the order of this seq.
      * If an element value x appears n times in that, then the first n occurrences of x will not form part of the result, but any following occurrences will.
-     *
      * @throws NullPointerException if the parameter seq is null
      */
     Seq<T> difference(Seq<T> seq);
@@ -923,5 +921,51 @@ public interface Seq<T> {
             }
         }
         return true;
+    }
+
+    /**
+     * Returns the maximum element of the seq
+     *
+     * @throws NullPointerException if comparator is null
+     */
+    default Optional<T> max(Comparator<? super T> comparator) {
+        Objects.requireNonNull(comparator);
+
+        if (size() == 0) {
+            return Optional.empty();
+        }
+
+        T candidate = get(0);
+        for (int i = 1; i < size(); i++) {
+            T current = get(i);
+            if (comparator.compare(current, candidate) > 0) {
+                candidate = current;
+            }
+        }
+
+        return Optional.of(candidate);
+    }
+
+    /**
+     * Returns the minimum element of the seq
+     *
+     * @throws NullPointerException if comparator is null
+     */
+    default Optional<T> min(Comparator<? super T> comparator) {
+        Objects.requireNonNull(comparator);
+
+        if (size() == 0) {
+            return Optional.empty();
+        }
+
+        T candidate = get(0);
+        for (int i = 1; i < size(); i++) {
+            T current = get(i);
+            if (comparator.compare(current, candidate) < 0) {
+                candidate = current;
+            }
+        }
+
+        return Optional.of(candidate);
     }
 }

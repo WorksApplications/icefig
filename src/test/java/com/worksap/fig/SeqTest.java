@@ -712,4 +712,22 @@ public class SeqTest {
                 Seqs.newMutableSeq(3, 4, 5)).toArrayList());
         assertEquals(actual, resultSet);
     }
+
+    @Test
+    public void testMax() {
+        assertThat(Seqs.newMutableSeq().max((i, j) -> 0).isPresent(), is(false));
+        assertThat(Seqs.newMutableSeq(1, 2, 3).max((i, j) -> Integer.compare(i, j)).get(), is(3));
+        assertThat(Seqs.newMutableSeq(1, 3, 2).max((i, j) -> Integer.compare(i, j)).get(), is(3));
+        assertThat(Seqs.newMutableSeq(3, 2, 1).max((i, j) -> Integer.compare(i, j)).get(), is(3));
+        assertThat(Seqs.newMutableSeq(3, 2, 1).max((i, j) -> Integer.compare(j, i)).get(), is(1));
+    }
+
+    @Test
+    public void testMin() {
+        assertThat(Seqs.newMutableSeq().min((i, j) -> 0).isPresent(), is(false));
+        assertThat(Seqs.newMutableSeq(1, 2, 3).min((i, j) -> Integer.compare(i, j)).get(), is(1));
+        assertThat(Seqs.newMutableSeq(1, 3, 2).min((i, j) -> Integer.compare(i, j)).get(), is(1));
+        assertThat(Seqs.newMutableSeq(3, 2, 1).min((i, j) -> Integer.compare(i, j)).get(), is(1));
+        assertThat(Seqs.newMutableSeq(3, 2, 1).min((i, j) -> Integer.compare(j, i)).get(), is(3));
+    }
 }
