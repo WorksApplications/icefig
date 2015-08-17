@@ -428,6 +428,29 @@ public interface Seq<T> {
     Seq<T> reject(BiPredicate<T, Integer> condition);
 
     /**
+     * Removes elements at the front of this seq which satisfy the condition, resulting a new seq without changing the original one.
+     *
+     * @param condition the condition used to filter elements by passing the element,
+     *                  returns true if the element satisfies the condition, otherwise returns false.
+     * @return the new seq without elements which satisfy the condition
+     * @throws NullPointerException if condition is null
+     */
+    Seq<T> rejectWhile(Predicate<T> condition);
+
+    /**
+     * Removes elements at the front of this seq which satisfy the condition, resulting a new seq without changing the original one.
+     * <p>
+     * Similar to {@link #reject(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression
+     * </p>
+     *
+     * @param condition the condition used to filter elements by passing the element and its index,
+     *                  returns true if the element satisfies the condition, otherwise returns false.
+     * @return the new seq without elements which satisfy the condition
+     * @throws NullPointerException if condition is null
+     */
+    Seq<T> rejectWhile(BiPredicate<T, Integer> condition);
+
+    /**
      * Gets elements which satisfy the condition, resulting a new seq without changing the original one.
      *
      * @param condition the condition used to filter elements by passing the element's index,
@@ -449,6 +472,29 @@ public interface Seq<T> {
      * @throws NullPointerException if condition is null
      */
     Seq<T> filter(BiPredicate<T, Integer> condition);
+
+    /**
+     * Gets elements at the front of this seq which satisfy the condition, resulting a new seq without changing the original one.
+     *
+     * @param condition the condition used to filter elements by passing the element's index,
+     *                  returns true if the element satisfies the condition, otherwise returns false
+     * @return the new seq containing only the elements satisfying the condition
+     * @throws NullPointerException if condition is null
+     */
+    Seq<T> filterWhile(Predicate<T> condition);
+
+    /**
+     * Gets elements at the front of this seq which satisfy the condition, resulting a new seq without changing the original one.
+     * <p>
+     * Similar to {@link #filter(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression.
+     * </p>
+     *
+     * @param condition the condition used to filter elements by passing the element and its index,
+     *                  returns true if the element satisfies the condition, otherwise returns false
+     * @return the new seq containing only the elements satisfying the condition
+     * @throws NullPointerException if condition is null
+     */
+    Seq<T> filterWhile(BiPredicate<T, Integer> condition);
 
     /**
      * Returns a new seq built by concatenating the <tt>times</tt> copies of this seq.

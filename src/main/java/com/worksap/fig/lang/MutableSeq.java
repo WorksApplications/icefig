@@ -88,10 +88,22 @@ public interface MutableSeq<T> extends Seq<T> {
     MutableSeq<T> reject(BiPredicate<T, Integer> condition);
 
     @Override
+    MutableSeq<T> rejectWhile(Predicate<T> condition);
+
+    @Override
+    MutableSeq<T> rejectWhile(BiPredicate<T, Integer> condition);
+
+    @Override
     MutableSeq<T> filter(Predicate<T> condition);
 
     @Override
     MutableSeq<T> filter(BiPredicate<T, Integer> condition);
+
+    @Override
+    MutableSeq<T> filterWhile(Predicate<T> condition);
+
+    @Override
+    MutableSeq<T> filterWhile(BiPredicate<T, Integer> condition);
 
     @Override
     MutableSeq<T> repeat(int times);
@@ -207,6 +219,17 @@ public interface MutableSeq<T> extends Seq<T> {
      * In-place method of {@link #filter(BiPredicate)}
      */
     MutableSeq<T> filterInPlace(BiPredicate<T, Integer> condition);
+
+    /**
+     * In-place method of {@link #filterWhile(Predicate)}
+     */
+    MutableSeq<T> filterWhileInPlace(Predicate<T> condition);
+
+    /**
+     * In-place method of {@link #filterWhile(BiPredicate)}
+     */
+    MutableSeq<T> filterWhileInPlace(BiPredicate<T, Integer> condition);
+
     /**
      * In-place method of {@link #reject(Predicate)}
      */
@@ -216,4 +239,14 @@ public interface MutableSeq<T> extends Seq<T> {
      * In-place method of {@link #reject(BiPredicate)}
      */
     MutableSeq<T> rejectInPlace(BiPredicate<T, Integer> condition);
+
+    /**
+     * In-place method of {@link #rejectWhile(Predicate)}
+     */
+    MutableSeq<T> rejectWhileInPlace(Predicate<T> condition);
+
+    /**
+     * In-place method of {@link #rejectWhile(BiPredicate)}
+     */
+    MutableSeq<T> rejectWhileInPlace(BiPredicate<T, Integer> condition);
 }

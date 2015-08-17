@@ -266,6 +266,34 @@ class SeqImpl<T> implements MutableSeq<T> {
     }
 
     @Override
+    public MutableSeq<T> rejectWhile(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
+        int idx = 0;
+        for (; idx < size() && condition.test(get(idx)); idx++);
+
+        MutableSeq<T> seq = new SeqImpl<>();
+        for (; idx < size(); idx++) {
+            seq.appendInPlace(get(idx));
+        }
+
+        return seq;
+    }
+
+    @Override
+    public MutableSeq<T> rejectWhile(BiPredicate<T, Integer> condition) {
+        Objects.requireNonNull(condition);
+        int idx = 0;
+        for (; idx < size() && condition.test(get(idx), idx); idx++);
+
+        MutableSeq<T> seq = new SeqImpl<>();
+        for (; idx < size(); idx++) {
+            seq.appendInPlace(get(idx));
+        }
+
+        return seq;
+    }
+
+    @Override
     public MutableSeq<T> filter(Predicate<T> condition) {
         Objects.requireNonNull(condition);
         List<T> newList = new ArrayList<>();
@@ -285,6 +313,26 @@ class SeqImpl<T> implements MutableSeq<T> {
                 newList.add(e);
         });
         return new SeqImpl<>(newList);
+    }
+
+    @Override
+    public MutableSeq<T> filterWhile(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
+        MutableSeq<T> seq = new SeqImpl<>();
+        for (int idx = 0; idx < size() && condition.test(get(idx)); idx++) {
+            seq.appendInPlace(get(idx));
+        }
+        return seq;
+    }
+
+    @Override
+    public MutableSeq<T> filterWhile(BiPredicate<T, Integer> condition) {
+        Objects.requireNonNull(condition);
+        MutableSeq<T> seq = new SeqImpl<>();
+        for (int idx = 0; idx < size() && condition.test(get(idx), idx); idx++) {
+            seq.appendInPlace(get(idx));
+        }
+        return seq;
     }
 
     @Override
@@ -442,6 +490,26 @@ class SeqImpl<T> implements MutableSeq<T> {
     }
 
     @Override
+    public MutableSeq<T> rejectWhileInPlace(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
+        final Iterator<T> each = list.iterator();
+        while (each.hasNext() && condition.test(each.next())) {
+            each.remove();
+        }
+        return this;
+    }
+
+    @Override
+    public MutableSeq<T> rejectWhileInPlace(BiPredicate<T, Integer> condition) {
+        Objects.requireNonNull(condition);
+        final Iterator<T> each = list.iterator();
+        for (int idx = 0; each.hasNext() && condition.test(each.next(), idx); idx++) {
+            each.remove();
+        }
+        return this;
+    }
+
+    @Override
     public MutableSeq<T> filterInPlace(Predicate<T> condition) {
         Objects.requireNonNull(condition);
         final Iterator<T> each = list.iterator();
@@ -463,6 +531,28 @@ class SeqImpl<T> implements MutableSeq<T> {
                 each.remove();
             }
             index++;
+        }
+        return this;
+    }
+
+    @Override
+    public MutableSeq<T> filterWhileInPlace(Predicate<T> condition) {
+        Objects.requireNonNull(condition);
+        int posToRemove = 0;
+        for (; posToRemove < size() && condition.test(get(posToRemove)); posToRemove++);
+        for (int idx = size() - 1; idx >= posToRemove; idx--) {
+            list.remove(idx);
+        }
+        return this;
+    }
+
+    @Override
+    public MutableSeq<T> filterWhileInPlace(BiPredicate<T, Integer> condition) {
+        Objects.requireNonNull(condition);
+        int posToRemove = 0;
+        for (; posToRemove < size() && condition.test(get(posToRemove), posToRemove); posToRemove++);
+        for (int idx = size() - 1; idx >= posToRemove; idx--) {
+            list.remove(idx);
         }
         return this;
     }
