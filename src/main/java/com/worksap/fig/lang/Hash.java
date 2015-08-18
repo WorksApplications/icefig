@@ -16,8 +16,12 @@
 
 package com.worksap.fig.lang;
 
+import java.util.ConcurrentModificationException;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 /**
  * Elegant supplement for Map in JDK
@@ -140,10 +144,106 @@ public interface Hash<K, V> {
     Hash<K, V> remove(K key);
 
     /**
+     * Removes the entry for the specified key only if it is currently
+     * mapped to the specified value.
+     *
+     * @param key key with which the specified value is associated
+     * @param value value expected to be associated with the specified key
+     * @return a new hash after the entry is removed
+     * @throws UnsupportedOperationException if the {@code remove} operation
+     *         is not supported by this hash
+     * @throws ClassCastException if the key or value is of an inappropriate
+     *         type for this hash
+     * @throws NullPointerException if the specified key or value is null,
+     *         and this map does not permit null keys or values
+     */
+    Hash<K, V> remove(K key, V value);
+
+    /**
      * Returns a Seq of keys of the given value.
      *
      * @param value the value
      * @return the collection of keys whose value is the given value
      */
     Seq<K> keysOf(V value);
+
+    /**
+     * Replaces the entry for the specified key only if it is
+     * currently mapped to some value.
+     *
+     * @param key key with which the specified value is associated
+     * @param value value to be associated with the specified key
+     * @return a new hash after the entry is replaced
+     * @throws ClassCastException if the class of the specified key or value
+     *         prevents it from being stored in this hash
+     * @throws NullPointerException if the specified key or value is null,
+     *         and this hash does not permit null keys or values
+     * @throws IllegalArgumentException if some property of the specified key
+     *         or value prevents it from being stored in this hash
+     */
+    Hash<K, V> replace(K key, V value);
+
+    /**
+     * Replaces the entry for the specified key only if currently
+     * mapped to the specified value.
+     *
+     * @param key key with which the specified value is associated
+     * @param oldValue value expected to be associated with the specified key
+     * @param newValue value to be associated with the specified key
+     * @return a new hash after the entry is replaced
+     * @throws UnsupportedOperationException if the {@code put} operation
+     *         is not supported by this hash
+     * @throws ClassCastException if the class of a specified key or value
+     *         prevents it from being stored in this hash
+     * @throws NullPointerException if a specified key or newValue is null,
+     *         and this hash does not permit null keys or values
+     * @throws NullPointerException if oldValue is null and this hash does not
+     *         permit null values
+     * @throws IllegalArgumentException if some property of a specified key
+     *         or value prevents it from being stored in this hash
+     */
+    Hash<K, V> replace(K key, V oldValue, V newValue);
+
+    /**
+     * Replaces each entry's value with the result of invoking the given
+     * function on that entry until all entries have been processed or the
+     * function throws an exception.  Exceptions thrown by the function are
+     * relayed to the caller.
+     *
+     * @param function the function to apply to each entry
+     * @return a new hash after all the entries are replaced
+     * @throws UnsupportedOperationException if the {@code set} operation
+     * is not supported by this hash's entry set iterator.
+     * @throws ClassCastException if the class of a replacement value
+     * prevents it from being stored in this hash
+     * @throws NullPointerException if the specified function is null, or the
+     * specified replacement value is null, and this hash does not permit null
+     * values
+     * @throws ClassCastException if a replacement value is of an inappropriate
+     *         type for this hash
+     * @throws NullPointerException if function or a replacement value is null,
+     *         and this hash does not permit null keys or values
+     * @throws IllegalArgumentException if some property of a replacement value
+     *         prevents it from being stored in this hash
+     * @throws ConcurrentModificationException if an entry is found to be
+     * removed during iteration
+     */
+    Hash<K, V> replaceAll(BiFunction<? super K, ? super V, ? extends V> function);
+
+    /**
+     * Returns the number of the specified value in this hash.
+     * @param value the value to count
+     * @return the number of the specified value in this hash
+     */
+    int count(V value);
+
+    /**
+     * Returns the number of entries which satisfy the condition.
+     *
+     * @param condition the condition used to filter entries by passing the key and the value,
+     *                  returns true if the entry satisfies the condition, otherwise returns false.
+     * @return the number of entries which satisfy the condition
+     * @throws NullPointerException if condition is null
+     */
+    int countIf(BiPredicate<K, V> condition);
 }

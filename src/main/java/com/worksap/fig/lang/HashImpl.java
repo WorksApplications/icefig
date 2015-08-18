@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
 /**
@@ -164,6 +165,13 @@ class HashImpl<K, V> implements MutableHash<K, V> {
     }
 
     @Override
+    public MutableHash<K, V> remove(K k, V v) {
+        Map<K, V> newHash = new HashMap<>(hash);
+        newHash.remove(k, v);
+        return new HashImpl<>(newHash);
+    }
+
+    @Override
     public MutableHash<K, V> filterInPlace(BiPredicate<K, V> condition) {
         Objects.requireNonNull(condition);
         final Iterator<Map.Entry<K, V>> each = hash.entrySet().iterator();
@@ -206,6 +214,25 @@ class HashImpl<K, V> implements MutableHash<K, V> {
     }
 
     @Override
+    public MutableHash<K, V> replaceInPlace(K k, V v) {
+        hash.replace(k, v);
+        return this;
+    }
+
+    @Override
+    public MutableHash<K, V> replaceInPlace(K k, V oldValue, V newValue) {
+        hash.replace(k, oldValue, newValue);
+        return this;
+    }
+
+    @Override
+    public MutableHash<K, V> replaceAllInPlace(BiFunction<? super K, ? super V, ? extends V> function) {
+        Objects.requireNonNull(function);
+        hash.replaceAll(function);
+        return this;
+    }
+
+    @Override
     public MutableHash<K, V> putInPlace(K k, V v) {
         hash.put(k, v);
         return this;
@@ -224,6 +251,12 @@ class HashImpl<K, V> implements MutableHash<K, V> {
     }
 
     @Override
+    public MutableHash<K, V> removeInPlace(K k, V v) {
+        hash.remove(k, v);
+        return this;
+    }
+
+    @Override
     public Seq<K> keysOf(V value) {
         MutableSeq<K> result = Seqs.newMutableSeq();
         hash.forEach((k, v) -> {
@@ -233,5 +266,46 @@ class HashImpl<K, V> implements MutableHash<K, V> {
                 result.appendInPlace(k);
         });
         return result;
+    }
+
+    @Override
+    public MutableHash<K, V> replace(K k, V v) {
+        Map<K, V> newHash = new HashMap<>(hash);
+        newHash.replace(k, v);
+        return new HashImpl<>(newHash);
+    }
+
+    @Override
+    public MutableHash<K, V> replace(K k, V oldValue, V newValue) {
+        Map<K, V> newHash = new HashMap<>(hash);
+        newHash.replace(k, oldValue, newValue);
+        return new HashImpl<>(newHash);
+    }
+
+    @Override
+    public MutableHash<K, V> replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+        Objects.requireNonNull(function);
+        Map<K, V> newHash = new HashMap<>(hash);
+        newHash.replaceAll(function);
+        return new HashImpl<>(newHash);
+    }
+
+    @Override
+    public int count(V value) {
+        return this.values().count(value);
+    }
+
+    @Override
+    public int countIf(BiPredicate<K, V> condition) {
+        Objects.requireNonNull(condition);
+        int count = 0;
+        final Iterator<Map.Entry<K, V>> each = hash.entrySet().iterator();
+        while (each.hasNext()) {
+            Map.Entry<K, V> nextEntry = each.next();
+            if (condition.test(nextEntry.getKey(), nextEntry.getValue())) {
+                count++;
+            }
+        }
+        return count;
     }
 }
