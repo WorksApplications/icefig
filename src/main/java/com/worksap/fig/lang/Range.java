@@ -16,17 +16,23 @@
 
 package com.worksap.fig.lang;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Spliterator;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Range is an element generator on the basis of start point,
  * end point and next element function.
  */
-public class Range<C extends Comparable<C>> {
+public class Range<C extends Comparable<C>> implements Iterable<C> {
     private C from;
     private C to;
     private boolean toIncluded;
@@ -153,35 +159,17 @@ public class Range<C extends Comparable<C>> {
     /**
      * Similar to {@link #forEach(Consumer)}, with additional parameter "index" as the second parameter of the lambda expression.
      *
-     * @throws NullPointerException if action is null
+     * @throws NullPointerException if action, this.from, this.to or this.next is null.
      */
     public void forEach(BiConsumer<? super C, Integer> action) {
         Objects.requireNonNull(action);
-        Objects.requireNonNull(from);
         Objects.requireNonNull(to);
 
-        if (Objects.isNull(biNext)) {
-            Objects.requireNonNull(next);
-        }
-
-        /* orientation = 0 means to is equal to from;
-         * orientation > 0 means to is greater than from;
-         * otherwise to is less than from.
-         */
-        int orientation = from.compareTo(to);
-        int i = 0;
-        C current = from;
-        int cmp = current.compareTo(to);
-        while (cmp * orientation > 0 || toIncluded && cmp == 0) {
-            action.accept(current, i);
-            if (Objects.nonNull(next)) {
-                current = next.apply(current);
-            } else {
-                current = biNext.apply(current, i);
-            }
-            Objects.requireNonNull(current);
-            cmp = current.compareTo(to);
-            ++i;
+        Itr itr = new Itr();
+        while (itr.hasNext()) {
+            int idx = itr.cursor;
+            C current = itr.next();
+            action.accept(current, idx);
         }
     }
 
@@ -195,5 +183,154 @@ public class Range<C extends Comparable<C>> {
         MutableSeq<C> seq = Seqs.newMutableSeq();
         forEach((Consumer<C>) seq::appendInPlace);
         return seq;
+    }
+
+    /**
+     *
+     * @throws NullPointerException if this.from or this.next is null.
+     */
+    @Override
+    public Iterator<C> iterator() {
+        return new Itr();
+    }
+
+    @Override
+    public Spliterator<C> spliterator() {
+        throw new UnsupportedOperationException("spliterator");
+    }
+
+    /**
+     * Get the first n elements of this range.
+     *
+     * @return The Seq containing the first n elements.
+     * @throws IllegalArgumentException if n < 0
+     */
+    public Seq<C> take(int n) {
+        if (n < 0) {
+            throw new IllegalArgumentException("n");
+        }
+        Itr itr = new Itr();
+        MutableSeq<C> seq = Seqs.newMutableSeq();
+
+        while (itr.hasNext() && itr.cursor < n) {
+            seq.appendInPlace(itr.next());
+        }
+
+        return seq;
+    }
+
+    /**
+     * Get elements at the front of this range which satisfy the condition.
+     *
+     * @param condition the condition used to filter elements by passing the element,
+     *                  returns true if the element satisfies the condition, otherwise returns false.
+     * @return The seq containing all the elements satisfying the condition
+     * @throws NullPointerException if condition is null
+     */
+    public Seq<C> takeWhile(Predicate<C> condition) {
+        Objects.requireNonNull(condition);
+
+        Itr itr = new Itr();
+        MutableSeq<C> seq = Seqs.newMutableSeq();
+
+        while (itr.hasNext()) {
+            C candidate = itr.next();
+            if (!condition.test(candidate)) {
+                break;
+            }
+            seq.appendInPlace(candidate);
+        }
+
+        return seq;
+    }
+
+    /**
+     * Get elements at the front of this range which satisfy the condition.
+     * <p>
+     * Similar to {@link #takeWhile(Predicate)}, with additional parameter "index" as the second parameter of the lambda expression.
+     * </p>
+     *
+     * @param condition the condition used to filter elements by passing the element and its index,
+     *                  returns true if the element satisfies the condition, otherwise returns false.
+     * @return The seq containing all the elements satisfying the condition
+     * @throws NullPointerException if condition is null
+     */
+    public Seq<C> takeWhile(BiPredicate<C, Integer> condition) {
+        Objects.requireNonNull(condition);
+
+        Itr itr = new Itr();
+        MutableSeq<C> seq = Seqs.newMutableSeq();
+
+        while (itr.hasNext()) {
+            int idx = itr.cursor;
+            C candidate = itr.next();
+            if (!condition.test(candidate, idx)) {
+                break;
+            }
+            seq.appendInPlace(candidate);
+        }
+
+        return seq;
+    }
+
+    private class Itr implements Iterator<C> {
+        int cursor;
+        C current;
+        C last;
+        C end;
+        boolean endIncluded;
+
+        /*
+         * orientation = 0 means to is equal to from;
+         * orientation > 0 means to is greater than from;
+         * otherwise to is less than from.
+         */
+        final Optional<Integer> orientation;
+
+        private Itr() {
+            Objects.requireNonNull(from);
+
+            if (Objects.isNull(biNext)) {
+                Objects.requireNonNull(next);
+            }
+
+            current = from;
+            end = to;
+            endIncluded = toIncluded;
+
+            if (Objects.isNull(end)) {
+                orientation = Optional.empty();
+            } else {
+                orientation = Optional.of(current.compareTo(end));
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (!orientation.isPresent()) {
+                return true;
+            }
+            int cmp = current.compareTo(end);
+            return cmp * orientation.get() > 0
+                    || endIncluded && cmp == 0;
+        }
+
+        @Override
+        public C next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+
+            last = current;
+            if (Objects.nonNull(next)) {
+                current = next.apply(current);
+            } else {
+                current = biNext.apply(current, cursor);
+            }
+            Objects.requireNonNull(current);
+            ++ cursor;
+
+            return last;
+        }
     }
 }
