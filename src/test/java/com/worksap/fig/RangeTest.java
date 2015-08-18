@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -139,6 +140,8 @@ public class RangeTest {
         Iterator<Integer> itr = new Range<>(1).to(1).next(i -> i + 1).iterator();
         assertThat(itr.next(), is(1));
         assertThat(itr.hasNext(), is(false));
+        final Iterator<Integer> it = itr;
+        assertThrows(NoSuchElementException.class, () -> it.next());
 
         itr = new Range<>(1).to(2).next(i -> i + 1).iterator();
         assertThat(itr.next(), is(1));
@@ -161,20 +164,27 @@ public class RangeTest {
     }
 
     @Test
+    public void testSpliterator() {
+        assertThrows(IllegalArgumentException.class, () -> new Range<>(1).next(i -> i + 1).take(-1));
+    }
+
+    @Test
     public void testTake() {
         assertThat(new Range<>(1).next(i -> i + 1).take(0), equalTo(Seqs.newMutableSeq()));
         assertThat(new Range<>(1).next(i -> i + 1).take(5), equalTo(Seqs.newMutableSeq(1, 2, 3, 4, 5)));
         assertThat(new Range<>(1).next(i -> i + 1).to(3).take(5), equalTo(Seqs.newMutableSeq(1, 2, 3)));
 
-        assertThrows(IllegalArgumentException.class, () -> assertThat(new Range<>(1).next(i -> i + 1).take(-1), equalTo(Seqs.newMutableSeq())));
+        assertThrows(UnsupportedOperationException.class, () -> new Range<>(1).spliterator());
     }
 
     @Test
     public void testTakeWhile() {
         assertThat(new Range<>(1).next(i -> i + 1).takeWhile(e -> e <= 5), equalTo(Seqs.newMutableSeq(1, 2, 3, 4, 5)));
         assertThat(new Range<>(1).next(i -> i + 1).takeWhile(e -> e < 1), equalTo(Seqs.newMutableSeq()));
+        assertThat(new Range<>(1).next(i -> i + 1).until(1).takeWhile(e -> e <= 5), equalTo(Seqs.newMutableSeq()));
         assertThat(new Range<>(1).next(i -> i + 1).takeWhile((e, i) -> i < 5), equalTo(Seqs.newMutableSeq(1, 2, 3, 4, 5)));
         assertThat(new Range<>(1).next(i -> i + 1).takeWhile((e, i) -> i < 0), equalTo(Seqs.newMutableSeq()));
+        assertThat(new Range<>(1).next(i -> i + 1).until(1).takeWhile((e, i) -> i < 5), equalTo(Seqs.newMutableSeq()));
 
         List<Integer> indices = new ArrayList<>();
         assertThat(new Range<>(1).next(i -> i + i)
