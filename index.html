@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Fig by wapatesh</title>
+    <title>IceFig by wapatesh</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -11,15 +11,15 @@
   </head>
   <body>
     <section class="page-header">
-      <h1 class="project-name">Fig</h1>
+      <h1 class="project-name">IceFig</h1>
       <h2 class="project-tagline">Java elegant supplement</h2>
-      <a href="https://github.com/wapatesh/fig" class="btn">View on GitHub</a>
-      <a href="https://github.com/wapatesh/fig/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/wapatesh/fig/tarball/master" class="btn">Download .tar.gz</a>
+      <a href="https://github.com/wapatesh/icefig" class="btn">View on GitHub</a>
+      <a href="https://github.com/wapatesh/icefig/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/wapatesh/icefig/tarball/master" class="btn">Download .tar.gz</a>
     </section>
 
     <section class="main-content">
-      <p><a href="https://travis-ci.org/wapatesh/fig"><img src="https://travis-ci.org/wapatesh/fig.svg?branch=master" alt="Build Status"></a> <a href="http://www.javadoc.io/doc/com.worksap/fig"><img src="https://readthedocs.org/projects/svg-pottery/badge/?version=latest" alt="Documentation"></a> <a href="http://codecov.io/github/wapatesh/fig?branch=master"><img src="http://codecov.io/github/wapatesh/fig/coverage.svg?branch=master" alt="codecov.io"></a></p>
+      <p><a href="https://travis-ci.org/wapatesh/icefig"><img src="https://travis-ci.org/wapatesh/icefig.svg?branch=master" alt="Build Status"></a> <a href="http://www.javadoc.io/doc/com.worksap/icefig"><img src="https://readthedocs.org/projects/svg-pottery/badge/?version=latest" alt="Documentation"></a> <a href="http://codecov.io/github/wapatesh/icefig?branch=master"><img src="http://codecov.io/github/wapatesh/icefig/coverage.svg?branch=master" alt="codecov.io"></a></p>
 
 <h2>
 <a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
@@ -27,7 +27,7 @@
 <p>Java 8 delivered lambda expressions, but without the enhancement of basic libraries like List, Map, String, which makes
 lambda expression still not delightful.</p>
 
-<p>Borrowered from Ruby basic library, Fig intends to supply the missing.</p>
+<p>Borrowered from Ruby basic library, IceFig intends to supply the missing.</p>
 
 <h2>
 <a id="quick-scan" class="anchor" href="#quick-scan" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick Scan</h2>
@@ -61,14 +61,14 @@ hash<span class="pl-k">.</span>keysOf(<span class="pl-c1">3</span>); <span class
 str<span class="pl-k">.</span>split(<span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span>)<span class="pl-k">.</span>join(<span class="pl-s"><span class="pl-pds">"</span>-<span class="pl-pds">"</span></span>)<span class="pl-k">.</span>capitalize(); <span class="pl-c">//"A-b-c-d-e-f-g"</span>
 str<span class="pl-k">.</span>partition(<span class="pl-s"><span class="pl-pds">"</span>d e<span class="pl-pds">"</span></span>)<span class="pl-k">.</span>map(<span class="pl-smi">CharSeq</span><span class="pl-k">::</span>trim);  <span class="pl-c">//["a b c", "d e", "f g"]</span></pre></div>
 
-<p><a href="http://www.javadoc.io/doc/com.worksap/fig">Full Javadoc</a></p>
+<p><a href="http://www.javadoc.io/doc/com.worksap/icefig">Full Javadoc</a></p>
 
 <h2>
 <a id="include-it" class="anchor" href="#include-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>Include it</h2>
 
 <div class="highlight highlight-xml"><pre>&lt;<span class="pl-ent">dependency</span>&gt;
     &lt;<span class="pl-ent">groupId</span>&gt;com.worksap&lt;/<span class="pl-ent">groupId</span>&gt;
-    &lt;<span class="pl-ent">artifactId</span>&gt;fig&lt;/<span class="pl-ent">artifactId</span>&gt;
+    &lt;<span class="pl-ent">artifactId</span>&gt;icefig&lt;/<span class="pl-ent">artifactId</span>&gt;
     &lt;<span class="pl-ent">version</span>&gt;0.1.0&lt;/<span class="pl-ent">version</span>&gt;
 &lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
 
@@ -78,7 +78,7 @@ str<span class="pl-k">.</span>partition(<span class="pl-s"><span class="pl-pds">
 <h3>
 <a id="not-stream" class="anchor" href="#not-stream" aria-hidden="true"><span class="octicon octicon-link"></span></a>Not stream</h3>
 
-<p>Fig is different from Stream, and implemented without Stream. While, it is simpler concept -- supplement methods on basic library.</p>
+<p>IceFig is different from Stream, and implemented without Stream. While, it is simpler concept -- supplement methods on basic library.</p>
 
 <p>Stream has several characteristics:</p>
 
@@ -90,22 +90,22 @@ str<span class="pl-k">.</span>partition(<span class="pl-s"><span class="pl-pds">
 
 <p>Thus, Stream may not be able to support operations related with the size of it, nor operations involving multiple or even random elements.</p>
 
-<p>Fig targets on "small data" operations within application logic, to provide simple &amp; beautiful code writing about String, List, Map operation &amp; transformation.</p>
+<p>IceFig targets on "small data" operations within application logic, to provide simple &amp; beautiful code writing about String, List, Map operation &amp; transformation.</p>
 
 <h3>
 <a id="no-utilities" class="anchor" href="#no-utilities" aria-hidden="true"><span class="octicon octicon-link"></span></a>No utilities</h3>
 
-<p>In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for the missing methods in standard library. While in Fig, we make an object oriented and functional way to free you from tedious code.</p>
+<p>In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for the missing methods in standard library. While in IceFig, we make an object oriented and functional way to free you from tedious code.</p>
 
 <h3>
 <a id="zero-runtime-dependency" class="anchor" href="#zero-runtime-dependency" aria-hidden="true"><span class="octicon octicon-link"></span></a>Zero runtime dependency</h3>
 
-<p>Fig has no external runtime dependency except JDK 8.</p>
+<p>IceFig has no external runtime dependency except JDK 8.</p>
 
 <h3>
 <a id="conventions" class="anchor" href="#conventions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conventions</h3>
 
-<p>Fig uses conventions on method names similar with Ruby. If there is a pair of methods <code>name, name$</code>, method ends with <code>$</code> means calling this method will change the object itself, while calling the other won't.</p>
+<p>IceFig uses conventions on method names similar with Ruby. If there is a pair of methods <code>name, name$</code>, method ends with <code>$</code> means calling this method will change the object itself, while calling the other won't.</p>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
@@ -118,7 +118,7 @@ str<span class="pl-k">.</span>partition(<span class="pl-s"><span class="pl-pds">
 <p>Feel free to submit issues &amp; PRs</p>
 
       <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/wapatesh/fig">Fig</a> is maintained by <a href="https://github.com/wapatesh">wapatesh</a>.</span>
+        <span class="site-footer-owner"><a href="https://github.com/wapatesh/icefig">IceFig</a> is maintained by <a href="https://github.com/wapatesh">wapatesh</a>.</span>
 
         <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
