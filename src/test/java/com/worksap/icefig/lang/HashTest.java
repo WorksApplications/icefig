@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.worksap.fig;
+package com.worksap.icefig.lang;
 
-import com.worksap.fig.lang.*;
+import com.worksap.icefig.lang.*;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
@@ -24,7 +24,6 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Objects;
 
-import static com.worksap.fig.Helpers.assertThrows;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -76,7 +75,7 @@ public class HashTest {
         assertTrue(hash.containsAny((k, v) -> k + v == 3));
         assertTrue(hash.containsAny((k, v) -> k + v == 6));
         assertFalse(hash.containsAny((k, v) -> k + v == 5));
-        assertThrows(NullPointerException.class, () -> hash.containsAny(null));
+        Helpers.assertThrows(NullPointerException.class, () -> hash.containsAny(null));
     }
 
     @Test
@@ -100,7 +99,7 @@ public class HashTest {
         assertTrue(rejected.equals(hash.reject((k, v) -> k + v != 6)));
         assertEquals(Hashes.newHash(), hash.reject((k, v) -> !Objects.equals(k, v)));
         assertNotEquals(Hashes.newHash(), hash);
-        assertThrows(NullPointerException.class, () -> hash.reject(null));
+        Helpers.assertThrows(NullPointerException.class, () -> hash.reject(null));
     }
 
     @Test
@@ -116,7 +115,7 @@ public class HashTest {
         assertEquals(Hashes.newHash(), hash.filter(Objects::equals));
         assertNotEquals(Hashes.newHash(), hash);
         assertEquals(origin, hash);
-        assertThrows(NullPointerException.class, () -> hash.filter(null));
+        Helpers.assertThrows(NullPointerException.class, () -> hash.filter(null));
     }
 
     @Test
@@ -128,7 +127,7 @@ public class HashTest {
         assertEquals(null, hash.get(2));
         assertEquals(2, hash.rejectInPlace(Objects::equals).size());
         assertEquals(Hashes.newHash(), hash.rejectInPlace((k, v) -> !Objects.equals(k, v)));
-        assertThrows(NullPointerException.class, () -> hash.rejectInPlace(null));
+        Helpers.assertThrows(NullPointerException.class, () -> hash.rejectInPlace(null));
     }
 
     @Test
@@ -140,7 +139,7 @@ public class HashTest {
         assertEquals(null, hash.get(2));
         assertEquals(2, hash.filterInPlace((k, v) -> !Objects.equals(k, v)).size());
         assertEquals(Hashes.newHash(), hash.filterInPlace(Objects::equals));
-        assertThrows(NullPointerException.class, () -> hash.filterInPlace(null));
+        Helpers.assertThrows(NullPointerException.class, () -> hash.filterInPlace(null));
     }
 
     @Test

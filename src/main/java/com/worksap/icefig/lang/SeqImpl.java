@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.worksap.fig.lang;
+package com.worksap.icefig.lang;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.*;
 

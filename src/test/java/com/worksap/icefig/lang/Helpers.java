@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.worksap.fig;
+package com.worksap.icefig.lang;
 
 /**
  * Created by liuyang on 7/30/15.

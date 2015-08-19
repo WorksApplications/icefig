@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package com.worksap.fig.lang;
+package com.worksap.icefig.lang;
 
 import java.util.ConcurrentModificationException;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 
 /**
  * Elegant supplement for Map in JDK

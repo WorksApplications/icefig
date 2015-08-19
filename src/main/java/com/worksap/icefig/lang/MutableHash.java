@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.worksap.fig.lang;
+package com.worksap.icefig.lang;
 
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
 /**
- * An interface extending {@link com.worksap.fig.lang.Hash} (which is immutable), with additional in-place methods to change the hash itself.
+ * An interface extending {@link Hash} (which is immutable), with additional in-place methods to change the hash itself.
  * Those methods are generally named xxxInPlace
  */
 public interface MutableHash<K, V> extends Hash<K, V> {

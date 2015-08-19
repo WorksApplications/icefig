@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.worksap.fig.lang;
+package com.worksap.icefig.lang;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

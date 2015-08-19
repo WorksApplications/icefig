@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-package com.worksap.fig;
+package com.worksap.icefig.lang;
 
-import com.worksap.fig.lang.MutableSeq;
-import com.worksap.fig.lang.Seq;
-import com.worksap.fig.lang.Seqs;
 import org.junit.Test;
 
 import java.util.*;
@@ -27,7 +24,6 @@ import java.util.function.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static com.worksap.fig.Helpers.*;
 
 /**
  * Created by liuyang on 7/23/15.
@@ -50,9 +46,9 @@ public class SeqTest {
         list.add(4);
         assertArrayEquals(new Integer[]{3, 4}, Seqs.newMutableSeq(list).toArray());
         Integer[] values = null;
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(values));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(values));
         Collection<Integer> cols = null;
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(cols));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(cols));
 
 
         // for 100% coverage
@@ -74,7 +70,7 @@ public class SeqTest {
         assertArrayEquals(new Integer[]{2, 4, 6}, Seqs.newMutableSeq(1, 2, 3).map(i -> i * 2).toArray());
         assertArrayEquals(new String[]{"x1", "x2", "x3"}, Seqs.newMutableSeq(1, 2, 3).map(i -> "x" + i).toArray());
         Function<Integer, Integer> f = null;
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).map(f));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).map(f));
     }
 
 
@@ -83,7 +79,7 @@ public class SeqTest {
         assertArrayEquals(new Integer[]{2, 3, 4, 3, 4, 5, 4, 5, 6}, Seqs.newMutableSeq(1, 2, 3).flatMap(i -> Seqs.newMutableSeq(i + 1, i + 2, i + 3)).toArray());
         assertArrayEquals(new Integer[]{1, 0, 2, 1, 3, 2}, Seqs.newMutableSeq(1, 2, 3).flatMap((i, idx) -> Seqs.newMutableSeq(i, idx)).toArray());
         Function<Integer, Seq<Integer>> f = null;
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).flatMap(f));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).flatMap(f));
     }
 
 
@@ -91,7 +87,7 @@ public class SeqTest {
     public void testMapWithIndex() {
         assertArrayEquals(new String[]{"a1", "b2", "c3"}, Seqs.newMutableSeq("a", "b", "c").map((s, i) -> s + (i + 1)).toArray());
         BiFunction<Integer, Integer, Integer> f = null;
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).map(f));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).map(f));
     }
 
     @Test
@@ -133,8 +129,8 @@ public class SeqTest {
 
     @Test
     public void testContainsAny() {
-        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).any((Predicate<Integer>) null));
-        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).any((BiPredicate<Integer, Integer>) null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).any((Predicate<Integer>) null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).any((BiPredicate<Integer, Integer>) null));
         assertTrue(Seqs.newSeq(1, 2, 3).any(i -> i > 2));
         assertTrue(Seqs.newSeq(1, 2, 3).any((e, i) -> e + i == 3));
         assertFalse(Seqs.newSeq(1, 2, 3).any((e, i) -> e + i == 4));
@@ -143,8 +139,8 @@ public class SeqTest {
 
     @Test
     public void testContainsAll() {
-        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).all((Predicate<Integer>) null));
-        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).all((BiPredicate<Integer, Integer>) null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).all((Predicate<Integer>) null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).all((BiPredicate<Integer, Integer>) null));
         assertTrue(Seqs.newSeq(1, 2, 3).all(i -> i > 0));
         assertTrue(Seqs.newSeq(3, 2, 1).all((e, i) -> e + i == 3));
         assertFalse(Seqs.newSeq(1, 2, 3).all((e, i) -> e + i == 3));
@@ -153,8 +149,8 @@ public class SeqTest {
 
     @Test
     public void testContainsNone() {
-        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).none((Predicate<Integer>) null));
-        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).none((BiPredicate<Integer, Integer>) null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).none((Predicate<Integer>) null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newSeq(1, 2, 3).none((BiPredicate<Integer, Integer>) null));
         assertTrue(Seqs.newSeq(1, 2, 3).none(i -> i > 3));
         assertTrue(Seqs.newSeq(1, 2, 3).none((e, i) -> e + i == 4));
         assertFalse(Seqs.newSeq(1, 2, 3).none((e, i) -> e + i == 3));
@@ -180,7 +176,7 @@ public class SeqTest {
         assertTrue(Seqs.newSeq('A', 'B', 'C')
                 .containsSubSeq(Seqs.newSeq('A', 'B', 'C')));
 
-        assertThrows(NullPointerException.class, () -> Seqs.newSeq('A', 'B', 'C').containsSubSeq(null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newSeq('A', 'B', 'C').containsSubSeq(null));
 
         assertEquals(15, Seqs.newSeq('B', 'B', 'C', ' ', 'A', 'B', 'C', 'D', 'A', 'B', ' ', 'A', 'B', 'C', 'D', 'A', 'B', 'C', 'D', 'A', 'B', 'D', 'E')
                 .indexOfSubSeq(Seqs.newSeq('A', 'B', 'C', 'D', 'A', 'B', 'D')));
@@ -192,20 +188,20 @@ public class SeqTest {
         assertEquals(3, Seqs.newSeq(3, 1, 2, 1, 2, 1, 2, 3)
                 .lastIndexOfSubSeq(Seqs.newSeq(1, 2, 1, 2)));
 
-        assertThrows(NullPointerException.class, () -> Seqs.newSeq('A', 'B', 'C').indexOfSubSeq(null));
-        assertThrows(NullPointerException.class, () -> Seqs.newSeq('A', 'B', 'C').lastIndexOfSubSeq(null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newSeq('A', 'B', 'C').indexOfSubSeq(null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newSeq('A', 'B', 'C').lastIndexOfSubSeq(null));
     }
 
     @Test
     public void testIntersect() {
-        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1).intersect(null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newSeq(1).intersect(null));
         assertEquals(Seqs.newSeq(), Seqs.newSeq(1, 2, 3).intersect(Seqs.newSeq()));
         assertEquals(Seqs.newSeq(3, 6, 2, 3), Seqs.newSeq(3, 6, 2, 4, 3, 6, 2).intersect(Seqs.newSeq(6, 2, 3, 3, 8, 3)));
     }
 
     @Test
     public void testDifference() {
-        assertThrows(NullPointerException.class, () -> Seqs.newSeq(1).difference(null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newSeq(1).difference(null));
         assertEquals(Seqs.newSeq(1, 2, 3), Seqs.newSeq(1, 2, 3).difference(Seqs.newSeq()));
         assertEquals(Seqs.newSeq(), Seqs.newSeq(3, 6, 2, 4, 3, 6, 2).difference(Seqs.newSeq(3, 6, 2, 4, 3, 6, 2)));
         assertEquals(Seqs.newSeq(4, 3, 6, 2), Seqs.newSeq(3, 6, 2, 4, 3, 6, 2).difference(Seqs.newSeq(3, 6, 2, 7)));
@@ -219,7 +215,7 @@ public class SeqTest {
         });
         seq.forEach(item -> assertTrue(seq.contains(item)));
         BiConsumer<String, Integer> f = null;
-        assertThrows(NullPointerException.class, () -> seq.forEach(f));
+        Helpers.assertThrows(NullPointerException.class, () -> seq.forEach(f));
     }
 
     @Test
@@ -244,7 +240,7 @@ public class SeqTest {
         assertArrayEquals(new Object[]{Seqs.newMutableSeq("a", "b", "c"), Seqs.newMutableSeq("b", "c", "d")}, seq.eachCons(3).toArray());
         assertArrayEquals(new Object[]{Seqs.newMutableSeq("a", "b", "c", "d")}, seq.eachCons(4).toArray());
         assertArrayEquals(new Object[]{}, seq.eachCons(5).toArray());
-        assertThrows(IllegalArgumentException.class, () -> seq.eachCons(-1));
+        Helpers.assertThrows(IllegalArgumentException.class, () -> seq.eachCons(-1));
     }
 
     @Test
@@ -263,8 +259,8 @@ public class SeqTest {
         seq.forEachCons(5, result::appendInPlace);
         assertArrayEquals(new Object[]{}, result.toArray());
 
-        assertThrows(NullPointerException.class, () -> seq.forEachCons(0, null));
-        assertThrows(IllegalArgumentException.class, () -> seq.forEachCons(0, result::appendInPlace));
+        Helpers.assertThrows(NullPointerException.class, () -> seq.forEachCons(0, null));
+        Helpers.assertThrows(IllegalArgumentException.class, () -> seq.forEachCons(0, result::appendInPlace));
     }
 
     @Test
@@ -343,8 +339,8 @@ public class SeqTest {
         assertEquals((Integer) 1, seq.first());
         assertEquals((Integer) 3, seq.last());
         seq.clear();
-        assertThrows(IndexOutOfBoundsException.class, () -> seq.first());
-        assertThrows(IndexOutOfBoundsException.class, () -> seq.last());
+        Helpers.assertThrows(IndexOutOfBoundsException.class, () -> seq.first());
+        Helpers.assertThrows(IndexOutOfBoundsException.class, () -> seq.last());
     }
 
     static class TestObj {
@@ -389,10 +385,10 @@ public class SeqTest {
         assertEquals(-1, people.findLastIndex(p -> p.age == 1));
         assertNull(people.findFirst(p -> p.age == 1));
         assertNull(people.findLast(p -> p.age == 1));
-        assertThrows(NullPointerException.class, () -> people.findFirst(null));
-        assertThrows(NullPointerException.class, () -> people.findLast(null));
-        assertThrows(NullPointerException.class, () -> people.findFirstIndex(null));
-        assertThrows(NullPointerException.class, () -> people.findLastIndex(null));
+        Helpers.assertThrows(NullPointerException.class, () -> people.findFirst(null));
+        Helpers.assertThrows(NullPointerException.class, () -> people.findLast(null));
+        Helpers.assertThrows(NullPointerException.class, () -> people.findFirstIndex(null));
+        Helpers.assertThrows(NullPointerException.class, () -> people.findLastIndex(null));
     }
 
     @Test
@@ -409,9 +405,9 @@ public class SeqTest {
         seq.prependInPlace(4, 5);
         assertEquals(Seqs.newMutableSeq(4, 5, 1, 2, 3, 4, 5), seq);
         Integer[] ints = null;
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).appendInPlace(ints));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).appendInPlace(ints));
         Collection<Integer> cols = null;
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).appendInPlace(cols));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).appendInPlace(cols));
     }
 
     @Test
@@ -433,13 +429,13 @@ public class SeqTest {
         seq.prepend(4, 5);
         assertEquals(Seqs.newMutableSeq(1, 2, 3), seq);
         Integer[] ints = null;
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).prepend(ints));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).append(ints));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).prepend(ints));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).prepend(ints));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).append(ints));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).prepend(ints));
         Collection<Integer> cols = null;
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).prepend(cols));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).append(cols));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).prepend(cols));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).prepend(cols));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).append(cols));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).prepend(cols));
 
         seq = Seqs.newMutableSeq(1, 2, 3);
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 1, 2, 3), seq.append(seq));
@@ -471,11 +467,11 @@ public class SeqTest {
         assertEquals(seq$, seq1$);
 
         Predicate<Integer> predicate = null;
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).reject(predicate));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectInPlace(predicate));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).reject(predicate));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectInPlace(predicate));
         BiPredicate<Integer, Integer> biPredicate = null;
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).reject(biPredicate));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectInPlace(biPredicate));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).reject(biPredicate));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectInPlace(biPredicate));
 
     }
 
@@ -496,10 +492,10 @@ public class SeqTest {
         assertThat(Seqs.newMutableSeq(1, 2, 1).rejectWhileInPlace((e, i) -> e < 1), is(equalTo(Seqs.newMutableSeq(1, 2, 1))));
         assertThat(Seqs.newMutableSeq(1, 2, 1).rejectWhileInPlace((e, i) -> e > 0), is(equalTo(Seqs.newMutableSeq())));
 
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectWhile((Predicate<Integer>) null));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectWhileInPlace((Predicate<Integer>) null));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectWhile((BiPredicate<Integer, Integer>) null));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectWhileInPlace((BiPredicate<Integer, Integer>) null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectWhile((Predicate<Integer>) null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectWhileInPlace((Predicate<Integer>) null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectWhile((BiPredicate<Integer, Integer>) null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).rejectWhileInPlace((BiPredicate<Integer, Integer>) null));
     }
 
     @Test
@@ -526,11 +522,11 @@ public class SeqTest {
         assertEquals(Seqs.newMutableSeq(2, 3), seq1$);
 
         Predicate<Integer> predicate = null;
-        assertThrows(NullPointerException.class, () -> seq.filter(predicate));
-        assertThrows(NullPointerException.class, () -> seq.filterInPlace(predicate));
+        Helpers.assertThrows(NullPointerException.class, () -> seq.filter(predicate));
+        Helpers.assertThrows(NullPointerException.class, () -> seq.filterInPlace(predicate));
         BiPredicate<Integer, Integer> biPredicate = null;
-        assertThrows(NullPointerException.class, () -> seq.filter(biPredicate));
-        assertThrows(NullPointerException.class, () -> seq.filterInPlace(biPredicate));
+        Helpers.assertThrows(NullPointerException.class, () -> seq.filter(biPredicate));
+        Helpers.assertThrows(NullPointerException.class, () -> seq.filterInPlace(biPredicate));
     }
 
     @Test
@@ -550,10 +546,10 @@ public class SeqTest {
         assertThat(Seqs.newMutableSeq(1, 2, 1).filterWhileInPlace((e, i) -> e < 1), is(equalTo(Seqs.newMutableSeq())));
         assertThat(Seqs.newMutableSeq(1, 2, 1).filterWhileInPlace((e, i) -> e > 0), is(equalTo(Seqs.newMutableSeq(1, 2, 1))));
 
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).filterWhile((Predicate<Integer>) null));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).filterWhileInPlace((Predicate<Integer>) null));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).filterWhile((BiPredicate<Integer, Integer>) null));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).filterWhileInPlace((BiPredicate<Integer, Integer>) null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).filterWhile((Predicate<Integer>) null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).filterWhileInPlace((Predicate<Integer>) null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).filterWhile((BiPredicate<Integer, Integer>) null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).filterWhileInPlace((BiPredicate<Integer, Integer>) null));
     }
 
     @Test
@@ -569,8 +565,8 @@ public class SeqTest {
         assertEquals(new Integer(100), seq.get(6, 100));
         assertEquals(new Integer(100), seq.get(-7, 100));
 
-        assertThrows(IndexOutOfBoundsException.class, () -> seq.get(6));
-        assertThrows(IndexOutOfBoundsException.class, () -> seq.get(-7));
+        Helpers.assertThrows(IndexOutOfBoundsException.class, () -> seq.get(6));
+        Helpers.assertThrows(IndexOutOfBoundsException.class, () -> seq.get(-7));
     }
 
     @Test
@@ -581,8 +577,8 @@ public class SeqTest {
         assertEquals(Seqs.newMutableSeq(1, 2), seq.repeatInPlace(1));
         assertEquals(Seqs.newMutableSeq(1, 2, 1, 2, 1, 2, 1, 2), seq.repeatInPlace(4));
         assertEquals(Seqs.newMutableSeq(1, 2, 1, 2, 1, 2, 1, 2), seq);
-        assertThrows(IllegalArgumentException.class, () -> seq.repeat(0));
-        assertThrows(IllegalArgumentException.class, () -> seq.repeatInPlace(0));
+        Helpers.assertThrows(IllegalArgumentException.class, () -> seq.repeat(0));
+        Helpers.assertThrows(IllegalArgumentException.class, () -> seq.repeatInPlace(0));
     }
 
     @Test
@@ -605,9 +601,9 @@ public class SeqTest {
         assertEquals(2, seq.countIf((e, i) -> e != null && e > 1 && i < seq.size() - 1));
 
         Predicate<Integer> predicate = null;
-        assertThrows(NullPointerException.class, () -> seq.countIf(predicate));
+        Helpers.assertThrows(NullPointerException.class, () -> seq.countIf(predicate));
         BiPredicate<Integer, Integer> biPredicate = null;
-        assertThrows(NullPointerException.class, () -> seq.countIf(biPredicate));
+        Helpers.assertThrows(NullPointerException.class, () -> seq.countIf(biPredicate));
     }
 
     @Test
@@ -619,7 +615,7 @@ public class SeqTest {
         assertArrayEquals(new Object[]{Seqs.newMutableSeq("a", "b", "c", "d"), Seqs.newMutableSeq("e")}, seq.eachSlice(4).toArray());
         assertArrayEquals(new Object[]{seq}, seq.eachSlice(5).toArray());
         assertArrayEquals(new Object[]{seq}, seq.eachSlice(6).toArray());
-        assertThrows(IllegalArgumentException.class, () -> seq.eachSlice(0));
+        Helpers.assertThrows(IllegalArgumentException.class, () -> seq.eachSlice(0));
     }
 
     @Test
@@ -638,8 +634,8 @@ public class SeqTest {
         seq.forEachSlice(5, result::appendInPlace);
         assertArrayEquals(new Object[]{Seqs.newMutableSeq("a", "b", "c", "d")}, result.toArray());
         seq.forEachSlice(1, s -> s.forEach(e -> System.out.println(e)));
-        assertThrows(IllegalArgumentException.class, () -> seq.forEachSlice(0, result::appendInPlace));
-        assertThrows(NullPointerException.class, () -> seq.forEachSlice(0, null));
+        Helpers.assertThrows(IllegalArgumentException.class, () -> seq.forEachSlice(0, result::appendInPlace));
+        Helpers.assertThrows(NullPointerException.class, () -> seq.forEachSlice(0, null));
     }
 
     @Test
@@ -663,8 +659,8 @@ public class SeqTest {
         assertEquals(2, map.size());
         assertEquals(new Integer(26), map.get("wang"));
         map.forEach((k, v) -> System.out.println(k + ":" + v));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).reduce(null));
-        assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).reduce(1, null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).reduce(null));
+        Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).reduce(1, null));
     }
 
     @Test
@@ -686,17 +682,17 @@ public class SeqTest {
     public void testSubSeq() {
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 3, 4, 5);
         assertEquals(Seqs.newMutableSeq(1, 2), seq.subSeq(0, 2));
-        assertThrows(IndexOutOfBoundsException.class, () -> seq.subSeq(-1, 2));
-        assertThrows(IndexOutOfBoundsException.class, () -> seq.subSeq(0, 12));
-        assertThrows(IllegalArgumentException.class, () -> seq.subSeq(2, 1));
+        Helpers.assertThrows(IndexOutOfBoundsException.class, () -> seq.subSeq(-1, 2));
+        Helpers.assertThrows(IndexOutOfBoundsException.class, () -> seq.subSeq(0, 12));
+        Helpers.assertThrows(IllegalArgumentException.class, () -> seq.subSeq(2, 1));
     }
 
     @Test
     public void testCombination() {
         MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 3, 4, 5);
         assertEquals(0, seq.eachCombination(6).size());
-        assertThrows(IllegalArgumentException.class, () -> seq.eachCombination(0));
-        assertThrows(IllegalArgumentException.class, () -> seq.eachCombination(-1));
+        Helpers.assertThrows(IllegalArgumentException.class, () -> seq.eachCombination(0));
+        Helpers.assertThrows(IllegalArgumentException.class, () -> seq.eachCombination(-1));
         assertEquals(1, seq.eachCombination(5).size());
         assertEquals(Seqs.newMutableSeq(1, 2, 3, 4, 5), seq.eachCombination(5).first());
         Set<MutableSeq<Integer>> resultSet = new HashSet<>(seq.eachCombination(3).toArrayList());

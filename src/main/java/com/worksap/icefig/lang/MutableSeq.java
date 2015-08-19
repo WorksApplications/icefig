@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.worksap.fig.lang;
+package com.worksap.icefig.lang;
 
 import java.util.*;
 import java.util.function.*;
 
 /**
- * An interface extending {@link com.worksap.fig.lang.Seq} (which is immutable), with additional in-place methods to change the seq itself.
+ * An interface extending {@link Seq} (which is immutable), with additional in-place methods to change the seq itself.
  * Those methods are generally named xxxInPlace
  */
 public interface MutableSeq<T> extends Seq<T> {

@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package com.worksap.fig;
+package com.worksap.icefig.lang;
 
-import com.worksap.fig.lang.CharSeq;
-import com.worksap.fig.lang.MutableSeq;
-import com.worksap.fig.lang.Seqs;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static com.worksap.fig.Helpers.assertThrows;
 import static org.junit.Assert.*;
 
 /**
@@ -234,7 +230,7 @@ public class CharSeqTest {
         assertEquals(6, cs.eachCodePoint().size());
         assertEquals(Seqs.newMutableSeq(104, 101, 108, 108, 111, 1593), codePoints);
         assertEquals(Seqs.newMutableSeq(), CharSeq.of("").eachCodePoint());
-        assertThrows(NullPointerException.class, () -> cs.forEachCodePoint(null));
+        Helpers.assertThrows(NullPointerException.class, () -> cs.forEachCodePoint(null));
     }
 
     @Test
@@ -269,8 +265,8 @@ public class CharSeqTest {
         assertTrue(CharSeq.of("ABC")
                 .containsSubSeq("ABC"));
 
-        assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").containsSubSeq((String) null));
-        assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").containsSubSeq((CharSeq) null));
+        Helpers.assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").containsSubSeq((String) null));
+        Helpers.assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").containsSubSeq((CharSeq) null));
 
         assertEquals(15, CharSeq.of("BBC ABCDAB ABCDABCDABDE")
                 .indexOfSubSeq("ABCDABD"));
@@ -282,9 +278,9 @@ public class CharSeqTest {
         assertEquals(3, CharSeq.of("31212123")
                 .lastIndexOfSubSeq("1212"));
 
-        assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").indexOfSubSeq((String) null));
-        assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").lastIndexOfSubSeq((String) null));
-        assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").indexOfSubSeq((CharSeq) null));
-        assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").lastIndexOfSubSeq((CharSeq) null));
+        Helpers.assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").indexOfSubSeq((String) null));
+        Helpers.assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").lastIndexOfSubSeq((String) null));
+        Helpers.assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").indexOfSubSeq((CharSeq) null));
+        Helpers.assertThrows(NullPointerException.class, () -> CharSeq.of("ABC").lastIndexOfSubSeq((CharSeq) null));
     }
 }
