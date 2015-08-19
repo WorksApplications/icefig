@@ -1,13 +1,13 @@
-# Fig [![Build Status](https://travis-ci.org/wapatesh/fig.svg?branch=master)](https://travis-ci.org/wapatesh/fig) [![Documentation](https://readthedocs.org/projects/svg-pottery/badge/?version=latest)](http://www.javadoc.io/doc/com.worksap/fig) [![codecov.io](http://codecov.io/github/wapatesh/fig/coverage.svg?branch=master)](http://codecov.io/github/wapatesh/fig?branch=master)
+# IceFig [![Build Status](https://travis-ci.org/wapatesh/icefig.svg?branch=master)](https://travis-ci.org/wapatesh/icefig) [![Documentation](https://readthedocs.org/projects/svg-pottery/badge/?version=latest)](http://www.javadoc.io/doc/com.worksap/icefig) [![codecov.io](http://codecov.io/github/wapatesh/icefig/coverage.svg?branch=master)](http://codecov.io/github/wapatesh/icefig?branch=master)
 
-[![Join the chat at https://gitter.im/wapatesh/fig](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/wapatesh/fig?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/wapatesh/icefig](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/wapatesh/icefig?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Java elegant supplement
 
 Java 8 delivered lambda expressions, but without the enhancement of basic libraries like List, Map, String, which makes
 lambda expression still not delightful.
 
-Borrowered from Ruby basic library, Fig intends to supply the missing.
+Borrowered from Ruby basic library, IceFig intends to supply the missing.
 
 ## Quick Scan
 
@@ -41,14 +41,14 @@ str.split(" ").join("-").capitalize(); //"A-b-c-d-e-f-g"
 str.partition("d e").map(CharSeq::trim);  //["a b c", "d e", "f g"]
 ```
 
-[Full Javadoc](http://www.javadoc.io/doc/com.worksap/fig)
+[Full Javadoc](http://www.javadoc.io/doc/com.worksap/icefig)
 
 ## Include it
 
 ```xml
 <dependency>
     <groupId>com.worksap</groupId>
-    <artifactId>fig</artifactId>
+    <artifactId>icefig</artifactId>
     <version>[latest version]</version>
 </dependency>
 ```
@@ -58,7 +58,7 @@ str.partition("d e").map(CharSeq::trim);  //["a b c", "d e", "f g"]
 
 ### Not stream
 
-Fig is different from Stream, and implemented without Stream. While, it is simpler concept -- supplement methods on basic library.
+IceFig is different from Stream, and implemented without Stream. While, it is simpler concept -- supplement methods on basic library.
 
 Stream has several characteristics:
 
@@ -71,19 +71,19 @@ Thus, Stream may not be able to support operations related with the size of it, 
 Basically, the vast majority operations on List, Map, String don't need a Stream. Stream brings great merits on big data processing, but when we're not facing performance problem (operating a list of about 10x elements), it is an over kill. 
 Yet Stream brings the 2 additional steps "Stream()" and "collect()", which is sometimes annoying to write.
 
-Fig targets on "small data" operations within application logic, to provide simple & beautiful code writing about String, List, Map operation & transformation.
+IceFig targets on "small data" operations within application logic, to provide simple & beautiful code writing about String, List, Map operation & transformation.
 
 ### No utilities
 
-In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for the missing methods in standard library. While in Fig, we make an object oriented and functional way to free you from tedious code.
+In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for the missing methods in standard library. While in IceFig, we make an object oriented and functional way to free you from tedious code.
 
 ### Zero runtime dependency
 
-Fig has no external runtime dependency except JDK 8.
+IceFig has no external runtime dependency except JDK 8.
 
 ### Mutable & default interfaces
 
-Fig firstly aggregates all operations which do not change the state into a default interface(e.x. Seq, Hash).
+IceFig firstly aggregates all operations which do not change the state into a default interface(e.x. Seq, Hash).
 On the other hand, there are interfaces named "mutableXXX" extending the default ones with additional in-place operations, which are commonly named `xxxInPlace`.
 
 If you don't want the ability to change the object, you can use the default interface to let compiler check it for you. And it is the recommended way.
@@ -92,7 +92,7 @@ Note that the default interface doesn't mean immutability of the object it is on
 
 ### Conventions
 
-Fig uses conventions on method names similar with Ruby. If there is a pair of methods `name, nameInPlace`, method ends with `InPlace` means calling this method will change the object itself, while calling the other won't.
+IceFig uses conventions on method names similar with Ruby. If there is a pair of methods `name, nameInPlace`, method ends with `InPlace` means calling this method will change the object itself, while calling the other won't.
 
 
 ## License
