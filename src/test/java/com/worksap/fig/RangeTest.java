@@ -24,7 +24,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -131,5 +133,65 @@ public class RangeTest {
     @Test
     public void testToMutableSeq() {
         assertThat(new Range<>(1).to(5).next(i -> i + 1).toMutableSeq(), is(equalTo(Seqs.newMutableSeq(1, 2, 3, 4, 5))));
+    }
+
+    @Test
+    public void testIterator() {
+        Iterator<Integer> itr = new Range<>(1).to(1).next(i -> i + 1).iterator();
+        assertThat(itr.next(), is(1));
+        assertThat(itr.hasNext(), is(false));
+        final Iterator<Integer> it = itr;
+        assertThrows(NoSuchElementException.class, () -> it.next());
+
+        itr = new Range<>(1).to(2).next(i -> i + 1).iterator();
+        assertThat(itr.next(), is(1));
+        assertThat(itr.next(), is(2));
+        assertThat(itr.hasNext(), is(false));
+
+        itr = new Range<>(1).next(i -> i + 1).iterator();
+        assertThat(itr.hasNext(), is(true));
+        for (int i = 0; i < 100; i++) {
+            itr.next();
+        }
+        assertThat(itr.next(), is(101));
+        assertThat(itr.hasNext(), is(true));
+
+        List<Integer> list = new ArrayList<>();
+        for (int d: new Range<>(1).next(i -> i + 1).until(5)) {
+            list.add(d);
+        }
+        assertThat(list, equalTo(Arrays.asList(1, 2, 3, 4)));
+    }
+
+    @Test
+    public void testSpliterator() {
+        assertThrows(IllegalArgumentException.class, () -> new Range<>(1).next(i -> i + 1).take(-1));
+    }
+
+    @Test
+    public void testTake() {
+        assertThat(new Range<>(1).next(i -> i + 1).take(0), equalTo(Seqs.newMutableSeq()));
+        assertThat(new Range<>(1).next(i -> i + 1).take(5), equalTo(Seqs.newMutableSeq(1, 2, 3, 4, 5)));
+        assertThat(new Range<>(1).next(i -> i + 1).to(3).take(5), equalTo(Seqs.newMutableSeq(1, 2, 3)));
+
+        assertThrows(UnsupportedOperationException.class, () -> new Range<>(1).spliterator());
+    }
+
+    @Test
+    public void testTakeWhile() {
+        assertThat(new Range<>(1).next(i -> i + 1).takeWhile(e -> e <= 5), equalTo(Seqs.newMutableSeq(1, 2, 3, 4, 5)));
+        assertThat(new Range<>(1).next(i -> i + 1).takeWhile(e -> e < 1), equalTo(Seqs.newMutableSeq()));
+        assertThat(new Range<>(1).next(i -> i + 1).until(1).takeWhile(e -> e <= 5), equalTo(Seqs.newMutableSeq()));
+        assertThat(new Range<>(1).next(i -> i + 1).takeWhile((e, i) -> i < 5), equalTo(Seqs.newMutableSeq(1, 2, 3, 4, 5)));
+        assertThat(new Range<>(1).next(i -> i + 1).takeWhile((e, i) -> i < 0), equalTo(Seqs.newMutableSeq()));
+        assertThat(new Range<>(1).next(i -> i + 1).until(1).takeWhile((e, i) -> i < 5), equalTo(Seqs.newMutableSeq()));
+
+        List<Integer> indices = new ArrayList<>();
+        assertThat(new Range<>(1).next(i -> i + i)
+                .takeWhile((e, i) -> {
+                    indices.add(i);
+                    return e < 64;
+                }), equalTo(Seqs.newMutableSeq(1, 2, 4, 8, 16, 32)));
+        assertThat(indices, equalTo(Arrays.asList(0, 1, 2, 3, 4, 5, 6)));
     }
 }
