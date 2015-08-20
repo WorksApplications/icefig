@@ -968,4 +968,35 @@ public interface Seq<T> {
 
         return Optional.of(candidate);
     }
+
+    /**
+     * Swaps the elements at the specified positions in this seq.
+     *
+     * @param i the index of one element to be swapped.
+     * @param j the index of the other element to be swapped.
+     * @throws IndexOutOfBoundsException if either <tt>i</tt> or <tt>j</tt>
+     *         is out of range (i &lt; 0 || i &gt;= this.size()
+     *         || j &lt; 0 || j &gt;= this.size()).
+     * @since 1.4
+     */
+    Seq<T> swap(int i, int j);
+
+    /**
+     * Rotates the elements in this seq by the specified distance.
+     * After calling this method, the element at index <tt>i</tt> will be
+     * the element previously at index <tt>(i - distance)</tt> mod
+     * <tt>this.size()</tt>, for all values of <tt>i</tt> between <tt>0</tt>
+     * and <tt>list.size()-1</tt>, inclusive.  (This method has no effect on
+     * the size of the list.)
+     *
+     * <p>For example, suppose <tt>seq</tt> comprises<tt> [1, 2, 3, 4, 5]</tt>.
+     * After invoking <tt>seq.rotate(1)</tt> (or
+     * <tt>seq.rotate(-4)</tt>), <tt>list</tt> will comprise
+     * <tt>[5, 1, 2, 3, 4]</tt>.
+     *
+     * @param distance the distance to rotate the seq.  There are no
+     *        constraints on this value; it may be zero, negative, or
+     *        greater than <tt>this.size()</tt>.
+     */
+    Seq<T> rotate(int distance);
 }

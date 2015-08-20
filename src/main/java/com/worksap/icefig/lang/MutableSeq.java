@@ -249,4 +249,14 @@ public interface MutableSeq<T> extends Seq<T> {
      * In-place method of {@link #rejectWhile(BiPredicate)}
      */
     MutableSeq<T> rejectWhileInPlace(BiPredicate<T, Integer> condition);
+
+    /**
+     * In-place method of {@link #swap(int, int)}
+     */
+    MutableSeq<T> swapInPlace(int i, int j);
+
+    /**
+     * In-place method of {@link #rotate(int)}
+     */
+    MutableSeq<T> rotateInPlace(int distance);
 }
