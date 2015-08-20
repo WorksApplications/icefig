@@ -678,4 +678,64 @@ class SeqImpl<T> implements MutableSeq<T> {
         });
         return result;
     }
+
+    @Override
+    public Seq<T> swap(int i, int j) {
+        MutableSeq<T> newSeq = new SeqImpl<>(list);
+        newSeq.swapInPlace(i, j);
+        return newSeq;
+    }
+
+    @Override
+    public MutableSeq<T> swapInPlace(int i, int j) {
+        T tmp = get(i);
+        set(i, get(j));
+        set(j, tmp);
+        return this;
+    }
+
+    @Override
+    public Seq<T> rotate(int distance) {
+        MutableSeq<T> newSeq = new SeqImpl<>();
+        int size = size();
+        if (size == 0) {
+            return newSeq;
+        }
+        distance = distance % size();
+        if (distance < 0) {
+            distance += size;
+        }
+
+        for (int i = 0; i < size(); i++) {
+            newSeq.appendInPlace(get((size + i - distance) % size));
+        }
+        return newSeq;
+    }
+
+    @Override
+    public MutableSeq<T> rotateInPlace(int distance) {
+        int size = size();
+        if (size == 0 || distance % size == 0) {
+            return this;
+        }
+        distance = distance % size();
+        if (distance < 0) {
+            distance += size;
+        }
+
+        for (int cycleStart = 0, movedSteps = 0; movedSteps != size; cycleStart++) {
+            T displaced = list.get(cycleStart);
+            int i = cycleStart;
+            do {
+                i += distance;
+                if (i >= size) {
+                    i -= size;
+                }
+                displaced = list.set(i, displaced);
+                movedSteps++;
+            } while (i != cycleStart);
+        }
+
+        return null;
+    }
 }

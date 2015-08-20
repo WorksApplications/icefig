@@ -726,4 +726,33 @@ public class SeqTest {
         assertThat(Seqs.newMutableSeq(3, 2, 1).min((i, j) -> Integer.compare(i, j)).get(), is(1));
         assertThat(Seqs.newMutableSeq(3, 2, 1).min((i, j) -> Integer.compare(j, i)).get(), is(3));
     }
+
+    @Test
+    public void testSwap() {
+        assertThat(Seqs.newMutableSeq(1, 2, 3, 4).swap(1, 2), equalTo(Seqs.newMutableSeq(1, 3, 2, 4)));
+        MutableSeq<Integer> seq = Seqs.newMutableSeq(1, 2, 3, 4);
+        seq.swapInPlace(1, 2);
+        assertThat(seq, equalTo(Seqs.newMutableSeq(1, 3, 2, 4)));
+    }
+
+    @Test
+    public void testRotate() {
+        assertThat(Seqs.newMutableSeq().rotate(1), equalTo(Seqs.newMutableSeq()));
+        assertThat(Seqs.newMutableSeq(1, 2, 3).rotate(0), equalTo(Seqs.newMutableSeq(1, 2, 3)));
+        assertThat(Seqs.newMutableSeq(1, 2, 3, 4, 5).rotate(2), equalTo(Seqs.newMutableSeq(4, 5, 1, 2, 3)));
+        assertThat(Seqs.newMutableSeq(1, 2, 3, 4, 5).rotate(-2), equalTo(Seqs.newMutableSeq(3, 4, 5, 1, 2)));
+
+        MutableSeq<Integer> seq = Seqs.newMutableSeq();
+        seq.rotateInPlace(1);
+        assertThat(seq, equalTo(Seqs.newMutableSeq()));
+        seq = Seqs.newMutableSeq(1, 2, 3);
+        seq.rotateInPlace(0);
+        assertThat(seq, equalTo(Seqs.newMutableSeq(1, 2, 3)));
+        seq = Seqs.newMutableSeq(1, 2, 3, 4, 5);
+        seq.rotateInPlace(2);
+        assertThat(seq, equalTo(Seqs.newMutableSeq(4, 5, 1, 2, 3)));
+        seq = Seqs.newMutableSeq(1, 2, 3, 4, 5);
+        seq.rotateInPlace(-2);
+        assertThat(seq, equalTo(Seqs.newMutableSeq(3, 4, 5, 1, 2)));
+    }
 }
