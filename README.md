@@ -7,7 +7,7 @@ Java elegant supplement
 Java 8 delivered lambda expressions, but without the enhancement of basic libraries like List, Map, String, which makes
 lambda expression still not delightful.
 
-Borrowered from Ruby basic library, IceFig intends to supply the missing.
+Inspired by other popular langeuages like Ruby and Scala, IceFig intends to supply the missing.
 
 ## Quick Scan
 
@@ -92,7 +92,7 @@ Note that the default interface doesn't mean immutability of the object it is on
 
 ### Conventions
 
-IceFig uses conventions on method names similar with Ruby. If there is a pair of methods `name, nameInPlace`, method ends with `InPlace` means calling this method will change the object itself, while calling the other won't.
+IceFig uses conventions on method names. If there is a pair of methods `name, nameInPlace`, method ends with `InPlace` means calling this method will change the object itself, while calling the other won't.
 
 
 ## License
