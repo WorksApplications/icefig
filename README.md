@@ -7,7 +7,7 @@ Java elegant supplement
 Java 8 delivered lambda expressions, but without the enhancement of basic libraries like List, Map, String, which makes
 lambda expression still not delightful.
 
-Inspired by other popular langeuages like Ruby and Scala, IceFig intends to supply the missing.
+Inspired by other popular languages like Ruby and Scala, IceFig intends to supply the missing.
 
 ## Quick Scan
 
@@ -58,7 +58,7 @@ str.partition("d e").map(CharSeq::trim);  //["a b c", "d e", "f g"]
 
 ### Not stream
 
-IceFig is different from Stream, and implemented without Stream. While, it is simpler concept -- supplement methods on basic library.
+IceFig is different from Stream, and implemented without Stream. While, it is simpler concept -- supplement methods on basic libraries.
 
 Stream has several characteristics:
 
@@ -75,7 +75,7 @@ IceFig targets on "small data" operations within application logic, to provide s
 
 ### No utilities
 
-In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for the missing methods in standard library. While in IceFig, we make an object oriented and functional way to free you from tedious code.
+In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for the missing methods in standard library. While in IceFig, we make an object oriented and functional way to free you from tedious codes.
 
 ### Zero runtime dependency
 
