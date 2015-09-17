@@ -27,14 +27,14 @@
 <p>Java 8 delivered lambda expressions, but without the enhancement of basic libraries like List, Map, String, which makes
 lambda expression still not delightful.</p>
 
-<p>Borrowered from Ruby basic library, IceFig intends to supply the missing.</p>
+<p>Inspired by other popular languages like Ruby and Scala, IceFig intends to supply the missing.</p>
 
 <h2>
 <a id="quick-scan" class="anchor" href="#quick-scan" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick Scan</h2>
 
 <p>Elegant alternative to List: <strong>Seq</strong></p>
 
-<div class="highlight highlight-java"><pre><span class="pl-k">Seq&lt;<span class="pl-smi">Integer</span>&gt;</span> seq <span class="pl-k">=</span> <span class="pl-smi">Seq</span><span class="pl-k">.</span>of(<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>);
+<div class="highlight highlight-source-java"><pre><span class="pl-k">Seq&lt;<span class="pl-smi">Integer</span>&gt;</span> seq <span class="pl-k">=</span> <span class="pl-smi">Seq</span><span class="pl-k">.</span>of(<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>);
 seq<span class="pl-k">.</span>shuffle(); <span class="pl-c">// copy to a new seq and shuffle it</span>
 seq<span class="pl-k">.</span>shuffle$(); <span class="pl-c">// shuffle the original seq</span>
 seq<span class="pl-k">.</span>forEach((value, idx) <span class="pl-k">-</span><span class="pl-k">&gt;</span> { <span class="pl-c">// with index</span>
@@ -50,14 +50,14 @@ seq<span class="pl-k">.</span>map(a <span class="pl-k">-</span><span class="pl-k
 
 <p>Elegant alternative to Map: <strong>Hash</strong></p>
 
-<div class="highlight highlight-java"><pre><span class="pl-k">Hash&lt;<span class="pl-smi">Integer</span>, <span class="pl-smi">Integer</span>&gt;</span> hash <span class="pl-k">=</span> <span class="pl-smi">Hash</span><span class="pl-k">.</span>newHash();
+<div class="highlight highlight-source-java"><pre><span class="pl-k">Hash&lt;<span class="pl-smi">Integer</span>, <span class="pl-smi">Integer</span>&gt;</span> hash <span class="pl-k">=</span> <span class="pl-smi">Hash</span><span class="pl-k">.</span>newHash();
 hash<span class="pl-k">.</span>set(<span class="pl-c1">1</span>, <span class="pl-c1">2</span>)<span class="pl-k">.</span>set(<span class="pl-c1">2</span>, <span class="pl-c1">3</span>)<span class="pl-k">.</span>set(<span class="pl-c1">3</span>, <span class="pl-c1">3</span>);
 hash<span class="pl-k">.</span>containsAny((k, v)<span class="pl-k">-</span><span class="pl-k">&gt;</span> k<span class="pl-k">+</span>v <span class="pl-k">==</span> <span class="pl-c1">5</span> ); <span class="pl-c">//true</span>
 hash<span class="pl-k">.</span>keysOf(<span class="pl-c1">3</span>); <span class="pl-c">// [2, 3]</span></pre></div>
 
 <p>Elegant alternative to String: <strong>CharSeq</strong></p>
 
-<div class="highlight highlight-java"><pre><span class="pl-smi">CharSeq</span> str <span class="pl-k">=</span> <span class="pl-smi">CharSeq</span><span class="pl-k">.</span>of(<span class="pl-s"><span class="pl-pds">"</span>a b c d e f g<span class="pl-pds">"</span></span>);
+<div class="highlight highlight-source-java"><pre><span class="pl-smi">CharSeq</span> str <span class="pl-k">=</span> <span class="pl-smi">CharSeq</span><span class="pl-k">.</span>of(<span class="pl-s"><span class="pl-pds">"</span>a b c d e f g<span class="pl-pds">"</span></span>);
 str<span class="pl-k">.</span>split(<span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span>)<span class="pl-k">.</span>join(<span class="pl-s"><span class="pl-pds">"</span>-<span class="pl-pds">"</span></span>)<span class="pl-k">.</span>capitalize(); <span class="pl-c">//"A-b-c-d-e-f-g"</span>
 str<span class="pl-k">.</span>partition(<span class="pl-s"><span class="pl-pds">"</span>d e<span class="pl-pds">"</span></span>)<span class="pl-k">.</span>map(<span class="pl-smi">CharSeq</span><span class="pl-k">::</span>trim);  <span class="pl-c">//["a b c", "d e", "f g"]</span></pre></div>
 
@@ -66,7 +66,7 @@ str<span class="pl-k">.</span>partition(<span class="pl-s"><span class="pl-pds">
 <h2>
 <a id="include-it" class="anchor" href="#include-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>Include it</h2>
 
-<div class="highlight highlight-xml"><pre>&lt;<span class="pl-ent">dependency</span>&gt;
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">dependency</span>&gt;
     &lt;<span class="pl-ent">groupId</span>&gt;com.worksap&lt;/<span class="pl-ent">groupId</span>&gt;
     &lt;<span class="pl-ent">artifactId</span>&gt;icefig&lt;/<span class="pl-ent">artifactId</span>&gt;
     &lt;<span class="pl-ent">version</span>&gt;0.1.0&lt;/<span class="pl-ent">version</span>&gt;
@@ -78,7 +78,7 @@ str<span class="pl-k">.</span>partition(<span class="pl-s"><span class="pl-pds">
 <h3>
 <a id="not-stream" class="anchor" href="#not-stream" aria-hidden="true"><span class="octicon octicon-link"></span></a>Not stream</h3>
 
-<p>IceFig is different from Stream, and implemented without Stream. While, it is simpler concept -- supplement methods on basic library.</p>
+<p>IceFig is different from Stream and implemented without Stream. While, it is simpler concept -- supplement methods on the basic library.</p>
 
 <p>Stream has several characteristics:</p>
 
@@ -95,7 +95,7 @@ str<span class="pl-k">.</span>partition(<span class="pl-s"><span class="pl-pds">
 <h3>
 <a id="no-utilities" class="anchor" href="#no-utilities" aria-hidden="true"><span class="octicon octicon-link"></span></a>No utilities</h3>
 
-<p>In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for the missing methods in standard library. While in IceFig, we make an object oriented and functional way to free you from tedious code.</p>
+<p>In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for the missing methods in the standard library. While, in IceFig, we make an object oriented and functional way to free you from tedious codes.</p>
 
 <h3>
 <a id="zero-runtime-dependency" class="anchor" href="#zero-runtime-dependency" aria-hidden="true"><span class="octicon octicon-link"></span></a>Zero runtime dependency</h3>
@@ -105,7 +105,7 @@ str<span class="pl-k">.</span>partition(<span class="pl-s"><span class="pl-pds">
 <h3>
 <a id="conventions" class="anchor" href="#conventions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conventions</h3>
 
-<p>IceFig uses conventions on method names similar with Ruby. If there is a pair of methods <code>name, name$</code>, method ends with <code>$</code> means calling this method will change the object itself, while calling the other won't.</p>
+<p>IceFig uses conventions on method names. If there is a pair of methods <code>name, name$</code>, method ends with <code>$</code> means calling this method will change the object itself, while calling the other won't.</p>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
