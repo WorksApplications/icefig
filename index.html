@@ -49,9 +49,8 @@ seq<span class="pl-k">.</span>map(a <span class="pl-k">-</span><span class="pl-k
 
 <p>Elegant alternative to Map: <strong>Hash</strong></p>
 
-<div class="highlight highlight-source-java"><pre><span class="pl-k">Hash&lt;<span class="pl-smi">Integer</span>, <span class="pl-smi">Integer</span>&gt;</span> hash <span class="pl-k">=</span> <span class="pl-smi">Hash</span><span class="pl-k">.</span>newHash();
-hash<span class="pl-k">.</span>set(<span class="pl-c1">1</span>, <span class="pl-c1">2</span>)<span class="pl-k">.</span>set(<span class="pl-c1">2</span>, <span class="pl-c1">3</span>)<span class="pl-k">.</span>set(<span class="pl-c1">3</span>, <span class="pl-c1">3</span>);
-hash<span class="pl-k">.</span>containsAny((k, v)<span class="pl-k">-</span><span class="pl-k">&gt;</span> k<span class="pl-k">+</span>v <span class="pl-k">==</span> <span class="pl-c1">5</span> ); <span class="pl-c">//true</span>
+<div class="highlight highlight-source-java"><pre><span class="pl-k">Hash&lt;<span class="pl-smi">Integer</span>, <span class="pl-smi">Integer</span>&gt;</span> hash <span class="pl-k">=</span> <span class="pl-smi">Hashes</span><span class="pl-k">.</span><span class="pl-k">&lt;</span><span class="pl-smi">Integer</span>, <span class="pl-smi">Integer</span><span class="pl-k">&gt;</span>newHash()<span class="pl-k">.</span>put(<span class="pl-c1">1</span>, <span class="pl-c1">2</span>)<span class="pl-k">.</span>put(<span class="pl-c1">2</span>, <span class="pl-c1">3</span>)<span class="pl-k">.</span>put(<span class="pl-c1">3</span>, <span class="pl-c1">3</span>);
+hash<span class="pl-k">.</span>containsAny((k, v) <span class="pl-k">-</span><span class="pl-k">&gt;</span> k<span class="pl-k">+</span>v <span class="pl-k">==</span> <span class="pl-c1">5</span> ); <span class="pl-c">//true</span>
 hash<span class="pl-k">.</span>keysOf(<span class="pl-c1">3</span>); <span class="pl-c">// [2, 3]</span></pre></div>
 
 <p>Elegant alternative to String: <strong>CharSeq</strong></p>
@@ -68,7 +67,7 @@ str<span class="pl-k">.</span>partition(<span class="pl-s"><span class="pl-pds">
 <div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">dependency</span>&gt;
     &lt;<span class="pl-ent">groupId</span>&gt;com.worksap&lt;/<span class="pl-ent">groupId</span>&gt;
     &lt;<span class="pl-ent">artifactId</span>&gt;icefig&lt;/<span class="pl-ent">artifactId</span>&gt;
-    &lt;<span class="pl-ent">version</span>&gt;0.1.0&lt;/<span class="pl-ent">version</span>&gt;
+    &lt;<span class="pl-ent">version</span>&gt;[latest version]&lt;/<span class="pl-ent">version</span>&gt;
 &lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
 
 <h2>
@@ -77,7 +76,7 @@ str<span class="pl-k">.</span>partition(<span class="pl-s"><span class="pl-pds">
 <h3>
 <a id="not-stream" class="anchor" href="#not-stream" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Not stream</h3>
 
-<p>IceFig is different from Stream and implemented without Stream. While, it is simpler concept -- supplement methods on the basic library.</p>
+<p>IceFig is different from Stream, and implemented without Stream. While, it is simpler concept -- supplement methods on basic libraries.</p>
 
 <p>Stream has several characteristics:</p>
 
@@ -89,12 +88,15 @@ str<span class="pl-k">.</span>partition(<span class="pl-s"><span class="pl-pds">
 
 <p>Thus, Stream may not be able to support operations related with the size of it, nor operations involving multiple or even random elements.</p>
 
+<p>Basically, the vast majority operations on List, Map, String don't need a Stream. Stream brings great merits on big data processing, but when we're not facing performance problem (operating a list of about 10x elements), it is an over kill. 
+Yet Stream brings the 2 additional steps "Stream()" and "collect()", which is sometimes annoying to write.</p>
+
 <p>IceFig targets on "small data" operations within application logic, to provide simple &amp; beautiful code writing about String, List, Map operation &amp; transformation.</p>
 
 <h3>
 <a id="no-utilities" class="anchor" href="#no-utilities" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>No utilities</h3>
 
-<p>In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for the missing methods in the standard library. While, in IceFig, we make an object oriented and functional way to free you from tedious codes.</p>
+<p>In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for the missing methods in standard library. While in IceFig, we make an object oriented and functional way to free you from tedious codes.</p>
 
 <h3>
 <a id="zero-runtime-dependency" class="anchor" href="#zero-runtime-dependency" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Zero runtime dependency</h3>
@@ -102,9 +104,19 @@ str<span class="pl-k">.</span>partition(<span class="pl-s"><span class="pl-pds">
 <p>IceFig has no external runtime dependency except JDK 8.</p>
 
 <h3>
+<a id="mutable--default-interfaces" class="anchor" href="#mutable--default-interfaces" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Mutable &amp; default interfaces</h3>
+
+<p>IceFig firstly aggregates all operations which do not change the state into a default interface(e.x. Seq, Hash).
+On the other hand, there are interfaces named "mutableXXX" extending the default ones with additional in-place operations, which are commonly named <code>xxxInPlace</code>.</p>
+
+<p>If you don't want the ability to change the object, you can use the default interface to let compiler check it for you. And it is the recommended way.</p>
+
+<p>Note that the default interface doesn't mean immutability of the object it is on, it only ensures "if outside only uses this interface on the object, the object will not be changed".</p>
+
+<h3>
 <a id="conventions" class="anchor" href="#conventions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Conventions</h3>
 
-<p>IceFig uses conventions on method names. If there is a pair of methods <code>name, name$</code>, method ends with <code>$</code> means calling this method will change the object itself, while calling the other won't.</p>
+<p>IceFig uses conventions on method names. If there is a pair of methods <code>name, nameInPlace</code>, method ends with <code>InPlace</code> means calling this method will change the object itself, while calling the other won't.</p>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
