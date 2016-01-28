@@ -22,7 +22,7 @@
       <p><a href="https://travis-ci.org/wapatesh/icefig"><img src="https://travis-ci.org/wapatesh/icefig.svg?branch=master" alt="Build Status"></a> <a href="http://www.javadoc.io/doc/com.worksap/icefig"><img src="https://readthedocs.org/projects/svg-pottery/badge/?version=latest" alt="Documentation"></a> <a href="http://codecov.io/github/wapatesh/icefig?branch=master"><img src="http://codecov.io/github/wapatesh/icefig/coverage.svg?branch=master" alt="codecov.io"></a></p>
 
 <h2>
-<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h2>
 
 <p>Java 8 delivered lambda expressions, but without the enhancement of basic libraries like List, Map, String, which makes
 lambda expression still not delightful.</p>
@@ -30,13 +30,12 @@ lambda expression still not delightful.</p>
 <p>Inspired by other popular languages like Ruby and Scala, IceFig intends to supply the missing.</p>
 
 <h2>
-<a id="quick-scan" class="anchor" href="#quick-scan" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick Scan</h2>
+<a id="quick-scan" class="anchor" href="#quick-scan" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Quick Scan</h2>
 
 <p>Elegant alternative to List: <strong>Seq</strong></p>
 
-<div class="highlight highlight-source-java"><pre><span class="pl-k">Seq&lt;<span class="pl-smi">Integer</span>&gt;</span> seq <span class="pl-k">=</span> <span class="pl-smi">Seq</span><span class="pl-k">.</span>of(<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>);
+<div class="highlight highlight-source-java"><pre><span class="pl-k">Seq&lt;<span class="pl-smi">Integer</span>&gt;</span> seq <span class="pl-k">=</span> <span class="pl-smi">Seqs</span><span class="pl-k">.</span>newSeq(<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>);
 seq<span class="pl-k">.</span>shuffle(); <span class="pl-c">// copy to a new seq and shuffle it</span>
-seq<span class="pl-k">.</span>shuffle$(); <span class="pl-c">// shuffle the original seq</span>
 seq<span class="pl-k">.</span>forEach((value, idx) <span class="pl-k">-</span><span class="pl-k">&gt;</span> { <span class="pl-c">// with index</span>
     <span class="pl-c">// (1, 0)  (2, 1)  (3, 2)</span>
 });
@@ -64,7 +63,7 @@ str<span class="pl-k">.</span>partition(<span class="pl-s"><span class="pl-pds">
 <p><a href="http://www.javadoc.io/doc/com.worksap/icefig">Full Javadoc</a></p>
 
 <h2>
-<a id="include-it" class="anchor" href="#include-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>Include it</h2>
+<a id="include-it" class="anchor" href="#include-it" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Include it</h2>
 
 <div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">dependency</span>&gt;
     &lt;<span class="pl-ent">groupId</span>&gt;com.worksap&lt;/<span class="pl-ent">groupId</span>&gt;
@@ -73,10 +72,10 @@ str<span class="pl-k">.</span>partition(<span class="pl-s"><span class="pl-pds">
 &lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
 
 <h2>
-<a id="concept" class="anchor" href="#concept" aria-hidden="true"><span class="octicon octicon-link"></span></a>Concept</h2>
+<a id="concept" class="anchor" href="#concept" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Concept</h2>
 
 <h3>
-<a id="not-stream" class="anchor" href="#not-stream" aria-hidden="true"><span class="octicon octicon-link"></span></a>Not stream</h3>
+<a id="not-stream" class="anchor" href="#not-stream" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Not stream</h3>
 
 <p>IceFig is different from Stream and implemented without Stream. While, it is simpler concept -- supplement methods on the basic library.</p>
 
@@ -93,27 +92,27 @@ str<span class="pl-k">.</span>partition(<span class="pl-s"><span class="pl-pds">
 <p>IceFig targets on "small data" operations within application logic, to provide simple &amp; beautiful code writing about String, List, Map operation &amp; transformation.</p>
 
 <h3>
-<a id="no-utilities" class="anchor" href="#no-utilities" aria-hidden="true"><span class="octicon octicon-link"></span></a>No utilities</h3>
+<a id="no-utilities" class="anchor" href="#no-utilities" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>No utilities</h3>
 
 <p>In traditional Java way, we use a lot of utilities (StringUtils, FileUtils) for the missing methods in the standard library. While, in IceFig, we make an object oriented and functional way to free you from tedious codes.</p>
 
 <h3>
-<a id="zero-runtime-dependency" class="anchor" href="#zero-runtime-dependency" aria-hidden="true"><span class="octicon octicon-link"></span></a>Zero runtime dependency</h3>
+<a id="zero-runtime-dependency" class="anchor" href="#zero-runtime-dependency" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Zero runtime dependency</h3>
 
 <p>IceFig has no external runtime dependency except JDK 8.</p>
 
 <h3>
-<a id="conventions" class="anchor" href="#conventions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conventions</h3>
+<a id="conventions" class="anchor" href="#conventions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Conventions</h3>
 
 <p>IceFig uses conventions on method names. If there is a pair of methods <code>name, name$</code>, method ends with <code>$</code> means calling this method will change the object itself, while calling the other won't.</p>
 
 <h2>
-<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
 
 <p><a href="LICENSE">Apache License 2.0</a></p>
 
 <h2>
-<a id="contribution" class="anchor" href="#contribution" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contribution</h2>
+<a id="contribution" class="anchor" href="#contribution" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contribution</h2>
 
 <p>Feel free to submit issues &amp; PRs</p>
 
