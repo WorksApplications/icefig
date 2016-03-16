@@ -1,4 +1,4 @@
-# IceFig [![Build Status](https://travis-ci.org/wapatesh/icefig.svg?branch=master)](https://travis-ci.org/wapatesh/icefig) [![Documentation](https://readthedocs.org/projects/svg-pottery/badge/?version=latest)](http://www.javadoc.io/doc/com.worksap/icefig) [![codecov.io](https://codecov.io/github/WorksApplications/icefig/coverage.svg?branch=master)](https://codecov.io/github/WorksApplications/icefig?branch=master)
+# IceFig [![Build Status](https://travis-ci.org/WorksApplications/icefig.svg?branch=master)](https://travis-ci.org/WorksApplications/icefig) [![Documentation](https://readthedocs.org/projects/svg-pottery/badge/?version=latest)](http://www.javadoc.io/doc/com.worksap/icefig) [![codecov.io](https://codecov.io/github/WorksApplications/icefig/coverage.svg?branch=master)](https://codecov.io/github/WorksApplications/icefig?branch=master)
 
 [![Join the chat at https://gitter.im/wapatesh/icefig](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/wapatesh/icefig?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
