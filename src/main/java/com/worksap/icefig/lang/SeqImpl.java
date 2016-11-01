@@ -20,17 +20,17 @@ import java.util.*;
 import java.util.function.*;
 
 /**
- * Created by liuyang on 7/23/15.
+ * The implementation of Seq and MutableSeq.
  */
 class SeqImpl<T> implements MutableSeq<T> {
 
     private final ArrayList<T> list;
 
-    public SeqImpl() {
+    SeqImpl() {
         this.list = new ArrayList<>();
     }
 
-    public SeqImpl(Collection<T> collection) {
+    SeqImpl(Collection<T> collection) {
         this.list = new ArrayList<>(collection);
     }
 
@@ -140,7 +140,8 @@ class SeqImpl<T> implements MutableSeq<T> {
     }
 
     @Override
-    public MutableSeq<T> append(T... values) {
+    @SafeVarargs
+    final public MutableSeq<T> append(T... values) {
         return append(Arrays.asList(values));
     }
 
@@ -165,10 +166,9 @@ class SeqImpl<T> implements MutableSeq<T> {
     }
 
     @Override
-    public MutableSeq<T> appendInPlace(T... values) {
-        for (T t : values) {
-            list.add(t);
-        }
+    @SafeVarargs
+    final public MutableSeq<T> appendInPlace(T... values) {
+        Collections.addAll(list, values);
         return this;
     }
 
@@ -193,7 +193,8 @@ class SeqImpl<T> implements MutableSeq<T> {
     }
 
     @Override
-    public MutableSeq<T> prepend(T... values) {
+    @SafeVarargs
+    final public MutableSeq<T> prepend(T... values) {
         Objects.requireNonNull(values);
         return prepend(Arrays.asList(values));
     }
@@ -221,7 +222,8 @@ class SeqImpl<T> implements MutableSeq<T> {
     }
 
     @Override
-    public MutableSeq<T> prependInPlace(T... values) {
+    @SafeVarargs
+    final public MutableSeq<T> prependInPlace(T... values) {
         return prependInPlace(Arrays.asList(values));
     }
 
@@ -414,9 +416,7 @@ class SeqImpl<T> implements MutableSeq<T> {
 
     public MutableSeq<MutableSeq<T>> eachCombination(int n) {
         MutableSeq<MutableSeq<T>> result = new SeqImpl<>();
-        forEachCombination(n, s -> {
-            result.appendInPlace((MutableSeq<T>) s);
-        });
+        forEachCombination(n, s -> result.appendInPlace((MutableSeq<T>) s));
         return result;
     }
 
@@ -623,15 +623,7 @@ class SeqImpl<T> implements MutableSeq<T> {
             return new SeqImpl<>();
         }
 
-        HashMap<T, Integer> map = new HashMap<>(seq.size());
-        seq.forEach(t -> {
-            Integer count = map.get(t);
-            if (count != null) {
-                map.put(t, count + 1);
-            } else {
-                map.put(t, 1);
-            }
-        });
+        HashMap<T, Integer> map = countIndex(seq);
         SeqImpl<T> result = new SeqImpl<>();
         forEach(t -> {
             Integer count = map.get(t);
@@ -647,13 +639,7 @@ class SeqImpl<T> implements MutableSeq<T> {
         return result;
     }
 
-    @Override
-    public Seq<T> difference(Seq<T> seq) {
-        Objects.requireNonNull(seq);
-        if (seq.isEmpty()) {
-            return new SeqImpl<>(list);
-        }
-
+    private HashMap<T, Integer> countIndex(Seq<T> seq) {
         HashMap<T, Integer> map = new HashMap<>(seq.size());
         seq.forEach(t -> {
             Integer count = map.get(t);
@@ -663,6 +649,17 @@ class SeqImpl<T> implements MutableSeq<T> {
                 map.put(t, 1);
             }
         });
+        return map;
+    }
+
+    @Override
+    public Seq<T> difference(Seq<T> seq) {
+        Objects.requireNonNull(seq);
+        if (seq.isEmpty()) {
+            return new SeqImpl<>(list);
+        }
+
+        HashMap<T, Integer> map = countIndex(seq);
         SeqImpl<T> result = new SeqImpl<>();
         forEach(t -> {
             Integer count = map.get(t);

@@ -633,7 +633,6 @@ public class SeqTest {
         result.clear();
         seq.forEachSlice(5, result::appendInPlace);
         assertArrayEquals(new Object[]{Seqs.newMutableSeq("a", "b", "c", "d")}, result.toArray());
-        seq.forEachSlice(1, s -> s.forEach(e -> System.out.println(e)));
         Helpers.assertThrows(IllegalArgumentException.class, () -> seq.forEachSlice(0, result::appendInPlace));
         Helpers.assertThrows(NullPointerException.class, () -> seq.forEachSlice(0, null));
     }
@@ -658,7 +657,6 @@ public class SeqTest {
         });
         assertEquals(2, map.size());
         assertEquals(new Integer(26), map.get("wang"));
-        map.forEach((k, v) -> System.out.println(k + ":" + v));
         Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).reduce(null));
         Helpers.assertThrows(NullPointerException.class, () -> Seqs.newMutableSeq(1).reduce(1, null));
     }

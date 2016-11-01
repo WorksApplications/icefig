@@ -45,3 +45,5 @@ apply plugin: 'io.codearte.nexus-staging'
 if (hasProperty('env') && env == 'production') {
     apply from: 'gradle/production.gradle'
 }
+
+apply plugin: "jacoco"
