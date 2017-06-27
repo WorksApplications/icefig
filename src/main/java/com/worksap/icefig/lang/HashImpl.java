@@ -19,6 +19,7 @@ package com.worksap.icefig.lang;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -27,7 +28,7 @@ import java.util.function.BiPredicate;
  * Created by lijunxiao on 8/6/15.
  */
 class HashImpl<K, V> implements MutableHash<K, V> {
-    private Map<K, V> hash;
+    private HashMap<K, V> hash;
 
     protected HashImpl() {
         this.hash = new HashMap<>();
@@ -307,5 +308,10 @@ class HashImpl<K, V> implements MutableHash<K, V> {
             }
         }
         return count;
+    }
+
+    @Override
+    public HashMap<K,V> toHashMap(){
+        return this.hash;
     }
 }

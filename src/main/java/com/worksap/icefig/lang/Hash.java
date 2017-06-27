@@ -18,6 +18,7 @@ package com.worksap.icefig.lang;
 
 import java.util.ConcurrentModificationException;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
@@ -244,4 +245,6 @@ public interface Hash<K, V> {
      * @throws NullPointerException if condition is null
      */
     int countIf(BiPredicate<K, V> condition);
+
+    HashMap<K,V> toHashMap();
 }
