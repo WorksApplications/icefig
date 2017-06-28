@@ -50,12 +50,12 @@ uploadArchives {
                 packaging 'jar'
                 // optionally artifactId can be defined here
                 description 'Java lambda supplement'
-                url 'http://wapatesh.github.io/fig/'
+                url 'http://worksapplications.github.io/icefig/'
 
                 scm {
-                    connection 'scm:git:git@github.com:wapatesh/fig.git'
-                    developerConnection 'scm:git:git@github.com:wapatesh/fig.git'
-                    url 'git@github.com:wapatesh/fig.git'
+                    connection 'scm:git:git@github.com:WorksApplications/icefig.git'
+                    developerConnection 'scm:git:git@github.com:WorksApplications/icefig.git'
+                    url 'git@github.com:WorksApplications/icefig.git'
                 }
 
                 licenses {
