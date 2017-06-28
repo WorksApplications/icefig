@@ -65,6 +65,11 @@ public class HashTest {
         assertEquals(1, hash1.remove("3").size());
         assertEquals(null, hash1.remove("3").get("3"));
         assertEquals("Chris Paul", hash1.get("3"));
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("key", "value");
+        Hash<String, String> hash2 = Hashes.<String, String>newHash().put("key", "value");
+        assertEquals(map, hash2.toHashMap());
     }
 
     @Test
